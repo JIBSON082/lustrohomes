@@ -1141,14 +1141,15 @@ function Footer() {
         <div>
           <div className="flex items-center gap-3 mb-5">
             <div className="relative w-16 h-16">
-              <Image
-                src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777567002/lustrologo_wfervy.png"
-                alt="Lustro Homes Logo"
-                fill
-                sizes="64px"
-                className="object-contain"
-              />
-            </div>
+  <Image
+    src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777567002/lustrologo_wfervy.png"
+    alt="Lustro Homes Logo"
+    fill
+    sizes="192px"
+    quality={100}
+    className="object-contain"
+  />
+</div>
             <span className="font-cormorant text-cream font-semibold text-xl tracking-wide">
               Lustro Homes
             </span>
