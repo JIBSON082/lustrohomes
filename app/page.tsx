@@ -10,7 +10,7 @@ const WHATSAPP_NUMBER = "2348000000000"; // ← Replace with actual WhatsApp num
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
 
 const HERO_SLIDES = [
-  "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=1920&q=85",
+   "https://res.cloudinary.com/dx3k7hbnc/image/upload/v1777562618/hero-1_jlcvld.jpg",
   "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1920&q=85",
   "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1920&q=85",
   "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1920&q=85",
