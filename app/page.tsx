@@ -1,261 +1,565 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 
-// ----------------------------------------------------------------------
-// DATA CONSTANTS
-// ----------------------------------------------------------------------
-const WHATSAPP_NUMBER = "2340000000000"; // Replace with actual
-const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}`;
+// ─────────────────────────────────────────────────
+// CONSTANTS
+// ─────────────────────────────────────────────────
+const WHATSAPP_NUMBER = "2348000000000"; // ← Replace with actual WhatsApp number
+const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
 
-const HERO_IMAGES = [
-  "https://images.unsplash.com/photo-1542314831-c6a4d14d8379?q=80&w=2000&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1566665797739-1674de7a421a?q=80&w=2000&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=2000&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?q=80&w=2000&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?q=80&w=2000&auto=format&fit=crop"
+const HERO_SLIDES = [
+  "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=1920&q=85",
+  "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1920&q=85",
+  "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1920&q=85",
+  "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1920&q=85",
+  "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1920&q=85",
 ];
 
-// ----------------------------------------------------------------------
-// COMPONENTS
-// ----------------------------------------------------------------------
+const NAV_LINKS = [
+  { label: "About", href: "#about" },
+  { label: "Rooms", href: "#rooms" },
+  { label: "Dining", href: "#dining" },
+  { label: "Gallery", href: "#gallery" },
+  { label: "Invest", href: "#invest" },
+  { label: "Contact", href: "#contact" },
+];
 
-function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const navLinks = [
-    { name: "About", href: "#about" },
-    { name: "Rooms", href: "#rooms" },
-    { name: "Dining", href: "#dining" },
-    { name: "Gallery", href: "#gallery" },
-    { name: "Invest", href: "#invest" },
-    { name: "Contact", href: "#contact" },
-  ];
+// ─────────────────────────────────────────────────
+// NAVBAR
+// ─────────────────────────────────────────────────
+function Navbar({
+  scrolled,
+  menuOpen,
+  setMenuOpen,
+}: {
+  scrolled: boolean;
+  menuOpen: boolean;
+  setMenuOpen: (v: boolean) => void;
+}) {
+  const handleNavClick = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+      e.preventDefault();
+      setMenuOpen(false);
+      const target = document.querySelector(href);
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth" });
+      }
+    },
+    [setMenuOpen]
+  );
 
   return (
     <>
-      <nav className={`fixed w-full z-50 transition-all duration-500 ${isScrolled ? "bg-cream/90 backdrop-blur-md shadow-sm py-4" : "bg-transparent py-6"}`}>
-        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-          <div className="flex items-center gap-3 cursor-pointer">
-            <span className={`font-display text-2xl font-bold tracking-wider ${isScrolled ? "text-charcoal" : "text-white"}`}>LUSTRO</span>
-          </div>
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+          scrolled
+            ? "bg-cream/92 backdrop-blur-md shadow-sm border-b border-charcoal/5"
+            : "bg-transparent"
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          {/* Logo */}
+          <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="flex items-center gap-3 group"
+          >
+            <div className="w-9 h-9 rounded-full bg-brown flex items-center justify-center shadow-md group-hover:bg-brown-light transition-colors">
+              <span className="font-cormorant text-cream font-bold text-base leading-none">
+                L
+              </span>
+            </div>
+            <span
+              className={`font-cormorant font-semibold text-xl tracking-wide transition-colors ${
+                scrolled ? "text-charcoal" : "text-cream"
+              }`}
+            >
+              Lustro Homes
+            </span>
+          </a>
 
+          {/* Desktop links */}
           <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <a key={link.name} href={link.href} className={`text-sm tracking-wide nav-link ${isScrolled ? "text-charcoal" : "text-white"}`}>
-                {link.name}
+            {NAV_LINKS.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                onClick={(e) => handleNavClick(e, link.href)}
+                className={`nav-link font-dm-sans text-sm tracking-wide transition-colors ${
+                  scrolled
+                    ? "text-charcoal/80 hover:text-brown"
+                    : "text-cream/85 hover:text-cream"
+                }`}
+              >
+                {link.label}
               </a>
             ))}
-          </div>
-
-          <div className="hidden md:block">
-            <a href={WHATSAPP_LINK} target="_blank" rel="noreferrer" className="bg-brown hover:bg-brown-light text-white px-6 py-2.5 rounded-full text-sm font-medium transition-colors">
+            <a
+              href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-brown text-cream font-dm-sans text-sm px-5 py-2.5 rounded-full hover:bg-brown-light transition-colors shadow-md"
+            >
               Book Now
             </a>
           </div>
 
-          <button onClick={() => setMobileMenuOpen(true)} className={`md:hidden ${isScrolled ? "text-charcoal" : "text-white"}`}>
-            <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
+          {/* Hamburger */}
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="md:hidden flex flex-col justify-center gap-[5px] w-8 h-8 relative z-50"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+          >
+            <span
+              className={`block w-6 h-[1.5px] transition-all duration-300 origin-center ${
+                menuOpen
+                  ? "rotate-45 translate-y-[6.5px] bg-cream"
+                  : scrolled
+                  ? "bg-charcoal"
+                  : "bg-cream"
+              }`}
+            />
+            <span
+              className={`block w-6 h-[1.5px] transition-all duration-300 ${
+                menuOpen
+                  ? "opacity-0 bg-cream"
+                  : scrolled
+                  ? "bg-charcoal"
+                  : "bg-cream"
+              }`}
+            />
+            <span
+              className={`block w-6 h-[1.5px] transition-all duration-300 origin-center ${
+                menuOpen
+                  ? "-rotate-45 -translate-y-[6.5px] bg-cream"
+                  : scrolled
+                  ? "bg-charcoal"
+                  : "bg-cream"
+              }`}
+            />
           </button>
         </div>
       </nav>
 
-      {/* Mobile Menu */}
-      <div className={`fixed inset-0 bg-charcoal z-[60] flex flex-col justify-center items-center transition-transform duration-500 ${mobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}>
-        <button onClick={() => setMobileMenuOpen(false)} className="absolute top-6 right-6 text-white">
-          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-        </button>
-        <div className="flex flex-col gap-6 text-center">
-          {navLinks.map((link) => (
-            <a key={link.name} href={link.href} onClick={() => setMobileMenuOpen(false)} className="font-display text-4xl text-white hover:text-gold transition-colors">
-              {link.name}
+      {/* Mobile Menu Overlay */}
+      <div
+        className={`mobile-menu ${
+          menuOpen ? "open" : ""
+        } fixed inset-0 z-40 bg-charcoal flex flex-col items-center justify-center`}
+      >
+        <div className="flex flex-col items-center gap-7">
+          {NAV_LINKS.map((link, i) => (
+            <a
+              key={link.label}
+              href={link.href}
+              onClick={(e) => handleNavClick(e, link.href)}
+              className="font-cormorant text-5xl text-cream hover:text-gold transition-colors tracking-wide"
+              style={{ animationDelay: `${i * 0.05}s` }}
+            >
+              {link.label}
             </a>
           ))}
-          <a href={WHATSAPP_LINK} className="mt-8 bg-brown text-white px-8 py-3 rounded-full">Book Your Stay</a>
+          <a
+            href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 bg-brown text-cream font-dm-sans px-10 py-3.5 rounded-full text-sm hover:bg-brown-light transition-colors"
+          >
+            Book Your Stay
+          </a>
+          <div className="mt-6 flex gap-6">
+            <a
+              href="https://instagram.com/lustro_homes"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-dm-sans text-xs text-cream/50 hover:text-gold transition-colors tracking-widest uppercase"
+            >
+              @lustro_homes
+            </a>
+            <a
+              href="https://instagram.com/lustro_lagos"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-dm-sans text-xs text-cream/50 hover:text-gold transition-colors tracking-widest uppercase"
+            >
+              @lustro_lagos
+            </a>
+          </div>
         </div>
       </div>
     </>
   );
 }
 
+// ─────────────────────────────────────────────────
+// HERO SECTION
+// ─────────────────────────────────────────────────
 function Hero() {
   const [activeSlide, setActiveSlide] = useState(0);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setActiveSlide((prev) => (prev + 1) % HERO_IMAGES.length);
+    const interval = setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % HERO_SLIDES.length);
     }, 5000);
-    return () => clearInterval(timer);
+    return () => clearInterval(interval);
   }, []);
 
   return (
-    <section className="relative h-screen w-full overflow-hidden flex items-center justify-center bg-charcoal">
-      {/* Layer 1: Backgrounds */}
-      <div className="absolute inset-0 z-1" style={{ transform: 'translateZ(0)' }}>
-        {HERO_IMAGES.map((src, index) => (
-          <div key={index} className={`absolute inset-0 hero-slide ${index === activeSlide ? "active" : ""}`}>
-            <Image src={src} alt="Lustro Homes Luxury" fill sizes="100vw" className="object-cover" priority={index === 0} quality={90} />
+    <section
+      id="hero"
+      className="relative h-screen overflow-hidden bg-charcoal"
+    >
+      {/* Slideshow Container */}
+      <div
+        className="absolute inset-0"
+        style={{ transform: "translateZ(0)", willChange: "transform" }}
+      >
+        {HERO_SLIDES.map((src, i) => (
+          <div
+            key={src}
+            className={`hero-slide ${i === activeSlide ? "active" : ""}`}
+          >
+            <Image
+              src={src}
+              alt={`Lustro Homes luxury suite ${i + 1}`}
+              fill
+              sizes="100vw"
+              priority={i === 0}
+              className="object-cover"
+              quality={i === 0 ? 90 : 75}
+            />
           </div>
         ))}
       </div>
 
-      {/* Layer 2: Scrim */}
-      <div className="absolute inset-0 z-10 hero-scrim" />
+      {/* Depth Scrim */}
+      <div className="hero-scrim absolute inset-0 z-10" />
 
-      {/* Layer 3: Glassmorphic Content */}
-      <div className="relative z-20 max-w-4xl w-full px-6 text-center text-white mt-16">
-        <div className="glass p-8 md:p-12 rounded-3xl inline-block mx-auto gsap-reveal">
-          <span className="uppercase tracking-[0.2em] text-xs font-bold text-white/80 mb-4 block">Premium Staycation · Lagos</span>
-          <h1 className="font-display text-5xl md:text-7xl leading-tight mb-6">
-            Your Lagos <span className="italic text-gold">Staycation</span> Awaits.
-          </h1>
-          <p className="text-lg text-white/90 font-light max-w-2xl mx-auto mb-8">
-            Experience unparalleled luxury, signature dining, and the ultimate city escape in the heart of Yaba.
+      {/* Glass Content Card */}
+      <div className="relative z-20 flex items-center justify-center h-full px-4 sm:px-6">
+        <div
+          className="glass rounded-2xl p-8 sm:p-10 md:p-12 max-w-xl w-full text-center"
+          style={{ isolation: "isolate", willChange: "backdrop-filter" }}
+        >
+          {/* Eyebrow */}
+          <p className="font-dm-sans text-[0.65rem] text-gold uppercase tracking-[0.3em] mb-5">
+            Premium Staycation · Lagos
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href={WHATSAPP_LINK} className="bg-brown hover:bg-brown-light text-white px-8 py-4 rounded-full transition-colors font-medium">Book Your Stay</a>
-            <a href="#rooms" className="bg-transparent border border-white/30 hover:bg-white/10 text-white px-8 py-4 rounded-full transition-colors font-medium">Explore Rooms</a>
-          </div>
-        </div>
 
-        {/* Indicators */}
-        <div className="flex justify-center gap-2 mt-12">
-          {HERO_IMAGES.map((_, i) => (
-            <button key={i} onClick={() => setActiveSlide(i)} className={`h-1.5 rounded-full transition-all duration-500 ${i === activeSlide ? "w-8 bg-brown" : "w-2 bg-white/40"}`} aria-label={`Go to slide ${i + 1}`} />
-          ))}
+          {/* Headline */}
+          <h1 className="font-cormorant text-4xl sm:text-5xl md:text-6xl text-cream font-light leading-[1.1] mb-5">
+            Your Lagos{" "}
+            <em className="italic text-gold not-italic" style={{ fontStyle: "italic" }}>
+              Staycation
+            </em>{" "}
+            Awaits.
+          </h1>
+
+          {/* Sub */}
+          <p className="font-dm-sans text-cream/70 text-sm leading-relaxed mb-8 max-w-sm mx-auto">
+            World-class comfort woven with Nigerian soul — unforgettable stays
+            and signature dining in the heart of Yaba, Lagos.
+          </p>
+
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <a
+              href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-brown text-cream font-dm-sans text-sm px-8 py-3.5 rounded-full hover:bg-brown-light transition-colors"
+            >
+              Book Your Stay
+            </a>
+            <a
+              href="#rooms"
+              onClick={(e) => {
+                e.preventDefault();
+                document.querySelector("#rooms")?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="border border-cream/30 text-cream font-dm-sans text-sm px-8 py-3.5 rounded-full hover:bg-cream/10 transition-colors"
+            >
+              Explore Rooms
+            </a>
+          </div>
+
+          {/* Slide indicators */}
+          <div className="flex justify-center gap-2 mt-8">
+            {HERO_SLIDES.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setActiveSlide(i)}
+                aria-label={`Go to slide ${i + 1}`}
+                className={`rounded-full transition-all duration-400 ${
+                  i === activeSlide
+                    ? "w-7 h-2 bg-gold"
+                    : "w-2 h-2 bg-cream/35 hover:bg-cream/60"
+                }`}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 opacity-70">
-        <span className="text-xs tracking-widest text-white uppercase">Scroll</span>
-        <div className="w-[1px] h-12 bg-white/30 overflow-hidden relative">
-          <div className="absolute top-0 left-0 w-full h-full bg-white animate-[slide-down_2s_ease-in-out_infinite]" />
-        </div>
+      {/* Scroll Cue */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-3 pointer-events-none">
+        <div className="w-px h-10 bg-gradient-to-b from-transparent to-cream/40" />
+        <span className="font-dm-sans text-[0.6rem] text-cream/45 uppercase tracking-[0.25em]">
+          Scroll
+        </span>
       </div>
     </section>
   );
 }
 
-function Stats() {
+// ─────────────────────────────────────────────────
+// STATS BAR
+// ─────────────────────────────────────────────────
+function StatsBar() {
   const stats = [
-    { value: "15,000+", label: "GUESTS HOSTED" },
-    { value: "3", label: "ICONIC PROPERTIES" },
-    { value: "₦2M+", label: "MONTHLY REVENUE" },
-    { value: "100%", label: "DELIVERY RATE" },
+    { number: "15,000+", label: "Guests Hosted" },
+    { number: "3", label: "Iconic Properties" },
+    { number: "₦2M+", label: "Monthly Revenue" },
+    { number: "100%", label: "Delivery Rate" },
   ];
 
   return (
-    <section className="bg-charcoal text-white py-12 border-b border-white/10">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-white/10 text-center">
-          {stats.map((stat, i) => (
-            <div key={i} className="gsap-reveal border-l-0 first:border-0 md:first:border-0 border-white/10">
-              <div className="font-display text-4xl md:text-5xl text-gold mb-2">{stat.value}</div>
-              <div className="text-[10px] md:text-xs tracking-widest uppercase text-white/50">{stat.label}</div>
-            </div>
-          ))}
+    <section className="bg-charcoal py-16">
+      <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10">
+        {stats.map((stat) => (
+          <div
+            key={stat.label}
+            className="reveal-element text-center md:border-r md:border-white/5 last:border-0"
+          >
+            <p className="font-cormorant text-4xl md:text-5xl text-gold font-light leading-none mb-2">
+              {stat.number}
+            </p>
+            <p className="font-dm-sans text-[0.65rem] text-white/45 uppercase tracking-[0.2em]">
+              {stat.label}
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ─────────────────────────────────────────────────
+// ABOUT SECTION
+// ─────────────────────────────────────────────────
+function About() {
+  return (
+    <section id="about" className="bg-cream py-24 md:py-36 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-14 md:gap-20 items-center">
+        {/* Left — Text */}
+        <div className="reveal-element">
+          <p className="font-dm-sans text-[0.65rem] text-brown uppercase tracking-[0.28em] mb-4">
+            Our Story
+          </p>
+          <h2 className="font-cormorant text-5xl md:text-6xl text-charcoal font-light leading-[1.1] mb-6">
+            Lagos Luxury,{" "}
+            <em className="italic text-brown">Redefined.</em>
+          </h2>
+          <div className="section-line mb-8" />
+          <p className="font-dm-sans text-charcoal/65 leading-[1.85] text-sm md:text-base mb-5">
+            Born in the creative heart of Yaba, Lustro Homes was forged with a
+            single, uncompromising vision — to deliver a shortlet experience
+            that rivals the world's finest. Every corner, every amenity, every
+            interaction is curated to make you feel something rare: true luxury
+            in your own city.
+          </p>
+          <p className="font-dm-sans text-charcoal/65 leading-[1.85] text-sm md:text-base mb-10">
+            From our signature in-house dining experience at Lustro Lagos
+            Restaurant, to our meticulously appointed suites, we don't just
+            offer a place to stay — we deliver an editorial moment in your life
+            that you'll carry long after checkout.
+          </p>
+
+          {/* Mini stats */}
+          <div className="grid grid-cols-3 gap-6 pt-8 border-t border-charcoal/10">
+            {[
+              { value: "3", label: "Properties" },
+              { value: "8,000+", label: "Total Stays" },
+              { value: "3 yrs", label: "Of Excellence" },
+            ].map((s) => (
+              <div key={s.label}>
+                <p className="font-cormorant text-3xl md:text-4xl text-brown font-light">
+                  {s.value}
+                </p>
+                <p className="font-dm-sans text-[0.65rem] text-charcoal/45 uppercase tracking-wider mt-1.5">
+                  {s.label}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Right — Image */}
+        <div className="reveal-element relative">
+          <div className="img-zoom relative rounded-2xl overflow-hidden h-[480px] md:h-[560px]">
+            <Image
+              src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85"
+              alt="Lustro Homes luxury living room interior"
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover"
+            />
+          </div>
+          {/* Floating glass badge */}
+          <div
+            className="glass absolute bottom-6 left-6 px-5 py-4 rounded-xl"
+            style={{ isolation: "isolate" }}
+          >
+            <p className="font-dm-sans text-[0.6rem] text-cream/60 uppercase tracking-widest">
+              Follow us
+            </p>
+            <p className="font-cormorant text-xl text-gold tracking-wide mt-0.5">
+              @lustro_homes
+            </p>
+          </div>
+          {/* Decorative element */}
+          <div className="absolute -top-4 -right-4 w-32 h-32 rounded-full border border-brown/15 pointer-events-none" />
+          <div className="absolute -top-8 -right-8 w-48 h-48 rounded-full border border-brown/8 pointer-events-none" />
         </div>
       </div>
     </section>
   );
 }
 
-function About() {
-  return (
-    <section id="about" className="bg-cream py-24 md:py-32 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
-        <div className="gsap-reveal-left order-2 md:order-1">
-          <span className="uppercase tracking-widest text-xs font-bold text-brown mb-2 block">Our Story</span>
-          <h2 className="font-display text-4xl md:text-6xl text-charcoal leading-tight">Lagos Luxury, <span className="italic text-brown-light">Redefined.</span></h2>
-          <div className="section-line"></div>
-          <div className="space-y-6 text-charcoal-light/80 mb-8 font-light leading-relaxed">
-            <p>Lustro Homes began with a singular vision: to create the most sought-after staycation experience on the Lagos Mainland. We fuse world-class interior design with localized hospitality, ensuring every guest feels an immediate sense of belonging and prestige.</p>
-            <p>We don't just host; we curate lifestyles. From our signature dining experiences to our meticulously engineered smart homes, we are setting a new benchmark for luxury and investment in Nigeria.</p>
-          </div>
-          <div className="flex gap-6 pt-6 border-t border-charcoal/10">
-            <div><span className="block font-display text-2xl text-brown">3</span><span className="text-xs uppercase tracking-wider text-charcoal/50">Properties</span></div>
-            <div><span className="block font-display text-2xl text-brown">8k+</span><span className="text-xs uppercase tracking-wider text-charcoal/50">Stays</span></div>
-            <div><span className="block font-display text-2xl text-brown">3yrs</span><span className="text-xs uppercase tracking-wider text-charcoal/50">Excellence</span></div>
-          </div>
-        </div>
-        <div className="gsap-reveal-right order-1 md:order-2 relative">
-          <div className="img-zoom rounded-2xl relative h-[500px] w-full shadow-2xl">
-            <Image src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1000&auto=format&fit=crop" alt="Lustro Homes Interior" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
-          </div>
-          <div className="absolute -bottom-6 -left-6 glass-light p-4 rounded-xl shadow-xl z-10 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-brown flex items-center justify-center text-white">
-              <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-            </div>
-            <div>
-              <p className="text-sm font-bold leading-tight">@lustro_homes</p>
-              <p className="text-xs text-charcoal/60">Follow our journey</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
+// ─────────────────────────────────────────────────
+// ROOMS & SUITES
+// ─────────────────────────────────────────────────
+interface Room {
+  name: string;
+  tier: string;
+  price: string;
+  features: string[];
+  image: string;
+  tag: string;
 }
 
 function Rooms() {
-  const rooms = [
+  const rooms: Room[] = [
     {
-      title: "The Studio", subtitle: "Classic Room", price: "₦50,000",
+      name: "The Studio",
+      tier: "Classic Room",
+      price: "₦50,000",
       features: ["King Bed", "Smart TV", "Fast WiFi", "AC", "En-suite"],
-      img: "https://images.unsplash.com/photo-1552566626-52f8b828add9?q=80&w=1000&auto=format&fit=crop"
+      image:
+        "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=85",
+      tag: "Most Popular",
     },
     {
-      title: "The Signature", subtitle: "Premium Suite", price: "₦85,000",
-      features: ["King Bed", "Glass Shower", "Netflix Ready", "Rattan Wardrobe", "Lounge Area"],
-      img: "https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=1000&auto=format&fit=crop"
+      name: "The Signature",
+      tier: "Premium Suite",
+      price: "₦85,000",
+      features: [
+        "King Bed",
+        "Glass Shower",
+        "Netflix Ready",
+        "Rattan Wardrobe",
+        "Lounge Area",
+      ],
+      image:
+        "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=85",
+      tag: "Best Value",
     },
     {
-      title: "The Penthouse", subtitle: "Top Floor Suite", price: "₦120,000",
-      features: ["King Bed", "Panoramic View", "Private Terrace", "Smart Automation", "Butler Ready"],
-      img: "https://images.unsplash.com/photo-1505693314120-0d443867891c?q=80&w=1000&auto=format&fit=crop"
-    }
+      name: "The Penthouse",
+      tier: "Top Floor Suite",
+      price: "₦120,000",
+      features: [
+        "King Bed",
+        "Panoramic View",
+        "Private Terrace",
+        "Smart Automation",
+        "Butler Ready",
+      ],
+      image:
+        "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=85",
+      tag: "Premium",
+    },
   ];
 
   return (
-    <section id="rooms" className="bg-cream-dark py-24 md:py-32">
+    <section id="rooms" className="bg-cream-dark py-24 md:py-36">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="flex flex-col items-center text-center mb-16 gsap-reveal">
-          <span className="uppercase tracking-widest text-xs font-bold text-brown mb-2">Our Spaces</span>
-          <h2 className="font-display text-4xl md:text-5xl text-charcoal">Rooms & Suites</h2>
-          <div className="section-line mx-auto"></div>
+        {/* Header */}
+        <div className="text-center mb-16 reveal-element">
+          <p className="font-dm-sans text-[0.65rem] text-brown uppercase tracking-[0.28em] mb-4">
+            Rooms & Suites
+          </p>
+          <h2 className="font-cormorant text-5xl md:text-6xl text-charcoal font-light">
+            Find Your Perfect Room
+          </h2>
+          <div className="section-line mx-auto mt-6" />
         </div>
 
+        {/* Room Cards */}
         <div className="grid md:grid-cols-3 gap-8">
           {rooms.map((room, i) => (
-            <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-sm card-lift gsap-reveal">
-              <div className="relative h-64 img-zoom">
-                <Image src={room.img} alt={room.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover" />
-                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-bold shadow-sm">
-                  {room.subtitle}
+            <div
+              key={room.name}
+              className="card-lift reveal-element bg-cream rounded-2xl overflow-hidden shadow-sm"
+              style={{ transitionDelay: `${i * 0.08}s` }}
+            >
+              {/* Image */}
+              <div className="img-zoom relative h-64">
+                <Image
+                  src={room.image}
+                  alt={room.name}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  className="object-cover"
+                />
+                <div className="absolute top-4 left-4">
+                  <span className="bg-brown text-cream font-dm-sans text-[0.6rem] px-3 py-1.5 rounded-full tracking-wider uppercase">
+                    {room.tag}
+                  </span>
                 </div>
               </div>
-              <div className="p-8">
-                <div className="flex justify-between items-end mb-4">
-                  <h3 className="font-display text-3xl">{room.title}</h3>
-                  <div className="text-right">
-                    <span className="block text-sm text-charcoal/50">per night</span>
-                    <span className="font-bold text-brown">{room.price}</span>
-                  </div>
+
+              {/* Body */}
+              <div className="p-7">
+                <p className="font-dm-sans text-[0.6rem] text-brown uppercase tracking-[0.22em] mb-1.5">
+                  {room.tier}
+                </p>
+                <h3 className="font-cormorant text-3xl text-charcoal font-light mb-1">
+                  {room.name}
+                </h3>
+                <div className="flex items-baseline gap-1.5 mb-5">
+                  <p className="font-cormorant text-2xl text-gold">
+                    {room.price}
+                  </p>
+                  <span className="font-dm-sans text-xs text-charcoal/40">
+                    / night
+                  </span>
                 </div>
-                <div className="flex flex-wrap gap-2 mb-8">
-                  {room.features.map((feat, j) => (
-                    <span key={j} className="bg-cream-dark text-charcoal text-[11px] uppercase tracking-wider px-2.5 py-1 rounded-md">{feat}</span>
+
+                {/* Feature pills */}
+                <div className="flex flex-wrap gap-2 mb-7">
+                  {room.features.map((f) => (
+                    <span
+                      key={f}
+                      className="font-dm-sans text-[0.65rem] bg-cream-dark text-charcoal/65 px-3 py-1.5 rounded-full"
+                    >
+                      {f}
+                    </span>
                   ))}
                 </div>
-                <a href={WHATSAPP_LINK} className="block w-full text-center border border-brown text-brown hover:bg-brown hover:text-white py-3 rounded-full transition-colors text-sm font-bold">
+
+                {/* CTA */}
+                <a
+                  href={`${WHATSAPP_URL}?text=I'd like to book ${room.name} at Lustro Homes`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-center bg-charcoal text-cream font-dm-sans text-sm py-3.5 rounded-full hover:bg-brown transition-colors"
+                >
                   Book This Room
                 </a>
               </div>
@@ -267,76 +571,218 @@ function Rooms() {
   );
 }
 
+// ─────────────────────────────────────────────────
+// DINING SECTION
+// ─────────────────────────────────────────────────
 function Dining() {
-  const images = [
-    { src: "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?q=80&w=800&auto=format&fit=crop", classes: "col-span-1 row-span-2 h-full" },
-    { src: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=800&auto=format&fit=crop", classes: "col-span-1 row-span-1 h-48" },
-    { src: "https://images.unsplash.com/photo-1414235077428-33898ed1e829?q=80&w=800&auto=format&fit=crop", classes: "col-span-1 row-span-1 h-48" },
-    { src: "https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=800&auto=format&fit=crop", classes: "col-span-1 row-span-2 h-full -mt-12" },
+  const diningImages = [
+    {
+      src: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=800&q=85",
+      alt: "Fine dining plated dish",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=800&q=85",
+      alt: "Aesthetic cocktails",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?auto=format&fit=crop&w=800&q=85",
+      alt: "Luxury restaurant interior",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?auto=format&fit=crop&w=800&q=85",
+      alt: "Elegant table setting",
+    },
   ];
 
   return (
-    <section id="dining" className="bg-charcoal text-white py-24 md:py-32 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
-        <div className="gsap-reveal-left">
-          <span className="uppercase tracking-widest text-xs font-bold text-gold mb-2 block">Signature Dining</span>
-          <h2 className="font-display text-4xl md:text-6xl leading-tight mb-2">Lustro Lagos <br/><span className="italic text-gold">Restaurant.</span></h2>
-          <div className="section-line bg-gradient-to-r from-gold to-yellow-600"></div>
-          <div className="space-y-6 text-white/70 font-light mb-10">
-            <p>Gastronomy elevated. Lustro Lagos is not just an amenity—it's a destination. Our in-house chefs craft continental and local masterpieces designed to tantalize your palate.</p>
-            <p>From perfectly brewed morning coffees to twilight cocktails, our dining space offers the perfect ambiance for romance, business, or unwinding after a long day in the city.</p>
-          </div>
+    <section id="dining" className="bg-charcoal py-24 md:py-36 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-14 md:gap-20 items-center">
+        {/* Left — Text */}
+        <div className="reveal-from-left order-2 md:order-1">
+          <p className="font-dm-sans text-[0.65rem] text-gold uppercase tracking-[0.28em] mb-4">
+            Signature Dining
+          </p>
+          <h2 className="font-cormorant text-5xl md:text-6xl text-cream font-light leading-[1.1] mb-6">
+            Lustro Lagos{" "}
+            <em className="italic text-gold">Restaurant</em>
+          </h2>
+          <div className="section-line mb-8" />
+          <p className="font-dm-sans text-cream/60 leading-[1.85] text-sm md:text-base mb-5">
+            Lustro Lagos is more than a restaurant — it's an immersive sensory
+            experience. We source the finest local ingredients and reimagine
+            them through a global culinary lens, delivering a menu that
+            surprises, delights, and lingers long after the last bite.
+          </p>
+          <p className="font-dm-sans text-cream/60 leading-[1.85] text-sm md:text-base mb-10">
+            Whether you're celebrating a milestone, hosting a business dinner,
+            or simply treating yourself — our team is dedicated to making every
+            meal an occasion. Open to both in-house guests and the public.
+          </p>
+
+          {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-4">
-            <a href={WHATSAPP_LINK} className="bg-gold hover:bg-yellow-600 text-charcoal px-8 py-3.5 rounded-full font-bold transition-colors text-center">Reserve A Table</a>
-            <a href="https://instagram.com/lustro_lagos" target="_blank" rel="noreferrer" className="border border-white/20 hover:bg-white/10 px-8 py-3.5 rounded-full transition-colors flex items-center justify-center gap-2">
-              <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            <a
+              href={`${WHATSAPP_URL}?text=I'd like to reserve a table at Lustro Lagos Restaurant`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-brown text-cream font-dm-sans text-sm px-8 py-3.5 rounded-full hover:bg-brown-light transition-colors text-center"
+            >
+              Reserve A Table
+            </a>
+            <a
+              href="https://instagram.com/lustro_lagos"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="border border-cream/20 text-cream font-dm-sans text-sm px-8 py-3.5 rounded-full hover:bg-cream/10 transition-colors text-center"
+            >
               @lustro_lagos
             </a>
           </div>
         </div>
-        <div className="gsap-reveal-right grid grid-cols-2 gap-4">
-          {images.map((img, i) => (
-            <div key={i} className={`img-zoom rounded-xl relative ${img.classes}`}>
-              <Image src={img.src} alt="Dining Experience" fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover" />
+
+        {/* Right — Asymmetric 2×2 Image Grid */}
+        {/* Layout: tall-left | short-right / short-left | tall-right */}
+        <div className="reveal-from-right order-1 md:order-2 grid grid-cols-2 gap-3">
+          {/* Left column */}
+          <div className="flex flex-col gap-3">
+            <div className="img-zoom relative rounded-xl overflow-hidden h-72">
+              <Image
+                src={diningImages[0].src}
+                alt={diningImages[0].alt}
+                fill
+                sizes="(max-width: 768px) 50vw, 25vw"
+                className="object-cover"
+              />
             </div>
-          ))}
+            <div className="img-zoom relative rounded-xl overflow-hidden h-44">
+              <Image
+                src={diningImages[2].src}
+                alt={diningImages[2].alt}
+                fill
+                sizes="(max-width: 768px) 50vw, 25vw"
+                className="object-cover"
+              />
+            </div>
+          </div>
+
+          {/* Right column */}
+          <div className="flex flex-col gap-3">
+            <div className="img-zoom relative rounded-xl overflow-hidden h-44">
+              <Image
+                src={diningImages[1].src}
+                alt={diningImages[1].alt}
+                fill
+                sizes="(max-width: 768px) 50vw, 25vw"
+                className="object-cover"
+              />
+            </div>
+            <div className="img-zoom relative rounded-xl overflow-hidden h-72">
+              <Image
+                src={diningImages[3].src}
+                alt={diningImages[3].alt}
+                fill
+                sizes="(max-width: 768px) 50vw, 25vw"
+                className="object-cover"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
+// ─────────────────────────────────────────────────
+// GALLERY
+// ─────────────────────────────────────────────────
 function Gallery() {
-  const images = [
-    "https://images.unsplash.com/photo-1560185016-df153df1869e?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1544148103-0773bf10d330?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1572555513568-1eb86a2f77c8?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=1200&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1414235077428-33898ed1e829?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1587985150436-1e626e2e8e97?q=80&w=800&auto=format&fit=crop",
+  const galleryImages = [
+    {
+      src: "https://images.unsplash.com/photo-1587985064135-0366536eab42?auto=format&fit=crop&w=800&q=85",
+      alt: "Luxury bedroom suite",
+      wide: true,
+    },
+    {
+      src: "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=85",
+      alt: "Premium hotel room",
+      wide: false,
+    },
+    {
+      src: "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=800&q=85",
+      alt: "Designer bedroom",
+      wide: false,
+    },
+    {
+      src: "https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=800&q=85",
+      alt: "Living area",
+      wide: false,
+    },
+    {
+      src: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=85",
+      alt: "Architectural exterior",
+      wide: true,
+    },
+    {
+      src: "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=800&q=85",
+      alt: "Hotel exterior at night",
+      wide: false,
+    },
+    {
+      src: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=85",
+      alt: "Restaurant dining",
+      wide: false,
+    },
+    {
+      src: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=800&q=85",
+      alt: "Signature cuisine",
+      wide: false,
+    },
   ];
 
   return (
-    <section id="gallery" className="bg-cream py-24 md:py-32">
+    <section id="gallery" className="bg-cream py-24 md:py-36">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="flex flex-col items-center text-center mb-16 gsap-reveal">
-          <span className="uppercase tracking-widest text-xs font-bold text-brown mb-2">Aesthetic Appeal</span>
-          <h2 className="font-display text-4xl md:text-5xl text-charcoal">Gallery</h2>
-          <div className="section-line mx-auto"></div>
+        {/* Header */}
+        <div className="text-center mb-14 reveal-element">
+          <p className="font-dm-sans text-[0.65rem] text-brown uppercase tracking-[0.28em] mb-4">
+            Gallery
+          </p>
+          <h2 className="font-cormorant text-5xl md:text-6xl text-charcoal font-light">
+            Life at Lustro
+          </h2>
+          <div className="section-line mx-auto mt-6" />
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {images.map((src, i) => (
-            <div key={i} className={`img-zoom rounded-xl relative gsap-reveal ${i === 0 || i === 4 ? "md:col-span-2 h-72" : "h-52"}`}>
-              <Image src={src} alt="Lustro Gallery" fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover" />
+        {/* Masonry Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {galleryImages.map((img) => (
+            <div
+              key={img.src}
+              className={`gallery-item img-zoom relative rounded-xl overflow-hidden ${
+                img.wide ? "md:col-span-2 h-72" : "h-52"
+              }`}
+            >
+              <Image
+                src={img.src}
+                alt={img.alt}
+                fill
+                sizes="(max-width: 768px) 50vw, 25vw"
+                className="object-cover"
+              />
             </div>
           ))}
         </div>
-        <div className="mt-12 text-center gsap-reveal">
-          <a href="https://instagram.com/lustro_homes" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-charcoal hover:text-brown transition-colors font-medium border-b border-charcoal/20 pb-1 hover:border-brown">
-            More on Instagram <span>→</span>
+
+        {/* Instagram link */}
+        <div className="text-center mt-12 reveal-element">
+          <a
+            href="https://instagram.com/lustro_homes"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 font-dm-sans text-sm text-brown hover:text-brown-light transition-colors"
+          >
+            <span>Follow @lustro_homes for more moments</span>
+            <span className="text-base">→</span>
           </a>
         </div>
       </div>
@@ -344,62 +790,148 @@ function Gallery() {
   );
 }
 
+// ─────────────────────────────────────────────────
+// INVESTMENT JOURNEY
+// ─────────────────────────────────────────────────
 function Investment() {
   const milestones = [
     {
-      title: "LUSTRO 1.0 — THE BLUEPRINT", subtitle: "Where Yaba First Met Luxury",
-      story: "Started with a simple goal — create the most sought-after shortlet in Yaba. Built an experience with signature in-house dining and world-class aesthetics.",
-      stats: ["15,000+ Guests Hosted", "₦2M+ Monthly Revenue", "₦1.4M/mo Investor Profit"],
-      status: "SOLD OUT & ACTIVE", color: "text-red-500"
+      title: "LUSTRO 1.0 — THE BLUEPRINT",
+      subtitle: "Where Yaba First Met Luxury",
+      story:
+        "Started with a simple goal — create the most sought-after shortlet in Yaba. Built an experience with signature in-house dining and world-class aesthetics that set a new benchmark for Lagos staycations.",
+      stats: [
+        { value: "15,000+", label: "Guests Hosted" },
+        { value: "₦2M+", label: "Monthly Revenue" },
+        { value: "₦1.4M/mo", label: "Investor Profit" },
+      ],
+      status: "SOLD OUT & ACTIVE",
+      quote: '"The proof is in the staying."',
     },
     {
-      title: "LUSTRO 2.0 — THE YANKEE EDITION", subtitle: "Luxury Redefined on the Mainland",
-      story: "Brought resort-quality living to Lagos Mainland. Yankee by Lustro — launched, sold out, delivering. No delays. No excuses. Just results.",
-      stats: ["Sold Out Launch Status", "Monthly Returns", "100% Satisfaction"],
-      status: "SOLD OUT & DELIVERING", color: "text-red-500"
+      title: "LUSTRO 2.0 — THE YANKEE EDITION",
+      subtitle: "Luxury Redefined on the Mainland",
+      story:
+        "Brought resort-quality living to Lagos Mainland. Yankee by Lustro — launched, sold out, delivering. No delays. No excuses. Just consistent, verifiable results.",
+      stats: [
+        { value: "Sold Out", label: "Launch Status" },
+        { value: "₦1.4M+", label: "Monthly Returns" },
+        { value: "100%", label: "Satisfaction" },
+      ],
+      status: "SOLD OUT & DELIVERING",
+      quote: '"Our standard is now everyone else\'s benchmark."',
     },
     {
-      title: "LUSTRO 3.0 — THE SMART ECOSYSTEM", subtitle: "The Ultimate Lifestyle Sanctuary",
-      story: "Most ambitious project yet. Fully automated smart apartments. Yaba's first in-house spa. Professional gym. Built, delivered, earning.",
-      stats: ["Full Auto Smart Features", "Yaba's First In-House Spa", "₦1.4M/mo Investor ROI"],
-      status: "COMPLETED & EARNING", color: "text-red-500"
-    }
+      title: "LUSTRO 3.0 — THE SMART ECOSYSTEM",
+      subtitle: "The Ultimate Lifestyle Sanctuary",
+      story:
+        "Our most ambitious project yet. Fully automated smart apartments. Yaba's first in-house spa. Professional gym. Built, delivered, and actively earning for investors.",
+      stats: [
+        { value: "Full Auto", label: "Smart Features" },
+        { value: "Yaba's First", label: "In-House Spa" },
+        { value: "₦1.4M/mo", label: "Investor ROI" },
+      ],
+      status: "COMPLETED & EARNING",
+      quote: '"We don\'t build houses. We engineer the future."',
+    },
   ];
 
   return (
-    <section id="invest" className="bg-charcoal-light py-24 md:py-32 text-white">
+    <section id="invest" className="bg-charcoal-light py-24 md:py-36">
       <div className="max-w-4xl mx-auto px-6">
-        <div className="mb-20 gsap-reveal">
-          <h2 className="font-display text-4xl md:text-5xl text-gold mb-4">The Lustro Journey — From Vision to Value</h2>
-          <p className="text-xl text-white/70 font-light">3 Iconic Projects. 100% Delivery. A New Era.</p>
+        {/* Header */}
+        <div className="text-center mb-20 reveal-element">
+          <p className="font-dm-sans text-[0.65rem] text-gold uppercase tracking-[0.28em] mb-4">
+            Investment Journey
+          </p>
+          <h2 className="font-cormorant text-4xl md:text-5xl text-cream font-light leading-[1.15] mb-4">
+            The Lustro Journey —{" "}
+            <em className="italic text-gold">From Vision to Value</em>
+          </h2>
+          <p className="font-dm-sans text-cream/45 text-sm tracking-wide">
+            3 Iconic Projects. 100% Delivery. A New Era.
+          </p>
         </div>
 
-        <div className="ml-2 md:ml-6 border-l-2 border-white/10 pl-6 md:pl-10 relative">
-          {milestones.map((ms, i) => (
-            <div key={i} className="milestone-card mb-16 gsap-reveal">
-              <div className="status-badge mb-4">
-                {ms.status} <span className={`pulse-dot bg-red-500`}></span>
+        {/* Timeline */}
+        <div className="space-y-14">
+          {milestones.map((m, i) => (
+            <div key={m.title} className="milestone-card reveal-element">
+              {/* Status */}
+              <div className="mb-4">
+                <span className="status-badge">
+                  <span className="pulse-dot" />
+                  {m.status}
+                </span>
               </div>
-              <h3 className="font-display text-2xl md:text-3xl mb-1">{ms.title}</h3>
-              <h4 className="text-gold italic mb-4">{ms.subtitle}</h4>
-              <p className="text-white/60 font-light leading-relaxed mb-6 max-w-2xl">{ms.story}</p>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {ms.stats.map((stat, j) => (
-                  <div key={j} className="bg-white/5 rounded-lg p-3 text-sm border border-white/5">{stat}</div>
+
+              <h3 className="font-cormorant text-2xl md:text-3xl text-cream font-light mb-1 tracking-wide">
+                {m.title}
+              </h3>
+              <p className="font-dm-sans text-sm text-gold mb-4 tracking-wide">
+                {m.subtitle}
+              </p>
+              <p className="font-dm-sans text-cream/55 text-sm leading-[1.85] mb-7">
+                {m.story}
+              </p>
+
+              {/* Stats grid */}
+              <div className="grid grid-cols-3 gap-3 mb-7">
+                {m.stats.map((s) => (
+                  <div
+                    key={s.label}
+                    className="bg-charcoal/60 rounded-xl p-4 border border-white/5"
+                  >
+                    <p className="font-cormorant text-2xl text-gold font-light">
+                      {s.value}
+                    </p>
+                    <p className="font-dm-sans text-[0.6rem] text-cream/40 uppercase tracking-wider mt-1">
+                      {s.label}
+                    </p>
+                  </div>
                 ))}
               </div>
+
+              <p className="font-cormorant text-lg text-cream/40 italic">
+                {m.quote}
+              </p>
             </div>
           ))}
         </div>
 
-        <div className="glass mt-16 p-8 md:p-12 text-center rounded-2xl gsap-reveal">
-          <h3 className="font-display text-4xl text-gold mb-4">Lustro 4.0 Is Coming.</h3>
-          <p className="text-white/80 max-w-xl mx-auto mb-8 leading-relaxed font-light">
-            People who moved first on 1.0, 2.0, and 3.0 are earning every month. The next evolution of luxury and smart investment is on the horizon. Don't miss out.
+        {/* Bottom CTA Card */}
+        <div
+          className="glass mt-20 rounded-2xl p-10 md:p-14 text-center reveal-element"
+          style={{ isolation: "isolate" }}
+        >
+          <p className="font-dm-sans text-[0.65rem] text-gold uppercase tracking-[0.28em] mb-4">
+            Coming Soon
+          </p>
+          <h3 className="font-cormorant text-4xl md:text-5xl text-cream font-light mb-5">
+            Lustro 4.0 Is Coming.
+          </h3>
+          <p className="font-dm-sans text-cream/60 text-sm leading-[1.85] max-w-md mx-auto mb-9">
+            People who moved first on 1.0, 2.0, and 3.0 are earning every
+            single month. The next chapter is being written. Don't be last in
+            the room.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href={WHATSAPP_LINK} className="bg-gold hover:bg-yellow-600 text-charcoal px-8 py-3.5 rounded-full font-bold transition-colors">Get Early Access</a>
-            <a href="https://instagram.com/lustro_homes" target="_blank" rel="noreferrer" className="border border-white/20 hover:bg-white/10 px-8 py-3.5 rounded-full transition-colors font-medium">Stay Connected</a>
+            <a
+              href={`${WHATSAPP_URL}?text=I'm interested in Lustro 4.0 early access`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-brown text-cream font-dm-sans text-sm px-9 py-3.5 rounded-full hover:bg-brown-light transition-colors"
+            >
+              Get Early Access
+            </a>
+            <a
+              href="https://instagram.com/lustro_homes"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="border border-cream/20 text-cream font-dm-sans text-sm px-9 py-3.5 rounded-full hover:bg-cream/10 transition-colors"
+            >
+              Stay Connected
+            </a>
           </div>
         </div>
       </div>
@@ -407,28 +939,75 @@ function Investment() {
   );
 }
 
+// ─────────────────────────────────────────────────
+// TESTIMONIALS
+// ─────────────────────────────────────────────────
 function Testimonials() {
   const reviews = [
-    { name: "Adaeze O.", loc: "Lekki Lagos", text: "From the moment we arrived, everything was perfect. The room aesthetics, the service, the food at Lustro Lagos — I have never experienced anything like it in Nigeria." },
-    { name: "Tunde M.", loc: "Ikeja Lagos", text: "Yankee by Lustro is a different world entirely. My girls and I booked for a staycation and did not want to leave. Every corner is Instagram-worthy." },
-    { name: "Chisom E.", loc: "Abuja", text: "I was visiting Lagos for a conference and chose Lustro on a recommendation. Best decision I made. The room felt like an international hotel." }
+    {
+      name: "Adaeze O.",
+      location: "Lekki, Lagos",
+      stars: 5,
+      text: "From the moment we arrived, everything was perfect. The room aesthetics, the service, the food at Lustro Lagos — I have never experienced anything like it in Nigeria.",
+    },
+    {
+      name: "Tunde M.",
+      location: "Ikeja, Lagos",
+      stars: 5,
+      text: "Yankee by Lustro is a different world entirely. My girls and I booked for a staycation and did not want to leave. Every corner is Instagram-worthy.",
+    },
+    {
+      name: "Chisom E.",
+      location: "Abuja",
+      stars: 5,
+      text: "I was visiting Lagos for a conference and chose Lustro on a recommendation. Best decision I made. The room felt like an international hotel.",
+    },
   ];
 
   return (
-    <section className="bg-cream-dark py-24 md:py-32">
+    <section className="bg-cream-dark py-24 md:py-36">
       <div className="max-w-7xl mx-auto px-6">
+        {/* Header */}
+        <div className="text-center mb-16 reveal-element">
+          <p className="font-dm-sans text-[0.65rem] text-brown uppercase tracking-[0.28em] mb-4">
+            Guest Reviews
+          </p>
+          <h2 className="font-cormorant text-5xl md:text-6xl text-charcoal font-light">
+            What Our Guests Say
+          </h2>
+          <div className="section-line mx-auto mt-6" />
+        </div>
+
+        {/* Cards */}
         <div className="grid md:grid-cols-3 gap-8">
-          {reviews.map((rev, i) => (
-            <div key={i} className="bg-white p-8 rounded-2xl shadow-sm card-lift gsap-reveal">
-              <div className="flex text-gold mb-6">
-                {[1,2,3,4,5].map(s => (
-                  <svg key={s} width="20" height="20" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+          {reviews.map((r, i) => (
+            <div
+              key={r.name}
+              className="card-lift reveal-element bg-cream rounded-2xl p-8 shadow-sm"
+              style={{ transitionDelay: `${i * 0.1}s` }}
+            >
+              {/* Stars */}
+              <div className="flex gap-0.5 mb-6">
+                {Array.from({ length: r.stars }).map((_, si) => (
+                  <span key={si} className="text-gold text-xl leading-none">
+                    ★
+                  </span>
                 ))}
               </div>
-              <p className="font-display italic text-xl text-charcoal/80 mb-6 leading-relaxed">"{rev.text}"</p>
-              <div>
-                <p className="font-bold text-charcoal">{rev.name}</p>
-                <p className="text-xs text-charcoal/50 uppercase tracking-widest">{rev.loc}</p>
+
+              {/* Quote */}
+              <p className="font-cormorant text-xl text-charcoal italic leading-[1.7] mb-7">
+                &ldquo;{r.text}&rdquo;
+              </p>
+
+              {/* Attribution */}
+              <div className="border-t border-charcoal/8 pt-5">
+                <p className="font-dm-sans text-sm font-medium text-charcoal">
+                  {r.name}
+                </p>
+                <p className="font-dm-sans text-xs text-charcoal/45 mt-0.5">
+                  {r.location}
+                </p>
               </div>
             </div>
           ))}
@@ -438,154 +1017,404 @@ function Testimonials() {
   );
 }
 
+// ─────────────────────────────────────────────────
+// CONTACT SECTION
+// ─────────────────────────────────────────────────
 function Contact() {
+  const contactCards = [
+    {
+      icon: "📱",
+      title: "WhatsApp Us",
+      detail: "Chat with us directly",
+      href: `${WHATSAPP_URL}?text=Hello, I'd like to make an enquiry`,
+    },
+    {
+      icon: "📍",
+      title: "Our Location",
+      detail: "37 Ibukun Olu St, Akoka, Yaba",
+      href: "https://maps.google.com/?q=37+Ibukun+Olu+Street+Akoka+Yaba+Lagos+Nigeria",
+    },
+    {
+      icon: "📸",
+      title: "Instagram",
+      detail: "@lustro_homes",
+      href: "https://instagram.com/lustro_homes",
+    },
+  ];
+
   return (
-    <section id="contact" className="relative py-32 bg-charcoal flex items-center justify-center overflow-hidden">
-      <div className="absolute inset-0 z-1" style={{ transform: 'translateZ(0)' }}>
-        <Image src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=2000&auto=format&fit=crop" alt="Lustro Homes Contact" fill sizes="100vw" className="object-cover" />
+    <section id="contact" className="relative py-28 md:py-40 overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=1920&q=85"
+          alt="Lustro Homes contact section"
+          fill
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-charcoal/82" />
       </div>
-      <div className="absolute inset-0 z-10 bg-charcoal/80" />
-      
-      <div className="relative z-20 max-w-5xl mx-auto px-6 text-center text-white gsap-reveal">
-        <h2 className="font-display text-5xl md:text-6xl mb-12">Ready to Experience <span className="italic text-gold">Lustro?</span></h2>
-        
-        <div className="grid md:grid-cols-3 gap-6 mb-12 text-left">
-          <div className="glass p-6 rounded-2xl flex flex-col gap-2">
-            <span className="text-2xl mb-2">📱</span>
-            <span className="text-xs uppercase tracking-widest text-white/50">WhatsApp Us</span>
-            <a href={WHATSAPP_LINK} className="font-medium hover:text-gold transition-colors">Chat for Booking</a>
-          </div>
-          <div className="glass p-6 rounded-2xl flex flex-col gap-2">
-            <span className="text-2xl mb-2">📍</span>
-            <span className="text-xs uppercase tracking-widest text-white/50">Location</span>
-            <span className="font-medium">37 Ibukun Olu St, Akoka, Yaba</span>
-          </div>
-          <div className="glass p-6 rounded-2xl flex flex-col gap-2">
-            <span className="text-2xl mb-2">📸</span>
-            <span className="text-xs uppercase tracking-widest text-white/50">Instagram</span>
-            <a href="https://instagram.com/lustro_homes" target="_blank" rel="noreferrer" className="font-medium hover:text-gold transition-colors">@lustro_homes</a>
-          </div>
+
+      {/* Content */}
+      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
+        <div className="reveal-element mb-16">
+          <p className="font-dm-sans text-[0.65rem] text-gold uppercase tracking-[0.28em] mb-5">
+            Get In Touch
+          </p>
+          <h2 className="font-cormorant text-5xl md:text-7xl text-cream font-light leading-[1.1]">
+            Ready to Experience{" "}
+            <em className="italic text-gold">Lustro?</em>
+          </h2>
         </div>
 
-        <a href={WHATSAPP_LINK} className="inline-block bg-brown hover:bg-brown-light text-white px-10 py-5 rounded-full font-bold text-lg transition-colors shadow-xl">
-          Book Your Stay Now
-        </a>
+        {/* Contact cards */}
+        <div className="grid md:grid-cols-3 gap-5 mb-14">
+          {contactCards.map((card, i) => (
+            <a
+              key={card.title}
+              href={card.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="reveal-element glass rounded-2xl p-8 text-center hover:scale-[1.02] transition-transform block"
+              style={{
+                isolation: "isolate",
+                transitionDelay: `${i * 0.08}s`,
+              }}
+            >
+              <span className="text-4xl mb-4 block">{card.icon}</span>
+              <h3 className="font-cormorant text-2xl text-cream mb-2">
+                {card.title}
+              </h3>
+              <p className="font-dm-sans text-sm text-cream/55">
+                {card.detail}
+              </p>
+            </a>
+          ))}
+        </div>
+
+        {/* Main CTA */}
+        <div className="reveal-element">
+          <a
+            href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block bg-brown text-cream font-dm-sans px-14 py-4 rounded-full text-sm hover:bg-brown-light transition-colors shadow-lg"
+          >
+            Book Your Stay Now
+          </a>
+        </div>
       </div>
     </section>
   );
 }
 
+// ─────────────────────────────────────────────────
+// FOOTER
+// ─────────────────────────────────────────────────
 function Footer() {
+  const navLinks = [
+    { label: "About", href: "#about" },
+    { label: "Rooms", href: "#rooms" },
+    { label: "Dining", href: "#dining" },
+    { label: "Gallery", href: "#gallery" },
+    { label: "Invest", href: "#invest" },
+    { label: "Contact", href: "#contact" },
+  ];
+
+  const handleFooterNav = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
+    e.preventDefault();
+    document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
-    <footer className="bg-charcoal text-white pt-20 pb-8 border-t border-white/5">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid md:grid-cols-3 gap-12 mb-16">
-          <div>
-            <div className="font-display text-3xl font-bold tracking-wider mb-4 text-white">LUSTRO</div>
-            <p className="text-gold italic mb-4 font-display text-xl">Staycation in Lagos | Signature Dining | Investment</p>
-            <p className="text-white/50 text-sm font-light leading-relaxed max-w-sm">
-              Redefining luxury hospitality and real estate investment on the Lagos Mainland. Built for those who demand excellence.
-            </p>
+    <footer className="bg-charcoal border-t border-white/5">
+      <div className="max-w-7xl mx-auto px-6 py-16 grid md:grid-cols-3 gap-12 md:gap-16">
+        {/* Col 1 — Brand */}
+        <div>
+          <div className="flex items-center gap-3 mb-5">
+            <div className="w-9 h-9 rounded-full bg-brown flex items-center justify-center">
+              <span className="font-cormorant text-cream font-bold text-base">
+                L
+              </span>
+            </div>
+            <span className="font-cormorant text-cream font-semibold text-xl tracking-wide">
+              Lustro Homes
+            </span>
           </div>
-          <div className="flex flex-col gap-3">
-            <h4 className="text-xs uppercase tracking-widest text-white/50 mb-4">Navigation</h4>
-            {["About", "Rooms", "Dining", "Gallery", "Invest", "Contact"].map(link => (
-              <a key={link} href={`#${link.toLowerCase()}`} className="text-white/80 hover:text-gold transition-colors w-fit">{link}</a>
+          <p className="font-dm-sans text-[0.65rem] text-gold uppercase tracking-wider mb-5">
+            Staycation in Lagos · Signature Dining · Investment
+          </p>
+          <p className="font-dm-sans text-cream/45 text-sm leading-[1.8]">
+            Lagos' most sought-after shortlet experience and signature dining
+            destination, nestled in the heart of Yaba.
+          </p>
+        </div>
+
+        {/* Col 2 — Navigation */}
+        <div>
+          <h4 className="font-dm-sans text-[0.6rem] text-cream/25 uppercase tracking-[0.25em] mb-7">
+            Explore
+          </h4>
+          <div className="space-y-3.5">
+            {navLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                onClick={(e) => handleFooterNav(e, link.href)}
+                className="block font-dm-sans text-sm text-cream/50 hover:text-cream transition-colors"
+              >
+                {link.label}
+              </a>
             ))}
           </div>
-          <div className="flex flex-col gap-3">
-            <h4 className="text-xs uppercase tracking-widest text-white/50 mb-4">Social</h4>
-            <a href="https://instagram.com/lustro_homes" target="_blank" rel="noreferrer" className="text-white/80 hover:text-gold transition-colors w-fit">Instagram @lustro_homes</a>
-            <a href="https://instagram.com/lustro_lagos" target="_blank" rel="noreferrer" className="text-white/80 hover:text-gold transition-colors w-fit">Instagram @lustro_lagos</a>
-            <a href={WHATSAPP_LINK} className="text-white/80 hover:text-gold transition-colors w-fit">WhatsApp Booking</a>
+        </div>
+
+        {/* Col 3 — Social */}
+        <div>
+          <h4 className="font-dm-sans text-[0.6rem] text-cream/25 uppercase tracking-[0.25em] mb-7">
+            Connect
+          </h4>
+          <div className="space-y-4">
+            <a
+              href="https://instagram.com/lustro_homes"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 group"
+            >
+              <span className="font-dm-sans text-sm text-cream/50 group-hover:text-cream transition-colors">
+                Instagram — @lustro_homes
+              </span>
+            </a>
+            <a
+              href="https://instagram.com/lustro_lagos"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 group"
+            >
+              <span className="font-dm-sans text-sm text-cream/50 group-hover:text-cream transition-colors">
+                Instagram — @lustro_lagos
+              </span>
+            </a>
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 group"
+            >
+              <span className="font-dm-sans text-sm text-cream/50 group-hover:text-cream transition-colors">
+                WhatsApp — Booking
+              </span>
+            </a>
+            <div className="pt-4">
+              <p className="font-dm-sans text-xs text-cream/30 leading-relaxed">
+                37 Ibukun Olu Street,
+                <br />
+                Akoka, Yaba, Lagos, Nigeria
+              </p>
+            </div>
           </div>
         </div>
-        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/40">
-          <p>&copy; {new Date().getFullYear()} Lustro Homes. All rights reserved.</p>
-          <p>37 Ibukun Olu Street, Akoka, Yaba, Lagos, Nigeria.</p>
+      </div>
+
+      {/* Bottom bar */}
+      <div className="border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col md:flex-row justify-between items-center gap-3">
+          <p className="font-dm-sans text-xs text-cream/25">
+            © {new Date().getFullYear()} Lustro Homes. All rights reserved.
+          </p>
+          <p className="font-dm-sans text-xs text-cream/25">
+            Crafted with precision · Yaba, Lagos, Nigeria
+          </p>
         </div>
       </div>
     </footer>
   );
 }
 
-export default function Page() {
+// ─────────────────────────────────────────────────
+// MAIN HOME COMPONENT
+// ─────────────────────────────────────────────────
+export default function Home() {
+  const [navScrolled, setNavScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Scroll detection
   useEffect(() => {
-    let lenisInstance: any;
+    const onScroll = () => setNavScrolled(window.scrollY > 80);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-    const initAnimationSystems = async () => {
+  // Body scroll lock when mobile menu open
+  useEffect(() => {
+    document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileMenuOpen]);
+
+  // GSAP ScrollTrigger animations
+  useEffect(() => {
+    let gsapCtx: { revert: () => void } | null = null;
+
+    const initGSAP = async () => {
       try {
-        const { default: Lenis } = await import("lenis");
-        const gsapPkg = await import("gsap");
-        const ScrollTriggerPkg = await import("gsap/ScrollTrigger");
-
-        const gsap = gsapPkg.default || gsapPkg;
-        const ScrollTrigger = ScrollTriggerPkg.default || ScrollTriggerPkg;
-
+        const { gsap } = await import("gsap");
+        const { ScrollTrigger } = await import("gsap/ScrollTrigger");
         gsap.registerPlugin(ScrollTrigger);
 
-        lenisInstance = new Lenis();
+        gsapCtx = gsap.context(() => {
+          // Standard reveal elements
+          gsap.utils.toArray<Element>(".reveal-element").forEach((el) => {
+            gsap.fromTo(
+              el,
+              { opacity: 0, y: 50 },
+              {
+                opacity: 1,
+                y: 0,
+                duration: 0.9,
+                ease: "power3.out",
+                scrollTrigger: {
+                  trigger: el,
+                  start: "top 87%",
+                  once: true,
+                },
+              }
+            );
+          });
 
-        gsap.ticker.add((time) => {
-          lenisInstance.raf(time * 1000);
+          // Reveal from left (dining text)
+          gsap.utils.toArray<Element>(".reveal-from-left").forEach((el) => {
+            gsap.fromTo(
+              el,
+              { opacity: 0, x: -60 },
+              {
+                opacity: 1,
+                x: 0,
+                duration: 0.9,
+                ease: "power3.out",
+                scrollTrigger: {
+                  trigger: el,
+                  start: "top 87%",
+                  once: true,
+                },
+              }
+            );
+          });
+
+          // Reveal from right (dining image grid)
+          gsap.utils.toArray<Element>(".reveal-from-right").forEach((el) => {
+            gsap.fromTo(
+              el,
+              { opacity: 0, x: 60 },
+              {
+                opacity: 1,
+                x: 0,
+                duration: 0.9,
+                ease: "power3.out",
+                scrollTrigger: {
+                  trigger: el,
+                  start: "top 87%",
+                  once: true,
+                },
+              }
+            );
+          });
+
+          // Gallery stagger
+          const galleryItems = gsap.utils.toArray<Element>(".gallery-item");
+          if (galleryItems.length) {
+            gsap.fromTo(
+              galleryItems,
+              { opacity: 0, y: 32 },
+              {
+                opacity: 1,
+                y: 0,
+                stagger: 0.08,
+                duration: 0.7,
+                ease: "power3.out",
+                scrollTrigger: {
+                  trigger: galleryItems[0],
+                  start: "top 90%",
+                  once: true,
+                },
+              }
+            );
+          }
         });
-        gsap.ticker.lagSmoothing(0);
-
-        // Standard up-reveal
-        const reveals = document.querySelectorAll(".gsap-reveal");
-        reveals.forEach((el) => {
-          gsap.fromTo(el, 
-            { opacity: 0, y: 50 },
-            { 
-              scrollTrigger: { trigger: el, start: "top 85%", once: true },
-              opacity: 1, y: 0, duration: 0.9, ease: "power3.out", stagger: 0.15 
-            }
-          );
+      } catch (err) {
+        console.warn("GSAP initialization failed — showing content without animations:", err);
+        // Fallback: make all animated elements visible
+        document.querySelectorAll(
+          ".reveal-element, .reveal-from-left, .reveal-from-right, .gallery-item"
+        ).forEach((el) => {
+          (el as HTMLElement).style.opacity = "1";
+          (el as HTMLElement).style.transform = "none";
         });
-
-        // Left split reveal
-        const leftReveals = document.querySelectorAll(".gsap-reveal-left");
-        leftReveals.forEach((el) => {
-          gsap.fromTo(el, 
-            { opacity: 0, x: -60 },
-            { 
-              scrollTrigger: { trigger: el, start: "top 85%", once: true },
-              opacity: 1, x: 0, duration: 0.9, ease: "power3.out"
-            }
-          );
-        });
-
-        // Right split reveal
-        const rightReveals = document.querySelectorAll(".gsap-reveal-right");
-        rightReveals.forEach((el) => {
-          gsap.fromTo(el, 
-            { opacity: 0, x: 60 },
-            { 
-              scrollTrigger: { trigger: el, start: "top 85%", once: true },
-              opacity: 1, x: 0, duration: 0.9, ease: "power3.out"
-            }
-          );
-        });
-
-      } catch (error) {
-        console.error("Animation system failed to initialize gracefully:", error);
       }
     };
 
-    initAnimationSystems();
+    initGSAP();
 
     return () => {
-      if (lenisInstance) {
-        lenisInstance.destroy();
+      gsapCtx?.revert();
+    };
+  }, []);
+
+  // Lenis smooth scroll + GSAP ticker
+  useEffect(() => {
+    let cleanup: (() => void) | undefined;
+
+    const initLenis = async () => {
+      try {
+        const LenisModule = await import("lenis");
+        const Lenis = LenisModule.default;
+        const { gsap } = await import("gsap");
+
+        const lenis = new Lenis({
+          lerp: 0.1,
+          smoothWheel: true,
+        });
+
+        const tickerFn = (time: number) => {
+          lenis.raf(time * 1000);
+        };
+
+        gsap.ticker.add(tickerFn);
+        gsap.ticker.lagSmoothing(0);
+
+        cleanup = () => {
+          gsap.ticker.remove(tickerFn);
+          lenis.destroy();
+        };
+      } catch (err) {
+        console.warn(
+          "Lenis smooth scroll unavailable — using native scroll:",
+          err
+        );
       }
+    };
+
+    initLenis();
+
+    return () => {
+      cleanup?.();
     };
   }, []);
 
   return (
-    <main className="relative bg-cream min-h-screen">
-      <Navbar />
+    <main className="overflow-x-hidden">
+      <Navbar
+        scrolled={navScrolled}
+        menuOpen={mobileMenuOpen}
+        setMenuOpen={setMobileMenuOpen}
+      />
       <Hero />
-      <Stats />
+      <StatsBar />
       <About />
       <Rooms />
       <Dining />
