@@ -69,11 +69,15 @@ function Navbar({
             }}
             className="flex items-center gap-3 group"
           >
-            <div className="w-9 h-9 rounded-full bg-brown flex items-center justify-center shadow-md group-hover:bg-brown-light transition-colors">
-              <span className="font-cormorant text-cream font-bold text-base leading-none">
-                L
-              </span>
-            </div>
+            <div className="relative w-10 h-10">
+  <Image
+    src="https://res.cloudinary.com/dx3k7hbnc/image/upload/v1777538012/1000428932-Picsart-BackgroundRemover.jpg_cyffyt.png"
+    alt="Lustro Homes Logo"
+    fill
+    sizes="40px"
+    className="object-contain"
+  />
+</div>
             <span
               className={`font-cormorant font-semibold text-xl tracking-wide transition-colors ${
                 scrolled ? "text-charcoal" : "text-cream"
