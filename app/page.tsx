@@ -71,7 +71,7 @@ function Navbar({
           >
             <div className="relative w-16 h-16">
               <Image
-                src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777538012/1000428932-Picsart-BackgroundRemover.jpg_cyffyt.png"
+                src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777567002/lustrologo_wfervy.png"
                 alt="Lustro Homes Logo"
                 fill
                 sizes="64px"
@@ -1141,7 +1141,7 @@ function Footer() {
           <div className="flex items-center gap-3 mb-5">
             <div className="relative w-16 h-16">
               <Image
-                src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777538012/1000428932-Picsart-BackgroundRemover.jpg_cyffyt.png"
+                src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777567002/lustrologo_wfervy.png"
                 alt="Lustro Homes Logo"
                 fill
                 sizes="64px"
