@@ -69,15 +69,16 @@ function Navbar({
             }}
             className="flex items-center gap-3 group"
           >
-            <div className="relative w-16 h-16">
-              <Image
-                src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777567002/lustrologo_wfervy.png"
-                alt="Lustro Homes Logo"
-                fill
-                sizes="64px"
-                className="object-contain"
-              />
-            </div>
+          <div className="relative w-16 h-16">
+  <Image
+    src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777567002/lustrologo_wfervy.png"
+    alt="Lustro Homes Logo"
+    fill
+    sizes="192px"
+    quality={100}
+    className="object-contain"
+  />
+</div>
             <span
               className={`font-cormorant font-semibold text-xl tracking-wide transition-colors ${
                 scrolled ? "text-charcoal" : "text-cream"
