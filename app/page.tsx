@@ -69,15 +69,15 @@ function Navbar({
             }}
             className="flex items-center gap-3 group"
           >
-            <div className="relative w-10 h-10">
-  <Image
-    src="https://res.cloudinary.com/dx3k7hbnc/image/upload/v1777538012/1000428932-Picsart-BackgroundRemover.jpg_cyffyt.png"
-    alt="Lustro Homes Logo"
-    fill
-    sizes="40px"
-    className="object-contain"
-  />
-</div>
+            <div className="relative w-16 h-16">
+              <Image
+                src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777538012/1000428932-Picsart-BackgroundRemover.jpg_cyffyt.png"
+                alt="Lustro Homes Logo"
+                fill
+                sizes="64px"
+                className="object-contain"
+              />
+            </div>
             <span
               className={`font-cormorant font-semibold text-xl tracking-wide transition-colors ${
                 scrolled ? "text-charcoal" : "text-cream"
@@ -199,7 +199,6 @@ function Navbar({
     </>
   );
 }
-
 // ─────────────────────────────────────────────────
 // HERO SECTION
 // ─────────────────────────────────────────────────
@@ -1140,15 +1139,15 @@ function Footer() {
         {/* Col 1 — Brand */}
         <div>
           <div className="flex items-center gap-3 mb-5">
-            <div className="relative w-10 h-10">
-  <Image
-    src="https://res.cloudinary.com/dx3k7hbnc/image/upload/v1777538012/1000428932-Picsart-BackgroundRemover.jpg_cyffyt.png"
-    alt="Lustro Homes Logo"
-    fill
-    sizes="40px"
-    className="object-contain"
-  />
-</div>
+            <div className="relative w-16 h-16">
+              <Image
+                src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777538012/1000428932-Picsart-BackgroundRemover.jpg_cyffyt.png"
+                alt="Lustro Homes Logo"
+                fill
+                sizes="64px"
+                className="object-contain"
+              />
+            </div>
             <span className="font-cormorant text-cream font-semibold text-xl tracking-wide">
               Lustro Homes
             </span>
