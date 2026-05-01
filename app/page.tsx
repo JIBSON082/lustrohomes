@@ -426,7 +426,7 @@ function About() {
         <div className="reveal-element relative">
           <div className="img-zoom relative rounded-2xl overflow-hidden h-[600px] md:h-[880px]">
             <Image
-              src="https://res.cloudinary.com/dx3k7hbnc/image/upload/v1777570667/living-room_ehvxbd.jpg"
+              src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777570667/living-room_ehvxbd.jpg"
               alt="Lustro Homes luxury living room interior"
               fill
               sizes="(max-width: 768px) 100vw, 60vw"
