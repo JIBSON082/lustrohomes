@@ -315,8 +315,7 @@ function Hero() {
         <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/85 via-black/30 to-black/10" />
 
         {/* Hero Content — pinned to bottom */}
-        <div className="relative z-20 flex flex-col justify-end h-full px-6 pb-16 md:pb-20">
-
+        <div className="relative z-20 flex flex-col justify-end h-full px-6 pb-10 md:pb-14"
           {/* Watch for more — top left of content area */}
           <button
             onClick={() => setModalOpen(true)}
@@ -371,7 +370,7 @@ function Hero() {
 
           {/* CTA Buttons */}
           <div
-            className="hero-ctas flex flex-col sm:flex-row gap-4"
+            className="hero-ctas flex flex-row gap-3"
             style={{ opacity: 0 }}
           >
             <a
