@@ -828,7 +828,7 @@ function Dining() {
 // ─────────────────────────────────────────────────
 // GALLERY
 // ─────────────────────────────────────────────────
-Function Gallery() {
+function Gallery() {
   const galleryImages = [
     {
       src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777562618/hero-1_jlcvld.png",
