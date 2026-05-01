@@ -378,7 +378,7 @@ function StatsBar() {
 function About() {
   return (
     <section id="about" className="bg-cream py-24 md:py-36 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-14 md:gap-20 items-center">
+      <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-14 md:gap-20 items-stretch">
         {/* Left — Text */}
         <div className="reveal-element">
           <p className="font-dm-sans text-[0.65rem] text-brown uppercase tracking-[0.28em] mb-4">
