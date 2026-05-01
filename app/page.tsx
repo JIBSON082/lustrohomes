@@ -429,7 +429,8 @@ function About() {
               src="https://res.cloudinary.com/dx3k7hbnc/image/upload/v1777570667/living-room_ehvxbd.jpg"
               alt="Lustro Homes luxury living room interior"
               fill
-              sizes="(max-width: 768px) 100vw, 50vw"
+              sizes="(max-width: 768px) 100vw, 60vw"
+              quality={100}
               className="object-cover"
             />
           </div>
