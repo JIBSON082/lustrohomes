@@ -711,20 +711,20 @@ function Rooms() {
 function Dining() {
   const diningImages = [
     {
-      src: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=800&q=85",
-      alt: "Fine dining plated dish",
+      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777641412/dining-1_kkrq3k.png",
+      alt: "Lustro Lagos fine dining",
     },
     {
-      src: "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=800&q=85",
-      alt: "Aesthetic cocktails",
+      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777641433/dining-2_hazzwe.jpg",
+      alt: "Lustro Lagos cocktails",
     },
     {
-      src: "https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?auto=format&fit=crop&w=800&q=85",
-      alt: "Luxury restaurant interior",
+      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777641470/dining-3_ff2cut.png",
+      alt: "Lustro Lagos restaurant interior",
     },
     {
-      src: "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?auto=format&fit=crop&w=800&q=85",
-      alt: "Elegant table setting",
+      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777641487/dining-5_kediuz.jpg",
+      alt: "Lustro Lagos signature cuisine",
     },
   ];
 
