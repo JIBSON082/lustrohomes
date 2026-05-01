@@ -9,13 +9,7 @@ import Image from "next/image";
 const WHATSAPP_NUMBER = "2348000000000"; // ← Replace with actual WhatsApp number
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
 
-const HERO_SLIDES = [
-   "https://res.cloudinary.com/dx3k7hbnc/image/upload/v1777562618/hero-1_jlcvld.jpg",
-  "https://res.cloudinary.com/dx3k7hbnc/image/upload/v1777569332/hero-2_w8amfo.jpg",
-  "https://res.cloudinary.com/dx3k7hbnc/image/upload/v1777569685/hero-3_oqrukn.jpg",
-  "https://res.cloudinary.com/dx3k7hbnc/image/upload/v1777570096/hero-4_d2xzfi.jpg",
-  "https://res.cloudinary.com/dx3k7hbnc/image/upload/v1777570438/hero-5_gzikdc.png",
-];
+
 
 const NAV_LINKS = [
      
@@ -233,83 +227,161 @@ function Navbar({
     </>
   );
 }
+ ─────────────────────────────────────────────────
+// HERO SECTION — Cinematic Video Background
 // ─────────────────────────────────────────────────
-// HERO SECTION
-// ─────────────────────────────────────────────────
+const HERO_VIDEO_URL =
+  "https://res.cloudinary.com/dx3k7hbnc/video/upload/q_auto:best,f_auto/v1777632548/Hero-video_egr33p.mp4";
+
+const HERO_MODAL_EMBED =
+  "https://player.cloudinary.com/embed/?cloud_name=dx3k7hbnc&public_id=Hero-video_egr33p&autoplay=true&controls=true";
+
 function Hero() {
-  const [activeSlide, setActiveSlide] = useState(0);
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveSlide((prev) => (prev + 1) % HERO_SLIDES.length);
-    }, 5000);
-    return () => clearInterval(interval);
+    const initAnim = async () => {
+      try {
+        const { gsap } = await import("gsap");
+        const tl = gsap.timeline({ delay: 0.4 });
+        tl.fromTo(
+          ".hero-eyebrow",
+          { opacity: 0, y: 22 },
+          { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" }
+        )
+          .fromTo(
+            ".hero-title",
+            { opacity: 0, y: 32 },
+            { opacity: 1, y: 0, duration: 1, ease: "power3.out" },
+            "-=0.5"
+          )
+          .fromTo(
+            ".hero-sub",
+            { opacity: 0, y: 24 },
+            { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
+            "-=0.5"
+          )
+          .fromTo(
+            ".hero-play",
+            { opacity: 0, scale: 0.85 },
+            { opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.4)" },
+            "-=0.4"
+          )
+          .fromTo(
+            ".hero-ctas",
+            { opacity: 0, y: 18 },
+            { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" },
+            "-=0.3"
+          );
+      } catch (err) {
+        document
+          .querySelectorAll(
+            ".hero-eyebrow,.hero-title,.hero-sub,.hero-play,.hero-ctas"
+          )
+          .forEach((el) => {
+            (el as HTMLElement).style.opacity = "1";
+            (el as HTMLElement).style.transform = "none";
+          });
+      }
+    };
+    initAnim();
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = modalOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [modalOpen]);
+
   return (
-    <section
-      id="hero"
-      className="relative h-screen overflow-hidden bg-charcoal"
-    >
-      {/* Slideshow Container */}
-      <div
-        className="absolute inset-0"
-        style={{ transform: "translateZ(0)", willChange: "transform" }}
+    <>
+      <section
+        id="hero"
+        className="relative h-screen overflow-hidden bg-charcoal"
       >
-        {HERO_SLIDES.map((src, i) => (
-          <div
-            key={src}
-            className={`hero-slide ${i === activeSlide ? "active" : ""}`}
-          >
-            <Image
-              src={src}
-              alt={`Lustro Homes luxury suite ${i + 1}`}
-              fill
-              sizes="100vw"
-              priority={i === 0}
-              className="object-cover"
-              quality={i === 0 ? 90 : 75}
-            />
-          </div>
-        ))}
-      </div>
-
-      {/* Depth Scrim */}
-      <div className="hero-scrim absolute inset-0 z-10" />
-
-      {/* Glass Content Card */}
-      <div className="relative z-20 flex items-center justify-center h-full px-4 sm:px-6">
+        {/* Background Video */}
         <div
-          className="glass rounded-2xl p-8 sm:p-10 md:p-12 max-w-xl w-full text-center"
-          style={{ isolation: "isolate", willChange: "backdrop-filter" }}
+          className="absolute inset-0 z-0"
+          style={{ transform: "translateZ(0)", willChange: "transform" }}
         >
+          <video
+            src={HERO_VIDEO_URL}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-full object-cover"
+          />
+        </div>
+
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 z-10 bg-black/52" />
+
+        {/* Hero Content */}
+        <div className="relative z-20 flex flex-col items-center justify-center h-full px-6 text-center">
           {/* Eyebrow */}
-          <p className="font-dm-sans text-[0.65rem] text-gold uppercase tracking-[0.3em] mb-5">
+          <p
+            className="hero-eyebrow font-dm-sans text-[0.65rem] text-gold uppercase tracking-[0.35em] mb-6"
+            style={{ opacity: 0 }}
+          >
             Premium Staycation · Lagos
           </p>
 
           {/* Headline */}
-          <h1 className="font-cormorant text-4xl sm:text-5xl md:text-6xl text-cream font-light leading-[1.1] mb-5">
+          <h1
+            className="hero-title font-cormorant text-5xl sm:text-6xl md:text-7xl text-cream font-light leading-[1.08] mb-6 max-w-3xl"
+            style={{ opacity: 0 }}
+          >
             Your Lagos{" "}
-            <em className="italic text-gold not-italic" style={{ fontStyle: "italic" }}>
+            <em className="text-gold" style={{ fontStyle: "italic" }}>
               Staycation
             </em>{" "}
             Awaits.
           </h1>
 
-          {/* Sub */}
-          <p className="font-dm-sans text-cream/70 text-sm leading-relaxed mb-8 max-w-sm mx-auto">
+          {/* Subtext */}
+          <p
+            className="hero-sub font-dm-sans text-cream/65 text-sm md:text-base leading-relaxed mb-10 max-w-md"
+            style={{ opacity: 0 }}
+          >
             World-class comfort woven with Nigerian soul — unforgettable stays
             and signature dining in the heart of Yaba, Lagos.
           </p>
 
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          {/* Play Button */}
+          <button
+            onClick={() => setModalOpen(true)}
+            className="hero-play group mb-10 flex flex-col items-center gap-3"
+            style={{ opacity: 0 }}
+            aria-label="Play video"
+          >
+            <div className="relative w-16 h-16 rounded-full border-2 border-cream/60 flex items-center justify-center group-hover:border-gold group-hover:scale-110 transition-all duration-400">
+              <div className="absolute inset-0 rounded-full border border-cream/20 scale-125 group-hover:scale-150 transition-transform duration-500 opacity-60" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="w-6 h-6 text-cream group-hover:text-gold transition-colors ml-0.5"
+              >
+                <path d="M8 5.14v14l11-7-11-7z" />
+              </svg>
+            </div>
+            <span className="font-dm-sans text-[0.65rem] text-cream/55 uppercase tracking-[0.25em] group-hover:text-gold transition-colors">
+              Watch Film
+            </span>
+          </button>
+
+          {/* CTA Buttons */}
+          <div
+            className="hero-ctas flex flex-col sm:flex-row gap-4"
+            style={{ opacity: 0 }}
+          >
             <a
               href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-brown text-cream font-dm-sans text-sm px-8 py-3.5 rounded-full hover:bg-brown-light transition-colors"
+              className="bg-brown text-cream font-dm-sans text-sm px-9 py-3.5 rounded-full hover:bg-brown-light transition-colors shadow-lg"
             >
               Book Your Stay
             </a>
@@ -317,40 +389,83 @@ function Hero() {
               href="#rooms"
               onClick={(e) => {
                 e.preventDefault();
-                document.querySelector("#rooms")?.scrollIntoView({ behavior: "smooth" });
+                const target = document.querySelector("#rooms");
+                if (target) {
+                  const y =
+                    target.getBoundingClientRect().top + window.scrollY;
+                  window.scrollTo({ top: y, behavior: "instant" });
+                }
               }}
-              className="border border-cream/30 text-cream font-dm-sans text-sm px-8 py-3.5 rounded-full hover:bg-cream/10 transition-colors"
+              className="border border-cream/35 text-cream font-dm-sans text-sm px-9 py-3.5 rounded-full hover:bg-cream/10 transition-colors"
             >
               Explore Rooms
             </a>
           </div>
+        </div>
+      </section>
 
-          {/* Slide indicators */}
-          <div className="flex justify-center gap-2 mt-8">
-            {HERO_SLIDES.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setActiveSlide(i)}
-                aria-label={`Go to slide ${i + 1}`}
-                className={`rounded-full transition-all duration-400 ${
-                  i === activeSlide
-                    ? "w-7 h-2 bg-gold"
-                    : "w-2 h-2 bg-cream/35 hover:bg-cream/60"
-                }`}
+      {/* Modal Player */}
+      {modalOpen && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center"
+          style={{ animation: "modalFadeIn 0.35s ease forwards" }}
+        >
+          <div
+            className="absolute inset-0 bg-black/90"
+            onClick={() => setModalOpen(false)}
+          />
+          <div
+            className="relative w-full max-w-4xl mx-4 rounded-2xl overflow-hidden shadow-2xl"
+            style={{
+              animation:
+                "modalScaleIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards",
+            }}
+          >
+            <button
+              onClick={() => setModalOpen(false)}
+              className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/60 flex items-center justify-center hover:bg-brown transition-colors"
+              aria-label="Close video"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                className="w-5 h-5 text-cream"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+            <div className="relative w-full" style={{ paddingTop: "56.25%" }}>
+              <iframe
+                src={HERO_MODAL_EMBED}
+                className="absolute inset-0 w-full h-full"
+                allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+                allowFullScreen
+                frameBorder="0"
+                title="Lustro Homes — Experience Film"
               />
-            ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Scroll Cue */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-3 pointer-events-none">
-        <div className="w-px h-10 bg-gradient-to-b from-transparent to-cream/40" />
-        <span className="font-dm-sans text-[0.6rem] text-cream/45 uppercase tracking-[0.25em]">
-          Scroll
-        </span>
-      </div>
-    </section>
+      <style>{`
+        @keyframes modalFadeIn {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+        @keyframes modalScaleIn {
+          from { opacity: 0; transform: scale(0.92) translateY(24px); }
+          to   { opacity: 1; transform: scale(1) translateY(0); }
+        }
+      `}</style>
+    </>
   );
 }
 
