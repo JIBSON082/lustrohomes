@@ -1149,6 +1149,7 @@ function Contact() {
 // ─────────────────────────────────────────────────
 function Footer() {
   const navLinks = [
+    { label: "Home", href: "#home" }, 
     { label: "About", href: "#about" },
     { label: "Rooms", href: "#rooms" },
     { label: "Dining", href: "#dining" },
