@@ -828,67 +828,67 @@ function Dining() {
 // ─────────────────────────────────────────────────
 // GALLERY
 // ─────────────────────────────────────────────────
-function Gallery() {
+Function Gallery() {
   const galleryImages = [
     {
       src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777562618/hero-1_jlcvld.png",
       alt: "Lustro Homes exterior",
-      wide: true,
+      spanClasses: "md:col-span-2 md:row-span-2", // Large Hero Feature
     },
     {
       src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777569332/hero-2_w8amfo.jpg",
       alt: "Lustro Homes interior",
-      wide: false,
+      spanClasses: "md:col-span-1 md:row-span-1",
     },
     {
       src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642486/gallery_ngzktt.jpg",
       alt: "Lustro Homes lifestyle",
-      wide: false,
+      spanClasses: "md:col-span-1 md:row-span-2", // Tall Portrait
     },
     {
       src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777569685/hero-3_oqrukn.jpg",
       alt: "Lustro Homes suite",
-      wide: false,
+      spanClasses: "md:col-span-1 md:row-span-1",
     },
     {
       src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642372/gallery-4_qk8z3h.jpg",
       alt: "Lustro Homes architecture",
-      wide: true,
+      spanClasses: "md:col-span-2 md:row-span-1", // Wide Landscape
     },
     {
       src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642364/gallery-3_p9jeub.jpg",
       alt: "Lustro Homes detail",
-      wide: false,
+      spanClasses: "md:col-span-1 md:row-span-1",
     },
     {
       src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642364/gallery-5_vapgeo.jpg",
       alt: "Lustro Homes amenities",
-      wide: false,
+      spanClasses: "md:col-span-1 md:row-span-1",
     },
     {
       src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642363/gallery-2_poa1ee.jpg",
       alt: "Lustro Homes dining",
-      wide: false,
+      spanClasses: "md:col-span-1 md:row-span-2", // Tall Portrait
     },
     {
       src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642365/gallery-7_tmifgb.jpg",
       alt: "Lustro Lagos restaurant",
-      wide: false,
+      spanClasses: "md:col-span-1 md:row-span-1",
     },
     {
       src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642363/gallery-6_sq3uy3.jpg",
       alt: "Lustro Homes lounge",
-      wide: false,
+      spanClasses: "md:col-span-2 md:row-span-1", // Wide Landscape
     },
     {
       src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777570096/hero-4_d2xzfi.jpg",
       alt: "Lustro Homes experience",
-      wide: false,
+      spanClasses: "md:col-span-1 md:row-span-1",
     },
     {
       src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777570438/hero-5_gzikdc.png",
       alt: "Lustro Homes luxury",
-      wide: false,
+      spanClasses: "md:col-span-1 md:row-span-1",
     },
   ];
 
@@ -906,25 +906,25 @@ function Gallery() {
           <div className="section-line mx-auto mt-6" />
         </div>
 
-        {/* Masonry Grid */}
-  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-  {galleryImages.map((img) => (
-    <div
-      key={img.src}
-      className={`gallery-item img-zoom relative rounded-xl overflow-hidden ${
-        img.wide ? "md:col-span-2 h-72" : "h-52"
-      }`}
-    >
-      <Image
-        src={img.src}
-        alt={img.alt}
-        fill
-        sizes="(max-width: 768px) 50vw, 25vw"
-        className="object-cover"
-      />
-    </div>
-  ))}
-</div>
+        {/* Bento Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-4 auto-rows-[300px] gap-6">
+          {galleryImages.map((img) => (
+            <div
+              key={img.src}
+              className={`gallery-item img-zoom group relative rounded-2xl overflow-hidden ${img.spanClasses}`}
+            >
+              <Image
+                src={img.src}
+                alt={img.alt}
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
+              />
+              {/* Subtle hover overlay for premium feel */}
+              <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/20" />
+            </div>
+          ))}
+        </div>
 
         {/* Instagram link */}
         <div className="text-center mt-12 reveal-element">
@@ -942,6 +942,7 @@ function Gallery() {
     </section>
   );
 }
+
 
 // ─────────────────────────────────────────────────
 // INVESTMENT JOURNEY
