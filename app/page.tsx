@@ -832,43 +832,63 @@ function Dining() {
 function Gallery() {
   const galleryImages = [
     {
-      src: "https://images.unsplash.com/photo-1587985064135-0366536eab42?auto=format&fit=crop&w=800&q=85",
-      alt: "Luxury bedroom suite",
+      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777562618/hero-1_jlcvld.png",
+      alt: "Lustro Homes exterior",
       wide: true,
     },
     {
-      src: "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=85",
-      alt: "Premium hotel room",
+      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777569332/hero-2_w8amfo.jpg",
+      alt: "Lustro Homes interior",
       wide: false,
     },
     {
-      src: "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=800&q=85",
-      alt: "Designer bedroom",
+      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642486/gallery_ngzktt.jpg",
+      alt: "Lustro Homes lifestyle",
       wide: false,
     },
     {
-      src: "https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=800&q=85",
-      alt: "Living area",
+      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777569685/hero-3_oqrukn.jpg",
+      alt: "Lustro Homes suite",
       wide: false,
     },
     {
-      src: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=85",
-      alt: "Architectural exterior",
+      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642372/gallery-4_qk8z3h.jpg",
+      alt: "Lustro Homes architecture",
       wide: true,
     },
     {
-      src: "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=800&q=85",
-      alt: "Hotel exterior at night",
+      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642364/gallery-3_p9jeub.jpg",
+      alt: "Lustro Homes detail",
       wide: false,
     },
     {
-      src: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=85",
-      alt: "Restaurant dining",
+      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642364/gallery-5_vapgeo.jpg",
+      alt: "Lustro Homes amenities",
       wide: false,
     },
     {
-      src: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=800&q=85",
-      alt: "Signature cuisine",
+      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642363/gallery-2_poa1ee.jpg",
+      alt: "Lustro Homes dining",
+      wide: false,
+    },
+    {
+      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642365/gallery-7_tmifgb.jpg",
+      alt: "Lustro Lagos restaurant",
+      wide: false,
+    },
+    {
+      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642363/gallery-6_sq3uy3.jpg",
+      alt: "Lustro Homes lounge",
+      wide: false,
+    },
+    {
+      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777570096/hero-4_d2xzfi.jpg",
+      alt: "Lustro Homes experience",
+      wide: false,
+    },
+    {
+      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777570438/hero-5_gzikdc.png",
+      alt: "Lustro Homes luxury",
       wide: false,
     },
   ];
