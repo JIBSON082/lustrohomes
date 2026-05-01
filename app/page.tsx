@@ -90,20 +90,28 @@ function Navbar({
 
           {/* Desktop links */}
           <div className="hidden md:flex items-center gap-8">
-            {NAV_LINKS.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                onClick={(e) => handleNavClick(e, link.href)}
-                className={`nav-link font-dm-sans text-sm tracking-wide transition-colors ${
-                  scrolled
-                    ? "text-charcoal/80 hover:text-brown"
-                    : "text-cream/85 hover:text-cream"
-                }`}
-              >
-                {link.label}
-              </a>
-            ))}
+            <a
+  href="#"
+  onClick={(e) => {
+    e.preventDefault();
+    setMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }}
+  className="font-cormorant text-3xl text-cream hover:text-gold transition-colors tracking-wide"
+>
+  Home
+</a>
+{NAV_LINKS.map((link, i) => (
+  <a
+    key={link.label}
+    href={link.href}
+    onClick={(e) => handleNavClick(e, link.href)}
+    className="font-cormorant text-3xl text-cream hover:text-gold transition-colors tracking-wide"
+    style={{ animationDelay: `${i * 0.05}s` }}
+  >
+    {link.label}
+  </a>
+))}
             <a
               href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
               target="_blank"
@@ -426,9 +434,6 @@ function About() {
               @lustro_homes
             </p>
           </div>
-          {/* Decorative element */}
-          <div className="absolute -top-4 -right-4 w-32 h-32 rounded-full border border-brown/15 pointer-events-none" />
-          <div className="absolute -top-8 -right-8 w-48 h-48 rounded-full border border-brown/8 pointer-events-none" />
         </div>
       </div>
     </section>
