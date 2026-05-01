@@ -160,62 +160,75 @@ function Navbar({
       </nav>
 
       {/* Mobile Menu Overlay */}
-      <div
-        className={`mobile-menu ${
-          menuOpen ? "open" : ""
-        } fixed inset-0 z-40 bg-charcoal flex flex-col items-center justify-center`}
+      {/* Mobile Menu Overlay */}
+<div
+  className={`mobile-menu ${
+    menuOpen ? "open" : ""
+  } fixed inset-0 z-40 bg-charcoal flex flex-col items-center justify-center`}
+>
+  <div className="flex flex-col items-center gap-5">
+    {[{ label: "Home", href: "#" }, ...NAV_LINKS].map((link, i) => (
+      <a
+        key={link.label}
+        href={link.href}
+        onClick={(e) => {
+          e.preventDefault();
+          setMenuOpen(false);
+          if (link.href === "#") {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          } else {
+            document.querySelector(link.href)?.scrollIntoView({ behavior: "smooth" });
+          }
+        }}
+        className="font-cormorant text-4xl text-cream hover:text-gold transition-colors tracking-wide"
+        style={{
+          opacity: menuOpen ? 1 : 0,
+          transform: menuOpen ? "translateY(0)" : "translateY(20px)",
+          transition: `opacity 0.4s ease ${i * 0.07}s, transform 0.4s ease ${i * 0.07}s`,
+        }}
       >
-        <div className="flex flex-col items-center gap-5">
-  <a
-    href="#"
-    onClick={(e) => {
-      e.preventDefault();
-      setMenuOpen(false);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }}
-    className="font-cormorant text-3xl text-cream hover:text-gold transition-colors tracking-wide"
-  >
-    Home
-  </a>
-  {NAV_LINKS.map((link, i) => (
+        {link.label}
+      </a>
+    ))}
     <a
-      key={link.label}
-      href={link.href}
-      onClick={(e) => handleNavClick(e, link.href)}
-      className="font-cormorant text-4xl text-cream hover:text-gold transition-colors tracking-wide"
-      style={{ animationDelay: `${i * 0.05}s` }}
+      href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="mt-4 bg-brown text-cream font-dm-sans px-10 py-3.5 rounded-full text-sm hover:bg-brown-light transition-colors"
+      style={{
+        opacity: menuOpen ? 1 : 0,
+        transform: menuOpen ? "translateY(0)" : "translateY(20px)",
+        transition: `opacity 0.4s ease 0.56s, transform 0.4s ease 0.56s`,
+      }}
     >
-      {link.label}
+      Book Your Stay
     </a>
-  ))}
-          <a
-            href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-4 bg-brown text-cream font-dm-sans px-10 py-3.5 rounded-full text-sm hover:bg-brown-light transition-colors"
-          >
-            Book Your Stay
-          </a>
-          <div className="mt-6 flex gap-6">
-            <a
-              href="https://instagram.com/lustro_homes"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-dm-sans text-xs text-cream/50 hover:text-gold transition-colors tracking-widest uppercase"
-            >
-              @lustro_homes
-            </a>
-            <a
-              href="https://instagram.com/lustro_lagos"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-dm-sans text-xs text-cream/50 hover:text-gold transition-colors tracking-widest uppercase"
-            >
-              @lustro_lagos
-            </a>
-          </div>
-        </div>
-      </div>
+    <div
+      className="mt-4 flex gap-6"
+      style={{
+        opacity: menuOpen ? 1 : 0,
+        transition: `opacity 0.4s ease 0.63s`,
+      }}
+    >
+      <a
+        href="https://instagram.com/lustro_homes"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="font-dm-sans text-xs text-cream/50 hover:text-gold transition-colors tracking-widest uppercase"
+      >
+        @lustro_homes
+      </a>
+      <a
+        href="https://instagram.com/lustro_lagos"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="font-dm-sans text-xs text-cream/50 hover:text-gold transition-colors tracking-widest uppercase"
+      >
+        @lustro_lagos
+      </a>
+    </div>
+  </div>
+</div>
     </>
   );
 }
