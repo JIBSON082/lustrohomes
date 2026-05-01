@@ -424,7 +424,7 @@ function About() {
 
         {/* Right — Image */}
         <div className="reveal-element relative">
-          <div className="img-zoom relative rounded-2xl overflow-hidden h-[520px] md:h-[680px]">
+          <div className="img-zoom relative rounded-2xl overflow-hidden h-[820px] md:h-[980px]">
   <Image
     src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777570667/living-room_ehvxbd.jpg"
     alt="Lustro Homes luxury living room interior"
