@@ -18,7 +18,7 @@ const HERO_SLIDES = [
 ];
 
 const NAV_LINKS = [
-  { label: "Home", href: "#home" },    
+     
   { label: "About", href: "#about" },
   { label: "Rooms", href: "#rooms" },
   { label: "Dining", href: "#dining" },
@@ -1149,7 +1149,7 @@ function Contact() {
 // ─────────────────────────────────────────────────
 function Footer() {
   const navLinks = [
-    { label: "Home", href: "#home" }, 
+    
     { label: "About", href: "#about" },
     { label: "Rooms", href: "#rooms" },
     { label: "Dining", href: "#dining" },
