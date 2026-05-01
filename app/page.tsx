@@ -106,7 +106,7 @@ function Navbar({
     key={link.label}
     href={link.href}
     onClick={(e) => handleNavClick(e, link.href)}
-    className="font-cormorant text-3xl text-cream hover:text-gold transition-colors tracking-wide"
+    className="font-cormorant text-4xl text-cream hover:text-gold transition-colors tracking-wide"
     style={{ animationDelay: `${i * 0.05}s` }}
   >
     {link.label}
@@ -182,7 +182,7 @@ function Navbar({
       key={link.label}
       href={link.href}
       onClick={(e) => handleNavClick(e, link.href)}
-      className="font-cormorant text-3xl text-cream hover:text-gold transition-colors tracking-wide"
+      className="font-cormorant text-4xl text-cream hover:text-gold transition-colors tracking-wide"
       style={{ animationDelay: `${i * 0.05}s` }}
     >
       {link.label}
