@@ -908,20 +908,20 @@ function Gallery() {
         </div>
 
         {/* Masonry Grid */}
-     <div className="columns-2 md:columns-3 gap-3 space-y-3">
+  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
   {galleryImages.map((img) => (
     <div
       key={img.src}
-      className="gallery-item img-zoom relative rounded-xl overflow-hidden break-inside-avoid mb-3"
+      className={`gallery-item img-zoom relative rounded-xl overflow-hidden ${
+        img.wide ? "md:col-span-2 h-72" : "h-52"
+      }`}
     >
       <Image
         src={img.src}
         alt={img.alt}
-        width={600}
-        height={400}
-        sizes="(max-width: 768px) 50vw, 33vw"
-        className="object-cover w-full h-auto"
-        quality={100}
+        fill
+        sizes="(max-width: 768px) 50vw, 25vw"
+        className="object-cover"
       />
     </div>
   ))}
