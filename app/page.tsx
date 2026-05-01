@@ -424,16 +424,16 @@ function About() {
 
         {/* Right — Image */}
         <div className="reveal-element relative">
-          <div className="img-zoom relative rounded-2xl overflow-hidden h-[600px] md:h-[880px]">
-            <Image
-              src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777570667/living-room_ehvxbd.jpg"
-              alt="Lustro Homes luxury living room interior"
-              fill
-              sizes="(max-width: 768px) 100vw, 60vw"
-              quality={100}
-              className="object-cover"
-            />
-          </div>
+          <div className="img-zoom relative rounded-2xl overflow-hidden h-[380px] md:h-[520px]">
+  <Image
+    src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777570667/living-room_ehvxbd.jpg"
+    alt="Lustro Homes luxury living room interior"
+    fill
+    sizes="(max-width: 768px) 100vw, 60vw"
+    quality={100}
+    className="object-cover object-right-top"
+  />
+</div>
           {/* Floating glass badge */}
           <div
             className="glass absolute bottom-6 left-6 px-5 py-4 rounded-xl"
