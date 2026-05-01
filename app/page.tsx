@@ -9,8 +9,6 @@ import Image from "next/image";
 const WHATSAPP_NUMBER = "2348000000000"; // ← Replace with actual WhatsApp number
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
 
-
-
 const NAV_LINKS = [
      
   { label: "About", href: "#about" },
