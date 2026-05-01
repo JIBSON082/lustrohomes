@@ -165,18 +165,29 @@ function Navbar({
           menuOpen ? "open" : ""
         } fixed inset-0 z-40 bg-charcoal flex flex-col items-center justify-center`}
       >
-        <div className="flex flex-col items-center gap-7">
-          {NAV_LINKS.map((link, i) => (
-            <a
-              key={link.label}
-              href={link.href}
-              onClick={(e) => handleNavClick(e, link.href)}
-              className="font-cormorant text-5xl text-cream hover:text-gold transition-colors tracking-wide"
-              style={{ animationDelay: `${i * 0.05}s` }}
-            >
-              {link.label}
-            </a>
-          ))}
+        <div className="flex flex-col items-center gap-5">
+  <a
+    href="#"
+    onClick={(e) => {
+      e.preventDefault();
+      setMenuOpen(false);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }}
+    className="font-cormorant text-3xl text-cream hover:text-gold transition-colors tracking-wide"
+  >
+    Home
+  </a>
+  {NAV_LINKS.map((link, i) => (
+    <a
+      key={link.label}
+      href={link.href}
+      onClick={(e) => handleNavClick(e, link.href)}
+      className="font-cormorant text-3xl text-cream hover:text-gold transition-colors tracking-wide"
+      style={{ animationDelay: `${i * 0.05}s` }}
+    >
+      {link.label}
+    </a>
+  ))}
           <a
             href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
             target="_blank"
