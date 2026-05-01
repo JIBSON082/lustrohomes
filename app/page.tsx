@@ -300,14 +300,15 @@ function Hero() {
           className="absolute inset-0 z-0"
           style={{ transform: "translateZ(0)", willChange: "transform" }}
         >
-          <video
-            src={HERO_VIDEO_URL}
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="w-full h-full object-cover"
-          />
+        <video
+  src={HERO_VIDEO_URL}
+  autoPlay
+  muted
+  loop
+  playsInline
+  className="w-full h-full object-cover"
+  style={{ filter: "brightness(1.3)" }}
+/>
         </div>
 
         {/* Dark Overlay — stronger at bottom where text sits */}
