@@ -18,6 +18,7 @@ const HERO_SLIDES = [
 ];
 
 const NAV_LINKS = [
+  { label: "Home", href: "#home" },    
   { label: "About", href: "#about" },
   { label: "Rooms", href: "#rooms" },
   { label: "Dining", href: "#dining" },
@@ -44,7 +45,7 @@ function Navbar({
       setMenuOpen(false);
       const target = document.querySelector(href);
       if (target) {
-        target.scrollIntoView({ behavior: "smooth" });
+        target.scrollIntoView({ behavior: "instant" });
       }
     },
     [setMenuOpen]
@@ -1161,7 +1162,7 @@ function Footer() {
     href: string
   ) => {
     e.preventDefault();
-    document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
+    document.querySelector(href)?.scrollIntoView({ behavior: "instant" });
   };
 
   return (
