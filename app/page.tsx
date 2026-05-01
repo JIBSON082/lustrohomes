@@ -232,9 +232,6 @@ function Navbar({
 const HERO_VIDEO_URL =
   "https://res.cloudinary.com/dx3k7hbnc/video/upload/q_auto:best,f_auto/v1777632548/Hero-video_egr33p.mp4";
 
-const HERO_MODAL_EMBED =
-  "https://player.cloudinary.com/embed/?cloud_name=dx3k7hbnc&public_id=Hero-video_egr33p&autoplay=true&controls=true";
-
 function Hero() {
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -242,7 +239,7 @@ function Hero() {
     const initAnim = async () => {
       try {
         const { gsap } = await import("gsap");
-        const tl = gsap.timeline({ delay: 0.4 });
+        const tl = gsap.timeline({ delay: 0.6 });
         tl.fromTo(
           ".hero-eyebrow",
           { opacity: 0, y: 22 },
@@ -314,14 +311,38 @@ function Hero() {
           />
         </div>
 
-        {/* Dark Overlay */}
-        <div className="absolute inset-0 z-10 bg-black/52" />
+        {/* Dark Overlay — stronger at bottom where text sits */}
+        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/85 via-black/30 to-black/10" />
 
-        {/* Hero Content */}
-        <div className="relative z-20 flex flex-col items-center justify-center h-full px-6 text-center">
+        {/* Hero Content — pinned to bottom */}
+        <div className="relative z-20 flex flex-col justify-end h-full px-6 pb-16 md:pb-20">
+
+          {/* Watch for more — top left of content area */}
+          <button
+            onClick={() => setModalOpen(true)}
+            className="hero-play group mb-8 flex items-center gap-3 w-fit"
+            style={{ opacity: 0 }}
+            aria-label="Watch for more"
+          >
+            <div className="relative w-12 h-12 rounded-full border-2 border-cream/60 flex items-center justify-center group-hover:border-gold group-hover:scale-110 transition-all duration-400">
+              <div className="absolute inset-0 rounded-full border border-cream/20 scale-125 group-hover:scale-150 transition-transform duration-500 opacity-60" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="w-5 h-5 text-cream group-hover:text-gold transition-colors ml-0.5"
+              >
+                <path d="M8 5.14v14l11-7-11-7z" />
+              </svg>
+            </div>
+            <span className="font-dm-sans text-[0.65rem] text-cream/70 uppercase tracking-[0.25em] group-hover:text-gold transition-colors">
+              Watch for more
+            </span>
+          </button>
+
           {/* Eyebrow */}
           <p
-            className="hero-eyebrow font-dm-sans text-[0.65rem] text-gold uppercase tracking-[0.35em] mb-6"
+            className="hero-eyebrow font-dm-sans text-[0.65rem] text-gold uppercase tracking-[0.35em] mb-4"
             style={{ opacity: 0 }}
           >
             Premium Staycation · Lagos
@@ -329,7 +350,7 @@ function Hero() {
 
           {/* Headline */}
           <h1
-            className="hero-title font-cormorant text-5xl sm:text-6xl md:text-7xl text-cream font-light leading-[1.08] mb-6 max-w-3xl"
+            className="hero-title font-cormorant text-5xl sm:text-6xl md:text-7xl text-cream font-light leading-[1.08] mb-4 max-w-2xl"
             style={{ opacity: 0 }}
           >
             Your Lagos{" "}
@@ -341,35 +362,12 @@ function Hero() {
 
           {/* Subtext */}
           <p
-            className="hero-sub font-dm-sans text-cream/65 text-sm md:text-base leading-relaxed mb-10 max-w-md"
+            className="hero-sub font-dm-sans text-cream/65 text-sm leading-relaxed mb-8 max-w-sm"
             style={{ opacity: 0 }}
           >
             World-class comfort woven with Nigerian soul — unforgettable stays
             and signature dining in the heart of Yaba, Lagos.
           </p>
-
-          {/* Play Button */}
-          <button
-            onClick={() => setModalOpen(true)}
-            className="hero-play group mb-10 flex flex-col items-center gap-3"
-            style={{ opacity: 0 }}
-            aria-label="Play video"
-          >
-            <div className="relative w-16 h-16 rounded-full border-2 border-cream/60 flex items-center justify-center group-hover:border-gold group-hover:scale-110 transition-all duration-400">
-              <div className="absolute inset-0 rounded-full border border-cream/20 scale-125 group-hover:scale-150 transition-transform duration-500 opacity-60" />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="w-6 h-6 text-cream group-hover:text-gold transition-colors ml-0.5"
-              >
-                <path d="M8 5.14v14l11-7-11-7z" />
-              </svg>
-            </div>
-            <span className="font-dm-sans text-[0.65rem] text-cream/55 uppercase tracking-[0.25em] group-hover:text-gold transition-colors">
-              Watch Film
-            </span>
-          </button>
 
           {/* CTA Buttons */}
           <div
@@ -380,7 +378,7 @@ function Hero() {
               href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-brown text-cream font-dm-sans text-sm px-9 py-3.5 rounded-full hover:bg-brown-light transition-colors shadow-lg"
+              className="bg-brown text-cream font-dm-sans text-sm px-9 py-3.5 rounded-full hover:bg-brown-light transition-colors shadow-lg w-fit"
             >
               Book Your Stay
             </a>
@@ -390,12 +388,11 @@ function Hero() {
                 e.preventDefault();
                 const target = document.querySelector("#rooms");
                 if (target) {
-                  const y =
-                    target.getBoundingClientRect().top + window.scrollY;
+                  const y = target.getBoundingClientRect().top + window.scrollY;
                   window.scrollTo({ top: y, behavior: "instant" });
                 }
               }}
-              className="border border-cream/35 text-cream font-dm-sans text-sm px-9 py-3.5 rounded-full hover:bg-cream/10 transition-colors"
+              className="border border-cream/35 text-cream font-dm-sans text-sm px-9 py-3.5 rounded-full hover:bg-cream/10 transition-colors w-fit"
             >
               Explore Rooms
             </a>
@@ -403,54 +400,43 @@ function Hero() {
         </div>
       </section>
 
-      {/* Modal Player */}
+      {/* ── Full Screen Modal Player ── */}
       {modalOpen && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center"
+          className="fixed inset-0 z-[100] bg-black flex items-center justify-center"
           style={{ animation: "modalFadeIn 0.35s ease forwards" }}
         >
-          <div
-            className="absolute inset-0 bg-black/90"
+          {/* Close Button */}
+          <button
             onClick={() => setModalOpen(false)}
-          />
-          <div
-            className="relative w-full max-w-4xl mx-4 rounded-2xl overflow-hidden shadow-2xl"
-            style={{
-              animation:
-                "modalScaleIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards",
-            }}
+            className="absolute top-5 right-5 z-10 w-11 h-11 rounded-full bg-white/10 flex items-center justify-center hover:bg-brown transition-colors"
+            aria-label="Close video"
           >
-            <button
-              onClick={() => setModalOpen(false)}
-              className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/60 flex items-center justify-center hover:bg-brown transition-colors"
-              aria-label="Close video"
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              className="w-5 h-5 text-cream"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                className="w-5 h-5 text-cream"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-            <div className="relative w-full" style={{ paddingTop: "56.25%" }}>
-              <iframe
-                src={HERO_MODAL_EMBED}
-                className="absolute inset-0 w-full h-full"
-                allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-                allowFullScreen
-                frameBorder="0"
-                title="Lustro Homes — Experience Film"
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
               />
-            </div>
-          </div>
+            </svg>
+          </button>
+
+          {/* Full Screen Native Video — no Cloudinary branding */}
+          <video
+            src={HERO_VIDEO_URL}
+            controls
+            autoPlay
+            playsInline
+            className="w-full h-full object-cover"
+            style={{ animation: "modalScaleIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards" }}
+          />
         </div>
       )}
 
@@ -460,8 +446,8 @@ function Hero() {
           to   { opacity: 1; }
         }
         @keyframes modalScaleIn {
-          from { opacity: 0; transform: scale(0.92) translateY(24px); }
-          to   { opacity: 1; transform: scale(1) translateY(0); }
+          from { opacity: 0; transform: scale(0.96); }
+          to   { opacity: 1; transform: scale(1); }
         }
       `}</style>
     </>
