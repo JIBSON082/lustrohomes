@@ -307,7 +307,7 @@ function Hero() {
   loop
   playsInline
   className="w-full h-full object-cover"
-  style={{ filter: "brightness(1.3)" }}
+  style={{ filter: "brightness(1.1)" }}
 />
         </div>
 
