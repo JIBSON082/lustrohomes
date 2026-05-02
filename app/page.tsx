@@ -1031,10 +1031,10 @@ function Investment() {
       key={s.label}
       className="bg-charcoal/60 rounded-xl p-4 border border-white/5 overflow-hidden flex flex-col justify-between min-h-[90px]"
     >
-      <p className="font-cormorant text-xl md:text-2xl text-gold font-light leading-tight break-words">
+     <p className="font-cormorant text-lg md:text-2xl text-gold font-light leading-tight whitespace-nowrap">
         {s.value}
       </p>
-      <p className="font-dm-sans text-[0.6rem] text-cream/40 uppercase tracking-wider mt-3 leading-tight">
+     <p className="font-dm-sans text-[0.6rem] text-cream/70 uppercase tracking-wider mt-3 leading-tight">
         {s.label}
       </p>
     </div>
