@@ -1043,26 +1043,29 @@ function Investment() {
 
               {/* Pricing reference (3.0 only) */}
               {m.pricing && (
-                <div className="flex gap-4 mb-7">
-                  {m.pricing.map((p) => (
-                    <div
-                      key={p.label}
-                      className="flex-1 bg-charcoal/40 rounded-xl p-4 border border-white/5 relative overflow-hidden"
-                    >
-                      <p className="font-dm-sans text-[0.6rem] text-cream/35 uppercase tracking-wider mb-1">
-                        {p.label}
-                      </p>
-                      <p className="font-cormorant text-2xl text-cream/50 font-light line-through decoration-gold/50">
-                        {p.value}
-                      </p>
-                      <span className="absolute top-3 right-3 font-dm-sans text-[0.55rem] bg-brown/30 text-brown-light border border-brown/20 px-2 py-1 rounded-full uppercase tracking-wider">
-                        {p.tag}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              )}
-
+  <div className="flex gap-4 mb-7">
+    {m.pricing.map((p) => (
+      <div
+        key={p.label}
+        className="flex-1 bg-charcoal/40 rounded-xl p-4 border border-white/5"
+      >
+        {/* Label + Sold Out on same row */}
+        <div className="flex items-center justify-between mb-2">
+          <p className="font-dm-sans text-[0.6rem] text-cream/35 uppercase tracking-wider">
+            {p.label}
+          </p>
+          <span className="font-dm-sans text-[0.55rem] bg-brown/30 text-brown-light border border-brown/20 px-2 py-1 rounded-full uppercase tracking-wider whitespace-nowrap">
+            {p.tag}
+          </span>
+        </div>
+        {/* Price below */}
+        <p className="font-cormorant text-2xl text-cream/50 font-light line-through decoration-gold/50">
+          {p.value}
+        </p>
+      </div>
+    ))}
+  </div>
+)}
               <p className="font-cormorant text-lg text-cream/40 italic">
                 {m.quote}
               </p>
