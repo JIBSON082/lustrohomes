@@ -924,7 +924,7 @@ function Investment() {
       title: "LUSTRO 1.0 — THE BLUEPRINT",
       subtitle: "Where Yaba First Met Luxury",
       story:
-        "Started with a simple goal — create the most sought-after shortlet in Yaba. Built an experience with signature in-house dining and world-class aesthetics that set a new benchmark for Lagos staycations.",
+        "We started with one goal — build the most sought-after shortlet experience in Yaba. What emerged was more than an apartment. It was a lifestyle statement. Signature in-house dining, world-class aesthetics, and a hospitality standard that Lagos had never seen at this level.",
       stats: [
         { value: "15,000+", label: "Guests Hosted" },
         { value: "₦2M+", label: "Monthly Revenue" },
@@ -932,12 +932,13 @@ function Investment() {
       ],
       status: "SOLD OUT & ACTIVE",
       quote: '"The proof is in the staying."',
+      pricing: null,
     },
     {
       title: "LUSTRO 2.0 — THE YANKEE EDITION",
       subtitle: "Luxury Redefined on the Mainland",
       story:
-        "Brought resort-quality living to Lagos Mainland. Yankee by Lustro — launched, sold out, delivering. No delays. No excuses. Just consistent, verifiable results.",
+        "We took everything that made 1.0 exceptional and brought it to the Lagos Mainland. Launched December 16th — sold out before the year ended. No delays. No excuses. Our investors were earning before most people even heard about it. When demand is real, results follow.",
       stats: [
         { value: "Sold Out", label: "Launch Status" },
         { value: "₦1.4M+", label: "Monthly Returns" },
@@ -945,12 +946,13 @@ function Investment() {
       ],
       status: "SOLD OUT & DELIVERING",
       quote: '"Our standard is now everyone else\'s benchmark."',
+      pricing: null,
     },
     {
       title: "LUSTRO 3.0 — THE SMART ECOSYSTEM",
       subtitle: "The Ultimate Lifestyle Sanctuary",
       story:
-        "Our most ambitious project yet. Fully automated smart apartments. Yaba's first in-house spa. Professional gym. Built, delivered, and actively earning for investors.",
+        "Our most ambitious project yet — and it delivered. Fully automated smart apartment units. Yaba's first in-house spa. A fully equipped professional gym. Every detail engineered for maximum occupancy, maximum returns, and a living experience that simply does not exist anywhere else on the Mainland.",
       stats: [
         { value: "Full Auto", label: "Smart Features" },
         { value: "Yaba's First", label: "In-House Spa" },
@@ -958,29 +960,51 @@ function Investment() {
       ],
       status: "COMPLETED & EARNING",
       quote: '"We don\'t build houses. We engineer the future."',
+      pricing: [
+        { label: "Part Ownership", value: "₦32.5M", tag: "Sold Out" },
+        { label: "Full Ownership", value: "₦65M", tag: "Sold Out" },
+      ],
     },
   ];
 
   return (
     <section id="invest" className="bg-charcoal-light py-24 md:py-36">
       <div className="max-w-4xl mx-auto px-6">
+
         {/* Header */}
-        <div className="text-center mb-20 reveal-element">
+        <div className="text-center mb-16 reveal-element">
           <p className="font-dm-sans text-[0.65rem] text-gold uppercase tracking-[0.28em] mb-4">
             Investment Journey
           </p>
-          <h2 className="font-cormorant text-4xl md:text-5xl text-cream font-light leading-[1.15] mb-4">
+          <h2 className="font-cormorant text-4xl md:text-5xl text-cream font-light leading-[1.15] mb-6">
             The Lustro Journey —{" "}
             <em className="italic text-gold">From Vision to Value</em>
           </h2>
-          <p className="font-dm-sans text-cream/45 text-sm tracking-wide">
+          <p className="font-dm-sans text-cream/45 text-sm tracking-wide mb-10">
             3 Iconic Projects. 100% Delivery. A New Era.
           </p>
+          {/* Opening hook */}
+          <div className="text-left bg-charcoal/50 rounded-2xl p-8 border border-white/5">
+            <p className="font-cormorant text-2xl md:text-3xl text-cream font-light leading-[1.6] italic">
+              "Most properties sit underperforming — wrong structure, wrong
+              aesthetics, wrong management. At Lustro, we proved that done
+              right, a single apartment can generate over{" "}
+              <span className="text-gold not-italic font-normal">
+                ₦2 million every month
+              </span>{" "}
+              — and deliver{" "}
+              <span className="text-gold not-italic font-normal">
+                ₦1.4 million pure profit
+              </span>{" "}
+              to investors. Consistently. Every month. This is the track
+              record."
+            </p>
+          </div>
         </div>
 
         {/* Timeline */}
         <div className="space-y-14">
-          {milestones.map((m, i) => (
+          {milestones.map((m) => (
             <div key={m.title} className="milestone-card reveal-element">
               {/* Status */}
               <div className="mb-4">
@@ -1017,6 +1041,28 @@ function Investment() {
                 ))}
               </div>
 
+              {/* Pricing reference (3.0 only) */}
+              {m.pricing && (
+                <div className="flex gap-4 mb-7">
+                  {m.pricing.map((p) => (
+                    <div
+                      key={p.label}
+                      className="flex-1 bg-charcoal/40 rounded-xl p-4 border border-white/5 relative overflow-hidden"
+                    >
+                      <p className="font-dm-sans text-[0.6rem] text-cream/35 uppercase tracking-wider mb-1">
+                        {p.label}
+                      </p>
+                      <p className="font-cormorant text-2xl text-cream/50 font-light line-through decoration-gold/50">
+                        {p.value}
+                      </p>
+                      <span className="absolute top-3 right-3 font-dm-sans text-[0.55rem] bg-brown/30 text-brown-light border border-brown/20 px-2 py-1 rounded-full uppercase tracking-wider">
+                        {p.tag}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
               <p className="font-cormorant text-lg text-cream/40 italic">
                 {m.quote}
               </p>
@@ -1024,40 +1070,31 @@ function Investment() {
           ))}
         </div>
 
-        {/* Bottom CTA Card */}
+        {/* Bottom CTA — credibility focused */}
         <div
           className="glass mt-20 rounded-2xl p-10 md:p-14 text-center reveal-element"
           style={{ isolation: "isolate" }}
         >
           <p className="font-dm-sans text-[0.65rem] text-gold uppercase tracking-[0.28em] mb-4">
-            Coming Soon
+            What's Next
           </p>
           <h3 className="font-cormorant text-4xl md:text-5xl text-cream font-light mb-5">
-            Lustro 4.0 Is Coming.
+            Built on a Track Record,{" "}
+            <em className="italic text-gold">Not Promises.</em>
           </h3>
-          <p className="font-dm-sans text-cream/60 text-sm leading-[1.85] max-w-md mx-auto mb-9">
-            People who moved first on 1.0, 2.0, and 3.0 are earning every
-            single month. The next chapter is being written. Don't be last in
-            the room.
+          <p className="font-dm-sans text-cream/55 text-sm leading-[1.85] max-w-md mx-auto mb-9">
+            Three projects. Three sold-out launches. Three sets of investors
+            earning every month. If you want to be part of what Lustro builds
+            next — get in touch now.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href={`${WHATSAPP_URL}?text=I'm interested in Lustro 4.0 early access`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-brown text-cream font-dm-sans text-sm px-9 py-3.5 rounded-full hover:bg-brown-light transition-colors"
-            >
-              Get Early Access
-            </a>
-            <a
-              href="https://instagram.com/lustro_homes"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="border border-cream/20 text-cream font-dm-sans text-sm px-9 py-3.5 rounded-full hover:bg-cream/10 transition-colors"
-            >
-              Stay Connected
-            </a>
-          </div>
+          <a
+            href={`${WHATSAPP_URL}?text=I'm interested in upcoming Lustro Homes investment opportunities`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block bg-brown text-cream font-dm-sans px-14 py-4 rounded-full text-sm hover:bg-brown-light transition-colors shadow-lg"
+          >
+            Get In Touch
+          </a>
         </div>
       </div>
     </section>
