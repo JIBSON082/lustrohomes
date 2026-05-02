@@ -833,62 +833,34 @@ function Gallery() {
     {
       src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777562618/hero-1_jlcvld.png",
       alt: "Lustro Homes exterior",
-      wide: true,
     },
     {
-      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777569332/hero-2_w8amfo.jpg",
-      alt: "Lustro Homes interior",
-      wide: false,
-    },
-    {
-      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642486/gallery_ngzktt.jpg",
-      alt: "Lustro Homes lifestyle",
-      wide: false,
+      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642365/gallery-7_tmifgb.jpg",
+      alt: "Lustro Lagos neon sign",
     },
     {
       src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777569685/hero-3_oqrukn.jpg",
       alt: "Lustro Homes suite",
-      wide: false,
-    },
-    {
-      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642372/gallery-4_qk8z3h.jpg",
-      alt: "Lustro Homes architecture",
-      wide: true,
-    },
-    {
-      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642364/gallery-3_p9jeub.jpg",
-      alt: "Lustro Homes detail",
-      wide: false,
-    },
-    {
-      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642364/gallery-5_vapgeo.jpg",
-      alt: "Lustro Homes amenities",
-      wide: false,
     },
     {
       src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642363/gallery-2_poa1ee.jpg",
-      alt: "Lustro Homes dining",
-      wide: false,
+      alt: "Lustro Lagos dining",
     },
     {
-      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642365/gallery-7_tmifgb.jpg",
-      alt: "Lustro Lagos restaurant",
-      wide: false,
+      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642372/gallery-4_qk8z3h.jpg",
+      alt: "Lustro staircase architecture",
     },
     {
       src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642363/gallery-6_sq3uy3.jpg",
       alt: "Lustro Homes lounge",
-      wide: false,
-    },
-    {
-      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777570096/hero-4_d2xzfi.jpg",
-      alt: "Lustro Homes experience",
-      wide: false,
     },
     {
       src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777570438/hero-5_gzikdc.png",
-      alt: "Lustro Homes luxury",
-      wide: false,
+      alt: "Lustro Homes night exterior",
+    },
+    {
+      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642364/gallery-5_vapgeo.jpg",
+      alt: "Lustro Homes amenities",
     },
   ];
 
@@ -906,21 +878,20 @@ function Gallery() {
           <div className="section-line mx-auto mt-6" />
         </div>
 
-        {/* Masonry Grid */}
-  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="columns-2 md:columns-3 gap-3">
   {galleryImages.map((img) => (
     <div
       key={img.src}
-      className={`gallery-item img-zoom relative rounded-xl overflow-hidden ${
-        img.wide ? "md:col-span-2 h-72" : "h-52"
-      }`}
+      className="gallery-item img-zoom relative rounded-xl overflow-hidden break-inside-avoid mb-3"
     >
       <Image
         src={img.src}
         alt={img.alt}
-        fill
-        sizes="(max-width: 768px) 50vw, 25vw"
-        className="object-cover"
+        width={600}
+        height={400}
+        sizes="(max-width: 768px) 50vw, 33vw"
+        className="object-cover w-full h-auto"
+        quality={100}
       />
     </div>
   ))}
