@@ -1029,12 +1029,12 @@ function Investment() {
   {m.stats.map((s) => (
     <div
       key={s.label}
-      className="bg-charcoal/60 rounded-xl p-3.5 border border-white/5 overflow-hidden"
+      className="bg-charcoal/60 rounded-xl p-5 border border-white/5 overflow-hidden flex flex-col justify-between min-h-[110px]"
     >
-      <p className="font-cormorant text-lg md:text-2xl text-gold font-light leading-tight break-words">
+      <p className="font-cormorant text-2xl md:text-3xl text-gold font-light leading-tight break-words">
         {s.value}
       </p>
-      <p className="font-dm-sans text-[0.55rem] text-cream/40 uppercase tracking-wider mt-1 leading-tight">
+      <p className="font-dm-sans text-[0.6rem] text-cream/40 uppercase tracking-wider mt-3 leading-tight">
         {s.label}
       </p>
     </div>
