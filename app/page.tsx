@@ -1025,11 +1025,11 @@ function Investment() {
               </p>
 
               {/* Stats grid */}
-             <div className="grid grid-cols-3 gap-3 mb-7">
+      <div className="grid grid-cols-3 gap-3 mb-7">
   {m.stats.map((s) => (
     <div
       key={s.label}
-      className="bg-charcoal/60 rounded-xl p-3.5 border border-white/5 overflow-hidden"
+      className="bg-charcoal/60 rounded-xl p-3 border border-white/5 overflow-hidden"
     >
       <p className="font-cormorant text-lg md:text-2xl text-gold font-light leading-tight break-words">
         {s.value}
