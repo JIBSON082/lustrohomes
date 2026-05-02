@@ -1025,21 +1025,21 @@ function Investment() {
               </p>
 
               {/* Stats grid */}
-              <div className="grid grid-cols-3 gap-3 mb-7">
-                {m.stats.map((s) => (
-                  <div
-                    key={s.label}
-                    className="bg-charcoal/60 rounded-xl p-4 border border-white/5"
-                  >
-                    <p className="font-cormorant text-2xl text-gold font-light">
-                      {s.value}
-                    </p>
-                    <p className="font-dm-sans text-[0.6rem] text-cream/40 uppercase tracking-wider mt-1">
-                      {s.label}
-                    </p>
-                  </div>
-                ))}
-              </div>
+             <div className="grid grid-cols-3 gap-3 mb-7">
+  {m.stats.map((s) => (
+    <div
+      key={s.label}
+      className="bg-charcoal/60 rounded-xl p-3 border border-white/5 overflow-hidden"
+    >
+      <p className="font-cormorant text-lg md:text-2xl text-gold font-light leading-tight break-words">
+        {s.value}
+      </p>
+      <p className="font-dm-sans text-[0.55rem] text-cream/40 uppercase tracking-wider mt-1 leading-tight">
+        {s.label}
+      </p>
+    </div>
+  ))}
+</div>
 
               {/* Pricing reference (3.0 only) */}
               {m.pricing && (
