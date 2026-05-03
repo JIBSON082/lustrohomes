@@ -905,7 +905,7 @@ function MenuModal({ onClose }: { onClose: () => void }) {
             <span className="text-gold text-lg block mb-2">{cat.icon}</span>
             <h3 className="font-cormorant text-3xl text-cream italic font-light">{cat.label}</h3>
           </div>
-          {(cat.sections as MenuSection[]).map((sec, si) => (
+          {(cat.sections as unknown as MenuSection[]).map((sec, si) => (
             <div key={si} className="mb-10" style={{ animation: `menuSectionIn 0.5s ease ${si * 0.08}s both` }}>
               <div className="mb-1">
                 <p className="font-dm-sans text-[0.58rem] text-gold uppercase tracking-[0.3em]">{sec.title}</p>
