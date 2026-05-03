@@ -853,7 +853,7 @@ function MenuModal({ onClose }: { onClose: () => void }) {
       className="fixed inset-0 z-[100] flex flex-col"
       style={{ animation: "menuModalIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards" }}
     >
-      <div className="absolute inset-0 bg-charcoal/95 backdrop-blur-md" onClick={onClose} />
+     <div className="absolute inset-0 bg-[#0a0a0a] backdrop-blur-md" onClick={onClose} />
       <div
         className="relative z-10 flex flex-col h-full max-w-2xl mx-auto w-full"
         style={{ animation: "menuPanelIn 0.5s cubic-bezier(0.25,0.46,0.45,0.94) 0.1s both" }}
@@ -918,9 +918,9 @@ function MenuModal({ onClose }: { onClose: () => void }) {
                   style={{ animation: `menuItemIn 0.4s ease ${si * 0.08 + ii * 0.04}s both` }}
                 >
                   <div className="flex-1 min-w-0">
-                    <p className="font-cormorant text-[1.05rem] text-cream group-hover:text-gold transition-colors leading-snug">{item.name}</p>
+                 <p className="font-cormorant text-xl font-semibold text-cream group-hover:text-gold transition-colors leading-snug">{item.name}</p>
                     {item.sub && <p className="font-cormorant text-sm text-cream/40 italic mt-0.5">{item.sub}</p>}
-                    {item.desc && <p className="font-dm-sans text-[0.62rem] text-cream/35 mt-1.5 leading-relaxed italic">{item.desc}</p>}
+                    {item.desc && <p className="font-dm-sans text-[0.65rem] text-cream/55 mt-1.5 leading-relaxed italic">{item.desc}</p>}
                   </div>
                   <div className="flex-shrink-0 w-8 border-b border-dotted border-gold/20 self-center mb-1" />
                   <p className="font-cormorant text-base text-gold font-light flex-shrink-0 tracking-wide">{fmtPrice(item.price)}</p>
