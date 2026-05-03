@@ -729,31 +729,85 @@ function Dining() {
 
   return (
     <section id="dining" className="bg-charcoal py-24 md:py-36 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-14 md:gap-20 items-center">
-        {/* Left — Text */}
-        <div className="reveal-from-left order-2 md:order-1">
-          <p className="font-dm-sans text-[0.65rem] text-gold uppercase tracking-[0.28em] mb-4">
+      <div className="max-w-7xl mx-auto px-6">
+
+        {/* Section Title — TOP, bold, centered */}
+        <div className="text-center mb-12 reveal-element">
+          <p className="font-dm-sans text-[0.65rem] text-gold uppercase tracking-[0.28em] mb-4 font-bold">
             Signature Dining
           </p>
-          <h2 className="font-cormorant text-5xl md:text-6xl text-cream font-light leading-[1.1] mb-6">
+          <h2 className="font-cormorant text-5xl md:text-6xl text-cream font-light leading-[1.1]">
             Lustro Lagos{" "}
             <em className="italic text-gold">Restaurant</em>
           </h2>
-          <div className="section-line mb-8" />
-          <p className="font-dm-sans text-cream/60 leading-[1.85] text-sm md:text-base mb-5">
-            Lustro Lagos is more than a restaurant — it's an immersive sensory
-            experience. We source the finest local ingredients and reimagine
-            them through a global culinary lens, delivering a menu that
-            surprises, delights, and lingers long after the last bite.
-          </p>
-          <p className="font-dm-sans text-cream/60 leading-[1.85] text-sm md:text-base mb-10">
-            Whether you're celebrating a milestone, hosting a business dinner,
-            or simply treating yourself — our team is dedicated to making every
-            meal an occasion. Open to both in-house guests and the public.
-          </p>
+          <div className="section-line mx-auto mt-6" />
+        </div>
 
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row gap-4">
+        {/* Image Grid — sequential animation */}
+        <div className="grid grid-cols-2 gap-3 mb-14">
+          <div className="flex flex-col gap-3">
+            <div className="dining-img-1 relative rounded-xl overflow-hidden h-72 img-zoom">
+              <Image
+                src={diningImages[0].src}
+                alt={diningImages[0].alt}
+                fill
+                sizes="(max-width: 768px) 50vw, 25vw"
+                className="object-cover"
+                quality={100}
+              />
+            </div>
+            <div className="dining-img-3 relative rounded-xl overflow-hidden h-44 img-zoom">
+              <Image
+                src={diningImages[2].src}
+                alt={diningImages[2].alt}
+                fill
+                sizes="(max-width: 768px) 50vw, 25vw"
+                className="object-cover"
+                quality={100}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <div className="dining-img-2 relative rounded-xl overflow-hidden h-44 img-zoom">
+              <Image
+                src={diningImages[1].src}
+                alt={diningImages[1].alt}
+                fill
+                sizes="(max-width: 768px) 50vw, 25vw"
+                className="object-cover"
+                quality={100}
+              />
+            </div>
+            <div className="dining-img-4 relative rounded-xl overflow-hidden h-72 img-zoom">
+              <Image
+                src={diningImages[3].src}
+                alt={diningImages[3].alt}
+                fill
+                sizes="(max-width: 768px) 50vw, 25vw"
+                className="object-cover"
+                quality={100}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Text + CTAs below images */}
+        <div className="grid md:grid-cols-2 gap-10 items-start reveal-from-left">
+          <div>
+            <p className="font-dm-sans text-cream/60 leading-[1.85] text-sm md:text-base mb-5">
+              Lustro Lagos is more than a restaurant — it's an immersive sensory
+              experience. We source the finest local ingredients and reimagine
+              them through a global culinary lens, delivering a menu that
+              surprises, delights, and lingers long after the last bite.
+            </p>
+            <p className="font-dm-sans text-cream/60 leading-[1.85] text-sm md:text-base">
+              Whether you're celebrating a milestone, hosting a business dinner,
+              or simply treating yourself — our team is dedicated to making every
+              meal an occasion. Open to both in-house guests and the public.
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-4 md:justify-end md:items-start">
             <a
               href={`${WHATSAPP_URL}?text=I'd like to reserve a table at Lustro Lagos Restaurant`}
               target="_blank"
@@ -772,55 +826,18 @@ function Dining() {
             </a>
           </div>
         </div>
-
-        {/* Right — Asymmetric 2×2 Image Grid */}
-        {/* Layout: tall-left | short-right / short-left | tall-right */}
-        <div className="reveal-from-right order-1 md:order-2 grid grid-cols-2 gap-3">
-          {/* Left column */}
-          <div className="flex flex-col gap-3">
-            <div className="img-zoom relative rounded-xl overflow-hidden h-72">
-              <Image
-                src={diningImages[0].src}
-                alt={diningImages[0].alt}
-                fill
-                sizes="(max-width: 768px) 50vw, 25vw"
-                className="object-cover"
-              />
-            </div>
-            <div className="img-zoom relative rounded-xl overflow-hidden h-44">
-              <Image
-                src={diningImages[2].src}
-                alt={diningImages[2].alt}
-                fill
-                sizes="(max-width: 768px) 50vw, 25vw"
-                className="object-cover"
-              />
-            </div>
-          </div>
-
-          {/* Right column */}
-          <div className="flex flex-col gap-3">
-            <div className="img-zoom relative rounded-xl overflow-hidden h-44">
-              <Image
-                src={diningImages[1].src}
-                alt={diningImages[1].alt}
-                fill
-                sizes="(max-width: 768px) 50vw, 25vw"
-                className="object-cover"
-              />
-            </div>
-            <div className="img-zoom relative rounded-xl overflow-hidden h-72">
-              <Image
-                src={diningImages[3].src}
-                alt={diningImages[3].alt}
-                fill
-                sizes="(max-width: 768px) 50vw, 25vw"
-                className="object-cover"
-              />
-            </div>
-          </div>
-        </div>
       </div>
+
+      <style>{`
+        @keyframes diningReveal {
+          from { opacity: 0; transform: translateY(40px) scale(0.97); }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .dining-img-1 { opacity: 0; animation: diningReveal 0.7s cubic-bezier(0.25,0.46,0.45,0.94) 0.1s forwards; }
+        .dining-img-2 { opacity: 0; animation: diningReveal 0.7s cubic-bezier(0.25,0.46,0.45,0.94) 0.35s forwards; }
+        .dining-img-3 { opacity: 0; animation: diningReveal 0.7s cubic-bezier(0.25,0.46,0.45,0.94) 0.6s forwards; }
+        .dining-img-4 { opacity: 0; animation: diningReveal 0.7s cubic-bezier(0.25,0.46,0.45,0.94) 0.85s forwards; }
+      `}</style>
     </section>
   );
 }
