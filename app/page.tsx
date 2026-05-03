@@ -193,14 +193,6 @@ function Navbar({
 // HERO SECTION
 // ─────────────────────────────────────────────────
 function Hero() {
-  const [activeSlide, setActiveSlide] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveSlide((prev) => (prev + 1) % HERO_SLIDES.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <section
