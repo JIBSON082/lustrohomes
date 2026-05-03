@@ -705,9 +705,263 @@ function Rooms() {
 }
 
 // ─────────────────────────────────────────────────
+// MENU DATA
+// ─────────────────────────────────────────────────
+const MENU_DATA = {
+  premium: {
+    label: "Premium", icon: "◆",
+    sections: [{
+      title: "Lustro Premium",
+      items: [
+        { name: "Don Julio 1942", price: 500000 },
+        { name: "Hennessy XO", price: 470000 },
+        { name: "Martel XO", price: 420000 },
+        { name: "Casamigo", price: 350000 },
+        { name: "Martel Blueswift", price: 200000 },
+        { name: "Belair", price: 120000 },
+        { name: "Jameson Black", price: 100000 },
+        { name: "Martel VS", price: 100000 },
+        { name: "White Wine", price: 35000 },
+        { name: "Red Wine", price: 35000 },
+      ],
+    },
+    { title: "Chaser", items: [{ name: "Cranberry", price: 12000 }, { name: "Soda", price: 2000 }] }],
+  },
+  cocktails: {
+    label: "Cocktails", icon: "🍸",
+    sections: [{
+      title: "Maple Classic Twist by Lustro",
+      items: [
+        { name: "Lustro Mojito", sub: "Mojito", desc: "White Rum, Fresh Mint Leaves, Lime Juice & Soda Water", price: 10000 },
+        { name: "Lustro Lady", desc: "Pineapple juice, vanilla essence, passion fruit & vodka", price: 12000 },
+        { name: "Lustro Ride", desc: "Dark and white rum, gin, vodka, tequila, vanilla essence, lemon juice, elder flower syrup & soda", price: 12000 },
+        { name: "Lustro Fever", desc: "Gin, vodka, brandy, lemon juice & blackberry liqueur", price: 10000 },
+        { name: "Golden Pina", sub: "Pina Colada", desc: "White Rum, Pineapple Juice & Coconut Cream", price: 11000 },
+        { name: "Brainstorm", desc: "Bailey Irish cream, gin, whiskey & coffee liqueur", price: 12000 },
+        { name: "Spicy Citrus Margarita", desc: "Tequila, triple sec, lime juice, agave syrup & cayenne pepper", price: 10000 },
+        { name: "Sunset Cosmo", sub: "Cosmopolitan", desc: "Vodka, Triple Sec, Cranberry Juice & Lime Juice", price: 10000 },
+        { name: "Lustro Island Rush", sub: "Long Island Iced Tea", desc: "Vodka, Tequila, White Rum, Gin, Triple Sec, Lemon Juice, Simple Syrup & Cola", price: 12000 },
+        { name: "Tequila Sunrise Glow", sub: "Tequila Sunrise", desc: "Tequila, Orange Juice & Grenadine", price: 10000 },
+      ],
+    }],
+  },
+  mocktails: {
+    label: "Mocktails", icon: "🍹",
+    sections: [
+      {
+        title: "Lustro Pine · Mocktail Series",
+        items: [
+          { name: "Lustro Pine", desc: "Dragon fruit puree, mint leaves, lime, white sugar, sparkling water, ice cubes", price: 10000 },
+          { name: "Safe Sex", desc: "Cranberry, peach syrup, orange squash & grenadine", price: 9000 },
+          { name: "Golden Glow", sub: "Tropical Bliss", desc: "Pineapple juice, mango puree, lime juice, coconut cream", price: 9000 },
+          { name: "Berry Luxe", sub: "Berry Fizz", desc: "Mixed Berry Puree, Lemonade & Honey Syrup", price: 9000 },
+          { name: "Mandarin Spritz", desc: "Mandarin juice, Prosecco & simple syrup", price: 9000 },
+          { name: "Chapman", desc: "Fanta, Sprite, Cucumber, Lemon, Grenadine and Angostura bitters", price: 9000 },
+        ],
+      },
+      {
+        title: "Shakes by Lustro",
+        items: [
+          { name: "Rose & Pistachio Milkshake", desc: "Milk, vanilla ice cream, rose syrup & crushed pistachios", price: 10000 },
+          { name: "Strawberry Baileys Milkshake", desc: "Strawberries, Baileys Irish Cream, milk, vanilla ice cream", price: 10000 },
+          { name: "Oreo Chocolate Milkshake", desc: "Oreo cookies, chocolate ice cream, milk, chocolate syrup", price: 10000 },
+          { name: "Vanilla Coffee Milkshake", desc: "Milk, vanilla ice cream, espresso, vanilla extract", price: 10000 },
+          { name: "Berry Dreams", desc: "Milk, strawberry ice cream, blueberry ice cream, mixed berry compote", price: 10000 },
+        ],
+      },
+    ],
+  },
+  starters: {
+    label: "Starters", icon: "✦",
+    sections: [{
+      title: "Starters",
+      items: [
+        { name: "Calamari Strips", desc: "Crispy Calamari served with sweet chilli sauce and ranch sauce", price: 12000 },
+        { name: "Buffalo Wings", desc: "Chicken wings cooked in hot buffalo sauce, garnished with sesame seed and fresh parsley", price: 10000 },
+        { name: "Honey Glazed Wings", desc: "Chicken wings glazed with honey, lemon pepper, chilli flakes garnished with parsley", price: 10000 },
+        { name: "Spicy Chicken Wings", desc: "Chicken wings cooked in hot chilli sauce, onion and bell pepper", price: 10000 },
+        { name: "Mayo Prawn Roll", desc: "Prawn wrapped in mayo dip with fresh salted veggies, thousand island sauce and our signature ranch sauce", price: 8000 },
+      ],
+    }],
+  },
+  mains: {
+    label: "Mains", icon: "◉",
+    sections: [
+      {
+        title: "Pastalavista",
+        items: [
+          { name: "Vannesa's Special", desc: "Vannesa's signature recipe, served with prawn, shredded beef, chicken breast and shrimps", price: 25000 },
+          { name: "Seafood Pasta", desc: "Pasta cooked in creamy or tomato sauce with shrimps, calamari, prawn, garnished with parsley flakes", price: 20000 },
+          { name: "Alfredo Pasta", desc: "Pasta cooked in creamy sauce, minced garlic, onion, chicken fillet, Parmesan cheese and fresh parsley", price: 17000 },
+          { name: "Lustro Chicken Pasta", desc: "Pasta cooked in tomato plum, diced chicken breast, fresh basil, garnished with Parmesan cheese", price: 15000 },
+          { name: "Lustro Beef Pasta", desc: "Pasta cooked in tomato plum, shredded beef, fresh basil, garnished with Parmesan cheese", price: 15000 },
+        ],
+      },
+      {
+        title: "Lustro Rice",
+        items: [
+          { name: "Lustro Jambalaya Rice", desc: "Jambalaya rice, served with chicken or spicy turkey", price: 25000 },
+          { name: "Egg Fried Rice with Beef Sweet Chili Sauce", desc: "Rice stir fried with veggies, eggs, shrimps, chicken breast with beef sweet chili sauce", price: 20000 },
+        ],
+      },
+      {
+        title: "Flames & Grills by Lustro",
+        items: [
+          { name: "Grilled Catfish", desc: "Grilled catfish served with fries, pepper sauce and steamed veggies", price: 25000 },
+          { name: "Grilled Croacker Fish", desc: "Grilled croacker fish served with fries, pepper sauce and steamed veggies", price: 25000 },
+          { name: "Suya Chicken Kebab", desc: "Grilled sticked suya chicken with veggies and yam fries", price: 15000 },
+        ],
+      },
+    ],
+  },
+  wraps: {
+    label: "Wraps & Sides", icon: "◈",
+    sections: [
+      { title: "Lustro Wraps", items: [{ name: "Chicken Shawarma Wrap", price: 10000 }, { name: "Beef Shawarma Wrap", price: 10000 }] },
+      { title: "Sides", items: [{ name: "Crispy French Fries", price: 5000 }, { name: "Yam Fries", price: 4000 }, { name: "Plantain", price: 3000 }] },
+    ],
+  },
+} as const;
+
+type MenuKey = keyof typeof MENU_DATA;
+
+interface MenuItem {
+  name: string;
+  sub?: string;
+  desc?: string;
+  price: number;
+}
+
+interface MenuSection {
+  title: string;
+  items: MenuItem[];
+}
+
+const fmtPrice = (n: number) => `₦${n.toLocaleString()}`;
+
+function MenuModal({ onClose }: { onClose: () => void }) {
+  const [activeTab, setActiveTab] = useState<MenuKey>("premium");
+  const cat = MENU_DATA[activeTab];
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, []);
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex flex-col"
+      style={{ animation: "menuModalIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards" }}
+    >
+      <div className="absolute inset-0 bg-charcoal/95 backdrop-blur-md" onClick={onClose} />
+      <div
+        className="relative z-10 flex flex-col h-full max-w-2xl mx-auto w-full"
+        style={{ animation: "menuPanelIn 0.5s cubic-bezier(0.25,0.46,0.45,0.94) 0.1s both" }}
+      >
+        {/* Header */}
+        <div className="flex-shrink-0 px-6 pt-8 pb-0">
+          <div className="flex items-start justify-between mb-6">
+            <div>
+              <p className="font-dm-sans text-[0.6rem] text-gold uppercase tracking-[0.3em] mb-2">
+                Lustro Lagos Restaurant
+              </p>
+              <h2 className="font-cormorant text-4xl text-cream font-light">
+                Our <em className="italic text-gold">Menu</em>
+              </h2>
+            </div>
+            <button
+              onClick={onClose}
+              className="w-10 h-10 rounded-full bg-white/8 flex items-center justify-center hover:bg-brown transition-colors flex-shrink-0 mt-1"
+              aria-label="Close menu"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4 text-cream">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div className="w-full h-px bg-gradient-to-r from-gold/40 via-gold/20 to-transparent mb-0" />
+          {/* Tab Bar */}
+          <div className="flex gap-1 overflow-x-auto no-scrollbar py-4">
+            {(Object.entries(MENU_DATA) as [MenuKey, typeof MENU_DATA[MenuKey]][]).map(([key, val]) => (
+              <button
+                key={key}
+                onClick={() => setActiveTab(key)}
+                className={`flex-shrink-0 font-dm-sans text-[0.62rem] uppercase tracking-[0.18em] px-4 py-2 rounded-full transition-all duration-300 ${
+                  activeTab === key
+                    ? "bg-brown text-cream shadow-md"
+                    : "text-cream/45 hover:text-cream/80 border border-white/8 hover:border-white/20"
+                }`}
+              >
+                {val.label}
+              </button>
+            ))}
+          </div>
+          <div className="w-full h-px bg-white/5" />
+        </div>
+
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto px-6 pb-10 no-scrollbar">
+          <div className="text-center py-8">
+            <span className="text-gold text-lg block mb-2">{cat.icon}</span>
+            <h3 className="font-cormorant text-3xl text-cream italic font-light">{cat.label}</h3>
+          </div>
+          {(cat.sections as MenuSection[]).map((sec, si) => (
+            <div key={si} className="mb-10" style={{ animation: `menuSectionIn 0.5s ease ${si * 0.08}s both` }}>
+              <div className="mb-1">
+                <p className="font-dm-sans text-[0.58rem] text-gold uppercase tracking-[0.3em]">{sec.title}</p>
+                <div className="mt-2 h-px bg-gradient-to-r from-gold/40 to-transparent" />
+              </div>
+              {sec.items.map((item, ii) => (
+                <div
+                  key={ii}
+                  className="group flex items-baseline gap-3 py-4 border-b border-white/4 hover:border-gold/20 transition-colors"
+                  style={{ animation: `menuItemIn 0.4s ease ${si * 0.08 + ii * 0.04}s both` }}
+                >
+                  <div className="flex-1 min-w-0">
+                    <p className="font-cormorant text-[1.05rem] text-cream group-hover:text-gold transition-colors leading-snug">{item.name}</p>
+                    {item.sub && <p className="font-cormorant text-sm text-cream/40 italic mt-0.5">{item.sub}</p>}
+                    {item.desc && <p className="font-dm-sans text-[0.62rem] text-cream/35 mt-1.5 leading-relaxed italic">{item.desc}</p>}
+                  </div>
+                  <div className="flex-shrink-0 w-8 border-b border-dotted border-gold/20 self-center mb-1" />
+                  <p className="font-cormorant text-base text-gold font-light flex-shrink-0 tracking-wide">{fmtPrice(item.price)}</p>
+                </div>
+              ))}
+            </div>
+          ))}
+          <div className="text-center pt-4 pb-2">
+            <div className="flex items-center gap-4 justify-center mb-6">
+              <div className="h-px flex-1 bg-gradient-to-r from-transparent to-gold/25" />
+              <p className="font-cormorant text-sm text-gold/50 italic tracking-widest">Lustro Lagos</p>
+              <div className="h-px flex-1 bg-gradient-to-l from-transparent to-gold/25" />
+            </div>
+            <a
+              href={`${WHATSAPP_URL}?text=I'd like to reserve a table at Lustro Lagos Restaurant`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block bg-brown text-cream font-dm-sans text-sm px-10 py-3.5 rounded-full hover:bg-brown-light transition-colors"
+            >
+              Reserve A Table
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes menuModalIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes menuPanelIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes menuSectionIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes menuItemIn { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
+      `}</style>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────
 // DINING SECTION
 // ─────────────────────────────────────────────────
 function Dining() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   const diningImages = [
     {
       src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777641412/dining-1_kkrq3k.png",
@@ -808,14 +1062,12 @@ function Dining() {
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-4 md:justify-end md:items-start">
-            <a
-              href={`${WHATSAPP_URL}?text=I'd like to reserve a table at Lustro Lagos Restaurant`}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => setMenuOpen(true)}
               className="bg-brown text-cream font-dm-sans text-sm px-8 py-3.5 rounded-full hover:bg-brown-light transition-colors text-center"
             >
-              Reserve A Table
-            </a>
+              Explore Lustro's Menu
+            </button>
             <a
               href="https://instagram.com/lustro_lagos"
               target="_blank"
@@ -827,6 +1079,8 @@ function Dining() {
           </div>
         </div>
       </div>
+
+      {menuOpen && <MenuModal onClose={() => setMenuOpen(false)} />}
 
       <style>{`
         @keyframes diningReveal {
