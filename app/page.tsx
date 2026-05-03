@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
@@ -11,7 +10,6 @@ const WHATSAPP_NUMBER = "2348000000000"; // ← Replace with actual WhatsApp num
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
 
 const NAV_LINKS = [
-     
   { label: "About", href: "#about" },
   { label: "Rooms", href: "#rooms" },
   { label: "Dining", href: "#dining" },
@@ -38,7 +36,7 @@ function Navbar({
       setMenuOpen(false);
       const target = document.querySelector(href);
       if (target) {
-        target.scrollIntoView({ behavior: "instant" });
+        target.scrollIntoView({ behavior: "smooth" });
       }
     },
     [setMenuOpen]
@@ -63,16 +61,11 @@ function Navbar({
             }}
             className="flex items-center gap-3 group"
           >
-          <div className="relative w-16 h-16">
-  <Image
-    src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777567002/lustrologo_wfervy.png"
-    alt="Lustro Homes Logo"
-    fill
-    sizes="192px"
-    quality={100}
-    className="object-contain"
-  />
-</div>
+            <div className="w-9 h-9 rounded-full bg-brown flex items-center justify-center shadow-md group-hover:bg-brown-light transition-colors">
+              <span className="font-cormorant text-cream font-bold text-base leading-none">
+                L
+              </span>
+            </div>
             <span
               className={`font-cormorant font-semibold text-xl tracking-wide transition-colors ${
                 scrolled ? "text-charcoal" : "text-cream"
@@ -84,28 +77,20 @@ function Navbar({
 
           {/* Desktop links */}
           <div className="hidden md:flex items-center gap-8">
-            <a
-  href="#"
-  onClick={(e) => {
-    e.preventDefault();
-    setMenuOpen(false);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }}
-  className="font-cormorant text-3xl text-cream hover:text-gold transition-colors tracking-wide"
->
-  Home
-</a>
-{NAV_LINKS.map((link, i) => (
-  <a
-    key={link.label}
-    href={link.href}
-    onClick={(e) => handleNavClick(e, link.href)}
-    className="font-cormorant text-4xl text-cream hover:text-gold transition-colors tracking-wide"
-    style={{ animationDelay: `${i * 0.05}s` }}
-  >
-    {link.label}
-  </a>
-))}
+            {NAV_LINKS.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                onClick={(e) => handleNavClick(e, link.href)}
+                className={`nav-link font-dm-sans text-sm tracking-wide transition-colors ${
+                  scrolled
+                    ? "text-charcoal/80 hover:text-brown"
+                    : "text-cream/85 hover:text-cream"
+                }`}
+              >
+                {link.label}
+              </a>
+            ))}
             <a
               href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
               target="_blank"
@@ -154,75 +139,51 @@ function Navbar({
       </nav>
 
       {/* Mobile Menu Overlay */}
-      {/* Mobile Menu Overlay */}
-<div
-  className={`mobile-menu ${
-    menuOpen ? "open" : ""
-  } fixed inset-0 z-40 bg-charcoal flex flex-col items-center justify-center`}
->
-  <div className="flex flex-col items-center gap-5">
-    {[{ label: "Home", href: "#" }, ...NAV_LINKS].map((link, i) => (
-      <a
-        key={link.label}
-        href={link.href}
-        onClick={(e) => {
-          e.preventDefault();
-          setMenuOpen(false);
-          if (link.href === "#") {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          } else {
-            document.querySelector(link.href)?.scrollIntoView({ behavior: "smooth" });
-          }
-        }}
-        className="font-cormorant text-4xl text-cream hover:text-gold transition-colors tracking-wide"
-        style={{
-          opacity: menuOpen ? 1 : 0,
-          transform: menuOpen ? "translateY(0)" : "translateY(20px)",
-          transition: `opacity 0.4s ease ${i * 0.07}s, transform 0.4s ease ${i * 0.07}s`,
-        }}
+      <div
+        className={`mobile-menu ${
+          menuOpen ? "open" : ""
+        } fixed inset-0 z-40 bg-charcoal flex flex-col items-center justify-center`}
       >
-        {link.label}
-      </a>
-    ))}
-    <a
-      href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="mt-4 bg-brown text-cream font-dm-sans px-10 py-3.5 rounded-full text-sm hover:bg-brown-light transition-colors"
-      style={{
-        opacity: menuOpen ? 1 : 0,
-        transform: menuOpen ? "translateY(0)" : "translateY(20px)",
-        transition: `opacity 0.4s ease 0.56s, transform 0.4s ease 0.56s`,
-      }}
-    >
-      Book Your Stay
-    </a>
-    <div
-      className="mt-4 flex gap-6"
-      style={{
-        opacity: menuOpen ? 1 : 0,
-        transition: `opacity 0.4s ease 0.63s`,
-      }}
-    >
-      <a
-        href="https://instagram.com/lustro_homes"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="font-dm-sans text-xs text-cream/50 hover:text-gold transition-colors tracking-widest uppercase"
-      >
-        @lustro_homes
-      </a>
-      <a
-        href="https://instagram.com/lustro_lagos"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="font-dm-sans text-xs text-cream/50 hover:text-gold transition-colors tracking-widest uppercase"
-      >
-        @lustro_lagos
-      </a>
-    </div>
-  </div>
-</div>
+        <div className="flex flex-col items-center gap-7">
+          {NAV_LINKS.map((link, i) => (
+            <a
+              key={link.label}
+              href={link.href}
+              onClick={(e) => handleNavClick(e, link.href)}
+              className="font-cormorant text-5xl text-cream hover:text-gold transition-colors tracking-wide"
+              style={{ animationDelay: `${i * 0.05}s` }}
+            >
+              {link.label}
+            </a>
+          ))}
+          <a
+            href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 bg-brown text-cream font-dm-sans px-10 py-3.5 rounded-full text-sm hover:bg-brown-light transition-colors"
+          >
+            Book Your Stay
+          </a>
+          <div className="mt-6 flex gap-6">
+            <a
+              href="https://instagram.com/lustro_homes"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-dm-sans text-xs text-cream/50 hover:text-gold transition-colors tracking-widest uppercase"
+            >
+              @lustro_homes
+            </a>
+            <a
+              href="https://instagram.com/lustro_lagos"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-dm-sans text-xs text-cream/50 hover:text-gold transition-colors tracking-widest uppercase"
+            >
+              @lustro_lagos
+            </a>
+          </div>
+        </div>
+      </div>
     </>
   );
 }
@@ -231,15 +192,21 @@ function Navbar({
 // HERO SECTION — Cinematic Video Background
 // ─────────────────────────────────────────────────
 const HERO_VIDEO_URL =
-  "https://res.cloudinary.com/dx3k7hbnc/video/upload/v1777632548/Hero-video_egr33p.mp4";
+  "https://res.cloudinary.com/dx3k7hbnc/video/upload/q_auto:best,f_auto/v1777632548/Hero-video_egr33p.mp4";
+
+const HERO_MODAL_EMBED =
+  "https://player.cloudinary.com/embed/?cloud_name=dx3k7hbnc&public_id=Hero-video_egr33p&autoplay=true&controls=true";
+
 function Hero() {
   const [modalOpen, setModalOpen] = useState(false);
+  const heroRef = useState<HTMLDivElement | null>(null);
 
+  // GSAP text entrance
   useEffect(() => {
     const initAnim = async () => {
       try {
         const { gsap } = await import("gsap");
-        const tl = gsap.timeline({ delay: 0.6 });
+        const tl = gsap.timeline({ delay: 0.4 });
         tl.fromTo(
           ".hero-eyebrow",
           { opacity: 0, y: 22 },
@@ -270,6 +237,7 @@ function Hero() {
             "-=0.3"
           );
       } catch (err) {
+        // Fallback — show everything
         document
           .querySelectorAll(
             ".hero-eyebrow,.hero-title,.hero-sub,.hero-play,.hero-ctas"
@@ -283,6 +251,7 @@ function Hero() {
     initAnim();
   }, []);
 
+  // Lock body scroll when modal open
   useEffect(() => {
     document.body.style.overflow = modalOpen ? "hidden" : "";
     return () => {
@@ -301,47 +270,24 @@ function Hero() {
           className="absolute inset-0 z-0"
           style={{ transform: "translateZ(0)", willChange: "transform" }}
         >
-    <video
-  src={HERO_VIDEO_URL}
-  autoPlay
-  muted
-  loop
-  playsInline
-  className="w-full h-full object-cover"
-/>
+          <video
+            src={HERO_VIDEO_URL}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-full object-cover"
+          />
         </div>
 
-        {/* Dark Overlay — stronger at bottom where text sits */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/85 via-black/30 to-black/10" />
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 z-10 bg-black/52" />
 
-        {/* Hero Content — pinned to bottom */}
-        <div className="relative z-20 flex flex-col justify-end h-full px-6 pb-10 md:pb-14" >
-          {/* Watch for more — top left of content area */}
-          <button
-            onClick={() => setModalOpen(true)}
-            className="hero-play group mb-8 flex items-center gap-3 w-fit"
-            style={{ opacity: 0 }}
-            aria-label="Watch for more"
-          >
-            <div className="relative w-12 h-12 rounded-full border-2 border-cream/60 flex items-center justify-center group-hover:border-gold group-hover:scale-110 transition-all duration-400">
-              <div className="absolute inset-0 rounded-full border border-cream/20 scale-125 group-hover:scale-150 transition-transform duration-500 opacity-60" />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="w-5 h-5 text-cream group-hover:text-gold transition-colors ml-0.5"
-              >
-                <path d="M8 5.14v14l11-7-11-7z" />
-              </svg>
-            </div>
-            <span className="font-dm-sans text-[0.65rem] text-cream/70 uppercase tracking-[0.25em] group-hover:text-gold transition-colors">
-              Watch for more
-            </span>
-          </button>
-
+        {/* Hero Content */}
+        <div className="relative z-20 flex flex-col items-center justify-center h-full px-6 text-center">
           {/* Eyebrow */}
           <p
-            className="hero-eyebrow font-dm-sans text-[0.65rem] text-gold uppercase tracking-[0.35em] mb-4"
+            className="hero-eyebrow font-dm-sans text-[0.65rem] text-gold uppercase tracking-[0.35em] mb-6"
             style={{ opacity: 0 }}
           >
             Premium Staycation · Lagos
@@ -349,7 +295,7 @@ function Hero() {
 
           {/* Headline */}
           <h1
-            className="hero-title font-cormorant text-5xl sm:text-6xl md:text-7xl text-cream font-light leading-[1.08] mb-4 max-w-2xl"
+            className="hero-title font-cormorant text-5xl sm:text-6xl md:text-7xl text-cream font-light leading-[1.08] mb-6 max-w-3xl"
             style={{ opacity: 0 }}
           >
             Your Lagos{" "}
@@ -361,23 +307,48 @@ function Hero() {
 
           {/* Subtext */}
           <p
-            className="hero-sub font-dm-sans text-cream/65 text-sm leading-relaxed mb-8 max-w-sm"
+            className="hero-sub font-dm-sans text-cream/65 text-sm md:text-base leading-relaxed mb-10 max-w-md"
             style={{ opacity: 0 }}
           >
             World-class comfort woven with Nigerian soul — unforgettable stays
             and signature dining in the heart of Yaba, Lagos.
           </p>
 
+          {/* Play Button */}
+          <button
+            onClick={() => setModalOpen(true)}
+            className="hero-play group mb-10 flex flex-col items-center gap-3"
+            style={{ opacity: 0 }}
+            aria-label="Play video"
+          >
+            <div className="relative w-16 h-16 rounded-full border-2 border-cream/60 flex items-center justify-center group-hover:border-gold group-hover:scale-110 transition-all duration-400">
+              {/* Ripple ring */}
+              <div className="absolute inset-0 rounded-full border border-cream/20 scale-125 group-hover:scale-150 transition-transform duration-500 opacity-60" />
+              {/* Play icon SVG */}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="w-6 h-6 text-cream group-hover:text-gold transition-colors ml-0.5"
+              >
+                <path d="M8 5.14v14l11-7-11-7z" />
+              </svg>
+            </div>
+            <span className="font-dm-sans text-[0.65rem] text-cream/55 uppercase tracking-[0.25em] group-hover:text-gold transition-colors">
+              Watch Film
+            </span>
+          </button>
+
           {/* CTA Buttons */}
           <div
-            className="hero-ctas flex flex-row gap-3"
+            className="hero-ctas flex flex-col sm:flex-row gap-4"
             style={{ opacity: 0 }}
           >
             <a
               href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-brown text-cream font-dm-sans text-sm px-9 py-3.5 rounded-full hover:bg-brown-light transition-colors shadow-lg w-fit"
+              className="bg-brown text-cream font-dm-sans text-sm px-9 py-3.5 rounded-full hover:bg-brown-light transition-colors shadow-lg"
             >
               Book Your Stay
             </a>
@@ -387,11 +358,12 @@ function Hero() {
                 e.preventDefault();
                 const target = document.querySelector("#rooms");
                 if (target) {
-                  const y = target.getBoundingClientRect().top + window.scrollY;
+                  const y =
+                    target.getBoundingClientRect().top + window.scrollY;
                   window.scrollTo({ top: y, behavior: "instant" });
                 }
               }}
-              className="border border-cream/35 text-cream font-dm-sans text-sm px-9 py-3.5 rounded-full hover:bg-cream/10 transition-colors w-fit"
+              className="border border-cream/35 text-cream font-dm-sans text-sm px-9 py-3.5 rounded-full hover:bg-cream/10 transition-colors"
             >
               Explore Rooms
             </a>
@@ -399,54 +371,73 @@ function Hero() {
         </div>
       </section>
 
-      {/* ── Full Screen Modal Player ── */}
+      {/* ── Modal Player ── */}
       {modalOpen && (
         <div
-          className="fixed inset-0 z-[100] bg-black flex items-center justify-center"
-          style={{ animation: "modalFadeIn 0.35s ease forwards" }}
+          className="fixed inset-0 z-[100] flex items-center justify-center"
+          style={{
+            animation: "modalFadeIn 0.35s ease forwards",
+          }}
         >
-          {/* Close Button */}
-          <button
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/90"
             onClick={() => setModalOpen(false)}
-            className="absolute top-5 right-5 z-10 w-11 h-11 rounded-full bg-white/10 flex items-center justify-center hover:bg-brown transition-colors"
-            aria-label="Close video"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              className="w-5 h-5 text-cream"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-
-          {/* Full Screen Native Video — no Cloudinary branding */}
-          <video
-            src={HERO_VIDEO_URL}
-            controls
-            autoPlay
-            playsInline
-            className="w-full h-full object-cover"
-            style={{ animation: "modalScaleIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards" }}
           />
+
+          {/* Modal Box */}
+          <div
+            className="relative w-full max-w-4xl mx-4 rounded-2xl overflow-hidden shadow-2xl"
+            style={{
+              animation: "modalScaleIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards",
+            }}
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setModalOpen(false)}
+              className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/60 flex items-center justify-center hover:bg-brown transition-colors"
+              aria-label="Close video"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                className="w-5 h-5 text-cream"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+
+            {/* Cloudinary Iframe Player */}
+            <div className="relative w-full" style={{ paddingTop: "56.25%" }}>
+              <iframe
+                src={HERO_MODAL_EMBED}
+                className="absolute inset-0 w-full h-full"
+                allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+                allowFullScreen
+                frameBorder="0"
+                title="Lustro Homes — Experience Film"
+              />
+            </div>
+          </div>
         </div>
       )}
 
+      {/* Modal animations injected as style tag */}
       <style>{`
         @keyframes modalFadeIn {
           from { opacity: 0; }
           to   { opacity: 1; }
         }
         @keyframes modalScaleIn {
-          from { opacity: 0; transform: scale(0.96); }
-          to   { opacity: 1; transform: scale(1); }
+          from { opacity: 0; transform: scale(0.92) translateY(24px); }
+          to   { opacity: 1; transform: scale(1) translateY(0); }
         }
       `}</style>
     </>
@@ -491,7 +482,7 @@ function StatsBar() {
 function About() {
   return (
     <section id="about" className="bg-cream py-24 md:py-36 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-[1fr_1.4fr] gap-14 md:gap-20 items-stretch">
+      <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-14 md:gap-20 items-center">
         {/* Left — Text */}
         <div className="reveal-element">
           <p className="font-dm-sans text-[0.65rem] text-brown uppercase tracking-[0.28em] mb-4">
@@ -537,16 +528,15 @@ function About() {
 
         {/* Right — Image */}
         <div className="reveal-element relative">
-          <div className="img-zoom relative rounded-2xl overflow-hidden h-[520px] md:h-[680px]">
-  <Image
-    src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777570667/living-room_ehvxbd.jpg"
-    alt="Lustro Homes luxury living room interior"
-    fill
-    sizes="(max-width: 768px) 100vw, 60vw"
-    quality={100}
-    className="object-cover object-right-top"
-  />
-</div>
+          <div className="img-zoom relative rounded-2xl overflow-hidden h-[480px] md:h-[560px]">
+            <Image
+              src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85"
+              alt="Lustro Homes luxury living room interior"
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover"
+            />
+          </div>
           {/* Floating glass badge */}
           <div
             className="glass absolute bottom-6 left-6 px-5 py-4 rounded-xl"
@@ -559,6 +549,9 @@ function About() {
               @lustro_homes
             </p>
           </div>
+          {/* Decorative element */}
+          <div className="absolute -top-4 -right-4 w-32 h-32 rounded-full border border-brown/15 pointer-events-none" />
+          <div className="absolute -top-8 -right-8 w-48 h-48 rounded-full border border-brown/8 pointer-events-none" />
         </div>
       </div>
     </section>
@@ -651,9 +644,18 @@ function Rooms() {
                   sizes="(max-width: 768px) 100vw, 33vw"
                   className="object-cover"
                 />
+                {/* Gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
                 <div className="absolute top-4 left-4">
                   <span className="bg-brown text-cream font-dm-sans text-[0.6rem] px-3 py-1.5 rounded-full tracking-wider uppercase">
                     {room.tag}
+                  </span>
+                </div>
+                {/* Price on image */}
+                <div className="absolute bottom-4 right-4">
+                  <span className="font-cormorant text-xl text-cream">
+                    {room.price}
+                    <span className="font-dm-sans text-[0.6rem] text-cream/60 ml-1">/ night</span>
                   </span>
                 </div>
               </div>
@@ -663,17 +665,9 @@ function Rooms() {
                 <p className="font-dm-sans text-[0.6rem] text-brown uppercase tracking-[0.22em] mb-1.5">
                   {room.tier}
                 </p>
-                <h3 className="font-cormorant text-3xl text-charcoal font-light mb-1">
+                <h3 className="font-cormorant text-3xl text-charcoal font-light mb-5">
                   {room.name}
                 </h3>
-                <div className="flex items-baseline gap-1.5 mb-5">
-                  <p className="font-cormorant text-2xl text-gold">
-                    {room.price}
-                  </p>
-                  <span className="font-dm-sans text-xs text-charcoal/40">
-                    / night
-                  </span>
-                </div>
 
                 {/* Feature pills */}
                 <div className="flex flex-wrap gap-2 mb-7">
@@ -706,9 +700,350 @@ function Rooms() {
 }
 
 // ─────────────────────────────────────────────────
+// MENU DATA
+// ─────────────────────────────────────────────────
+const MENU_DATA = {
+  premium: {
+    label: "Premium",
+    icon: "◆",
+    sections: [
+      {
+        title: "Lustro Premium",
+        items: [
+          { name: "Don Julio 1942", price: 500000 },
+          { name: "Hennessy XO", price: 470000 },
+          { name: "Martel XO", price: 420000 },
+          { name: "Casamigo", price: 350000 },
+          { name: "Martel Blueswift", price: 200000 },
+          { name: "Belair", price: 120000 },
+          { name: "Jameson Black", price: 100000 },
+          { name: "Martel VS", price: 100000 },
+          { name: "White Wine", price: 35000 },
+          { name: "Red Wine", price: 35000 },
+        ],
+      },
+      {
+        title: "Chaser",
+        items: [
+          { name: "Cranberry", price: 12000 },
+          { name: "Soda", price: 2000 },
+        ],
+      },
+    ],
+  },
+  cocktails: {
+    label: "Cocktails",
+    icon: "🍸",
+    sections: [
+      {
+        title: "Maple Classic Twist by Lustro",
+        items: [
+          { name: "Lustro Mojito", sub: "Mojito", desc: "White Rum, Fresh Mint Leaves, Lime Juice & Soda Water", price: 10000 },
+          { name: "Lustro Lady", desc: "Pineapple juice, vanilla essence, passion fruit & vodka", price: 12000 },
+          { name: "Lustro Ride", desc: "Dark and white rum, gin, vodka, tequila, vanilla essence, lemon juice, elder flower syrup & soda", price: 12000 },
+          { name: "Lustro Fever", desc: "Gin, vodka, brandy, lemon juice & blackberry liqueur", price: 10000 },
+          { name: "Golden Pina", sub: "Pina Colada", desc: "White Rum, Pineapple Juice & Coconut Cream", price: 11000 },
+          { name: "Brainstorm", desc: "Bailey Irish cream, gin, whiskey & coffee liqueur", price: 12000 },
+          { name: "Spicy Citrus Margarita", desc: "Tequila, triple sec, lime juice, agave syrup & cayenne pepper", price: 10000 },
+          { name: "Sunset Cosmo", sub: "Cosmopolitan", desc: "Vodka, Triple Sec, Cranberry Juice & Lime Juice", price: 10000 },
+          { name: "Lustro Island Rush", sub: "Long Island Iced Tea", desc: "Vodka, Tequila, White Rum, Gin, Triple Sec, Lemon Juice, Simple Syrup & Cola", price: 12000 },
+          { name: "Tequila Sunrise Glow", sub: "Tequila Sunrise", desc: "Tequila, Orange Juice & Grenadine", price: 10000 },
+        ],
+      },
+    ],
+  },
+  mocktails: {
+    label: "Mocktails",
+    icon: "🍹",
+    sections: [
+      {
+        title: "Lustro Pine · Mocktail Series",
+        items: [
+          { name: "Lustro Pine", desc: "Dragon fruit puree, mint leaves, lime, white sugar, sparkling water, ice cubes", price: 10000 },
+          { name: "Safe Sex", desc: "Cranberry, peach syrup, orange squash & grenadine", price: 9000 },
+          { name: "Golden Glow", sub: "Tropical Bliss", desc: "Pineapple juice, mango puree, lime juice, coconut cream", price: 9000 },
+          { name: "Berry Luxe", sub: "Berry Fizz", desc: "Mixed Berry Puree, Lemonade & Honey Syrup", price: 9000 },
+          { name: "Mandarin Spritz", desc: "Mandarin juice, Prosecco & simple syrup", price: 9000 },
+          { name: "Chapman", desc: "Fanta, Sprite, Cucumber, Lemon, Grenadine and Angostura bitters", price: 9000 },
+        ],
+      },
+      {
+        title: "Shakes by Lustro",
+        items: [
+          { name: "Rose & Pistachio Milkshake", desc: "Milk, vanilla ice cream, rose syrup & crushed pistachios", price: 10000 },
+          { name: "Strawberry Baileys Milkshake", desc: "Strawberries, Baileys Irish Cream, milk, vanilla ice cream", price: 10000 },
+          { name: "Oreo Chocolate Milkshake", desc: "Oreo cookies, chocolate ice cream, milk, chocolate syrup", price: 10000 },
+          { name: "Vanilla Coffee Milkshake", desc: "Milk, vanilla ice cream, espresso, vanilla extract", price: 10000 },
+          { name: "Berry Dreams", desc: "Milk, strawberry ice cream, blueberry ice cream, mixed berry compote", price: 10000 },
+        ],
+      },
+    ],
+  },
+  starters: {
+    label: "Starters",
+    icon: "✦",
+    sections: [
+      {
+        title: "Starters",
+        items: [
+          { name: "Calamari Strips", desc: "Crispy Calamari served with sweet chilli sauce and ranch sauce", price: 12000 },
+          { name: "Buffalo Wings", desc: "Chicken wings cooked in hot buffalo sauce, garnished with sesame seed and fresh parsley", price: 10000 },
+          { name: "Honey Glazed Wings", desc: "Chicken wings glazed with honey, lemon pepper, chilli flakes garnished with parsley", price: 10000 },
+          { name: "Spicy Chicken Wings", desc: "Chicken wings cooked in hot chilli sauce, onion and bell pepper", price: 10000 },
+          { name: "Mayo Prawn Roll", desc: "Prawn wrapped in mayo dip with fresh salted veggies, thousand island sauce and our signature ranch sauce", price: 8000 },
+        ],
+      },
+    ],
+  },
+  mains: {
+    label: "Mains",
+    icon: "◉",
+    sections: [
+      {
+        title: "Pastalavista",
+        items: [
+          { name: "Vannesa's Special", desc: "Vannesa's signature recipe, served with prawn, shredded beef, chicken breast and shrimps", price: 25000 },
+          { name: "Seafood Pasta", desc: "Pasta cooked in creamy or tomato sauce with shrimps, calamari, prawn, garnished with parsley flakes", price: 20000 },
+          { name: "Alfredo Pasta", desc: "Pasta cooked in creamy sauce, minced garlic, onion, chicken fillet, Parmesan cheese and fresh parsley", price: 17000 },
+          { name: "Lustro Chicken Pasta", desc: "Pasta cooked in tomato plum, diced chicken breast, fresh basil, garnished with Parmesan cheese", price: 15000 },
+          { name: "Lustro Beef Pasta", desc: "Pasta cooked in tomato plum, shredded beef, fresh basil, garnished with Parmesan cheese", price: 15000 },
+        ],
+      },
+      {
+        title: "Lustro Rice",
+        items: [
+          { name: "Lustro Jambalaya Rice", desc: "Jambalaya rice, served with chicken or spicy turkey", price: 25000 },
+          { name: "Egg Fried Rice with Beef Sweet Chili Sauce", desc: "Rice stir fried with veggies, eggs, shrimps, chicken breast with beef sweet chili sauce", price: 20000 },
+        ],
+      },
+      {
+        title: "Flames & Grills by Lustro",
+        items: [
+          { name: "Grilled Catfish", desc: "Grilled catfish served with fries, pepper sauce and steamed veggies", price: 25000 },
+          { name: "Grilled Croacker Fish", desc: "Grilled croacker fish served with fries, pepper sauce and steamed veggies", price: 25000 },
+          { name: "Suya Chicken Kebab", desc: "Grilled sticked suya chicken with veggies and yam fries", price: 15000 },
+        ],
+      },
+    ],
+  },
+  wraps: {
+    label: "Wraps & Sides",
+    icon: "◈",
+    sections: [
+      {
+        title: "Lustro Wraps",
+        items: [
+          { name: "Chicken Shawarma Wrap", price: 10000 },
+          { name: "Beef Shawarma Wrap", price: 10000 },
+        ],
+      },
+      {
+        title: "Sides",
+        items: [
+          { name: "Crispy French Fries", price: 5000 },
+          { name: "Yam Fries", price: 4000 },
+          { name: "Plantain", price: 3000 },
+        ],
+      },
+    ],
+  },
+} as const;
+
+type MenuKey = keyof typeof MENU_DATA;
+
+interface MenuItem {
+  name: string;
+  sub?: string;
+  desc?: string;
+  price: number;
+}
+
+interface MenuSection {
+  title: string;
+  items: MenuItem[];
+}
+
+const fmtPrice = (n: number) => `₦${n.toLocaleString()}`;
+
+// ─────────────────────────────────────────────────
+// MENU MODAL COMPONENT
+// ─────────────────────────────────────────────────
+function MenuModal({ onClose }: { onClose: () => void }) {
+  const [activeTab, setActiveTab] = useState<MenuKey>("premium");
+  const cat = MENU_DATA[activeTab];
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, []);
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex flex-col"
+      style={{ animation: "menuModalIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards" }}
+    >
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-charcoal/95 backdrop-blur-md" onClick={onClose} />
+
+      {/* Modal Panel */}
+      <div
+        className="relative z-10 flex flex-col h-full max-w-2xl mx-auto w-full"
+        style={{ animation: "menuPanelIn 0.5s cubic-bezier(0.25,0.46,0.45,0.94) 0.1s both" }}
+      >
+        {/* Header */}
+        <div className="flex-shrink-0 px-6 pt-8 pb-0">
+          <div className="flex items-start justify-between mb-6">
+            <div>
+              <p className="font-dm-sans text-[0.6rem] text-gold uppercase tracking-[0.3em] mb-2">
+                Lustro Lagos Restaurant
+              </p>
+              <h2 className="font-cormorant text-4xl text-cream font-light">
+                Our <em className="italic text-gold">Menu</em>
+              </h2>
+            </div>
+            <button
+              onClick={onClose}
+              className="w-10 h-10 rounded-full bg-white/8 flex items-center justify-center hover:bg-brown transition-colors flex-shrink-0 mt-1"
+              aria-label="Close menu"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4 text-cream">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Divider */}
+          <div className="w-full h-px bg-gradient-to-r from-gold/40 via-gold/20 to-transparent mb-0" />
+
+          {/* Tab Bar */}
+          <div className="flex gap-1 overflow-x-auto no-scrollbar py-4">
+            {(Object.entries(MENU_DATA) as [MenuKey, typeof MENU_DATA[MenuKey]][]).map(([key, val]) => (
+              <button
+                key={key}
+                onClick={() => setActiveTab(key)}
+                className={`flex-shrink-0 font-dm-sans text-[0.62rem] uppercase tracking-[0.18em] px-4 py-2 rounded-full transition-all duration-300 ${
+                  activeTab === key
+                    ? "bg-brown text-cream shadow-md"
+                    : "text-cream/45 hover:text-cream/80 border border-white/8 hover:border-white/20"
+                }`}
+              >
+                {val.label}
+              </button>
+            ))}
+          </div>
+          <div className="w-full h-px bg-white/5" />
+        </div>
+
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto px-6 pb-10 no-scrollbar">
+          {/* Category Header */}
+          <div className="text-center py-8">
+            <span className="text-gold text-lg block mb-2">{cat.icon}</span>
+            <h3 className="font-cormorant text-3xl text-cream italic font-light">
+              {cat.label}
+            </h3>
+          </div>
+
+          {/* Sections */}
+          {(cat.sections as MenuSection[]).map((sec, si) => (
+            <div
+              key={si}
+              className="mb-10"
+              style={{ animation: `menuSectionIn 0.5s ease ${si * 0.08}s both` }}
+            >
+              {/* Section Title */}
+              <div className="mb-1">
+                <p className="font-dm-sans text-[0.58rem] text-gold uppercase tracking-[0.3em]">
+                  {sec.title}
+                </p>
+                <div className="mt-2 h-px bg-gradient-to-r from-gold/40 to-transparent" />
+              </div>
+
+              {/* Items */}
+              {sec.items.map((item, ii) => (
+                <div
+                  key={ii}
+                  className="group flex items-baseline gap-3 py-4 border-b border-white/4 hover:border-gold/20 transition-colors"
+                  style={{ animation: `menuItemIn 0.4s ease ${si * 0.08 + ii * 0.04}s both` }}
+                >
+                  {/* Left */}
+                  <div className="flex-1 min-w-0">
+                    <p className="font-cormorant text-[1.05rem] text-cream group-hover:text-gold transition-colors leading-snug">
+                      {item.name}
+                    </p>
+                    {item.sub && (
+                      <p className="font-cormorant text-sm text-cream/40 italic mt-0.5">
+                        {item.sub}
+                      </p>
+                    )}
+                    {item.desc && (
+                      <p className="font-dm-sans text-[0.62rem] text-cream/35 mt-1.5 leading-relaxed italic">
+                        {item.desc}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Dots */}
+                  <div className="flex-shrink-0 w-8 border-b border-dotted border-gold/20 self-center mb-1" />
+
+                  {/* Price */}
+                  <p className="font-cormorant text-base text-gold font-light flex-shrink-0 tracking-wide">
+                    {fmtPrice(item.price)}
+                  </p>
+                </div>
+              ))}
+            </div>
+          ))}
+
+          {/* Footer */}
+          <div className="text-center pt-4 pb-2">
+            <div className="flex items-center gap-4 justify-center mb-6">
+              <div className="h-px flex-1 bg-gradient-to-r from-transparent to-gold/25" />
+              <p className="font-cormorant text-sm text-gold/50 italic tracking-widest">
+                Lustro Lagos
+              </p>
+              <div className="h-px flex-1 bg-gradient-to-l from-transparent to-gold/25" />
+            </div>
+            <a
+              href={`${WHATSAPP_URL}?text=I'd like to reserve a table at Lustro Lagos Restaurant`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block bg-brown text-cream font-dm-sans text-sm px-10 py-3.5 rounded-full hover:bg-brown-light transition-colors"
+            >
+              Reserve A Table
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes menuModalIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes menuPanelIn {
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes menuSectionIn {
+          from { opacity: 0; transform: translateY(16px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes menuItemIn {
+          from { opacity: 0; transform: translateX(-8px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────
 // DINING SECTION
 // ─────────────────────────────────────────────────
 function Dining() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   const diningImages = [
     {
       src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777641412/dining-1_kkrq3k.png",
@@ -744,53 +1079,64 @@ function Dining() {
           <div className="section-line mx-auto mt-6" />
         </div>
 
-        {/* Image Grid — sequential animation */}
-        <div className="grid grid-cols-2 gap-3 mb-14">
-          <div className="flex flex-col gap-3">
-            <div className="dining-img-1 relative rounded-xl overflow-hidden h-72 img-zoom">
-              <Image
-                src={diningImages[0].src}
-                alt={diningImages[0].alt}
-                fill
-                sizes="(max-width: 768px) 50vw, 25vw"
-                className="object-cover"
-                quality={100}
-              />
-            </div>
-            <div className="dining-img-3 relative rounded-xl overflow-hidden h-44 img-zoom">
-              <Image
-                src={diningImages[2].src}
-                alt={diningImages[2].alt}
-                fill
-                sizes="(max-width: 768px) 50vw, 25vw"
-                className="object-cover"
-                quality={100}
-              />
+        {/* Bento Image Grid — sequential animation */}
+        <div className="grid grid-cols-4 auto-rows-[200px] gap-4 mb-14">
+
+          {/* Hero tile — col-span-2 row-span-2 */}
+          <div className="dining-img-1 col-span-2 row-span-2 relative rounded-2xl overflow-hidden img-zoom">
+            <Image
+              src={diningImages[0].src}
+              alt={diningImages[0].alt}
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover"
+              quality={100}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent flex items-end p-6">
+              <p className="font-cormorant text-2xl text-cream italic">Signature Dishes</p>
             </div>
           </div>
 
-          <div className="flex flex-col gap-3">
-            <div className="dining-img-2 relative rounded-xl overflow-hidden h-44 img-zoom">
-              <Image
-                src={diningImages[1].src}
-                alt={diningImages[1].alt}
-                fill
-                sizes="(max-width: 768px) 50vw, 25vw"
-                className="object-cover"
-                quality={100}
-              />
-            </div>
-            <div className="dining-img-4 relative rounded-xl overflow-hidden h-72 img-zoom">
-              <Image
-                src={diningImages[3].src}
-                alt={diningImages[3].alt}
-                fill
-                sizes="(max-width: 768px) 50vw, 25vw"
-                className="object-cover"
-                quality={100}
-              />
+          {/* Top right — col-span-2 row-span-1 */}
+          <div className="dining-img-2 col-span-2 row-span-1 relative rounded-2xl overflow-hidden img-zoom">
+            <Image
+              src={diningImages[1].src}
+              alt={diningImages[1].alt}
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover"
+              quality={100}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-5">
+              <p className="font-cormorant text-xl text-cream italic">Craft Cocktails</p>
             </div>
           </div>
+
+          {/* Bottom right 1 */}
+          <div className="dining-img-3 col-span-1 row-span-1 relative rounded-2xl overflow-hidden img-zoom">
+            <Image
+              src={diningImages[2].src}
+              alt={diningImages[2].alt}
+              fill
+              sizes="(max-width: 768px) 50vw, 25vw"
+              className="object-cover"
+              quality={100}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          </div>
+
+          {/* Bottom right 2 — text tile */}
+          <div className="dining-img-4 col-span-1 row-span-1 relative rounded-2xl overflow-hidden bg-brown/20 border border-gold/20 flex items-center justify-center p-5">
+            <div className="text-center">
+              <p className="font-cormorant text-xl text-gold italic leading-snug">
+                "Dining is an art form."
+              </p>
+              <p className="font-dm-sans text-[0.6rem] text-cream/40 uppercase tracking-widest mt-3">
+                Lustro Lagos
+              </p>
+            </div>
+          </div>
+
         </div>
 
         {/* Text + CTAs below images */}
@@ -809,14 +1155,12 @@ function Dining() {
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-4 md:justify-end md:items-start">
-            <a
-              href={`${WHATSAPP_URL}?text=I'd like to reserve a table at Lustro Lagos Restaurant`}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => setMenuOpen(true)}
               className="bg-brown text-cream font-dm-sans text-sm px-8 py-3.5 rounded-full hover:bg-brown-light transition-colors text-center"
             >
-              Reserve A Table
-            </a>
+              Explore Lustro's Menu
+            </button>
             <a
               href="https://instagram.com/lustro_lagos"
               target="_blank"
@@ -828,6 +1172,9 @@ function Dining() {
           </div>
         </div>
       </div>
+
+      {/* Menu Modal */}
+      {menuOpen && <MenuModal onClose={() => setMenuOpen(false)} />}
 
       <style>{`
         @keyframes diningReveal {
@@ -844,43 +1191,105 @@ function Dining() {
 }
 
 // ─────────────────────────────────────────────────
-// GALLERY
+// GALLERY — Luxury Bento Grid
 // ─────────────────────────────────────────────────
 function Gallery() {
   const galleryImages = [
     {
-      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777562618/hero-1_jlcvld.png",
+      url: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777562618/hero-1_jlcvld.png",
       alt: "Lustro Homes exterior",
+      title: "Lustro Exterior",
+      spanClasses: "md:col-span-2 md:row-span-2",
     },
     {
-      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642365/gallery-7_tmifgb.jpg",
+      url: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642365/gallery-7_tmifgb.jpg",
       alt: "Lustro Lagos neon sign",
+      title: "Lustro Lagos",
+      spanClasses: "md:col-span-2 md:row-span-2",
     },
     {
-      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777569685/hero-3_oqrukn.jpg",
-      alt: "Lustro Homes suite",
+      url: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777569332/hero-2_w8amfo.jpg",
+      alt: "Lustro Homes interior",
+      title: "Premium Interior",
+      spanClasses: "md:col-span-1 md:row-span-1",
     },
     {
-      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642363/gallery-2_poa1ee.jpg",
-      alt: "Lustro Lagos dining",
+      url: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642486/gallery_ngzktt.jpg",
+      alt: "Lustro lifestyle",
+      title: "Lifestyle",
+      spanClasses: "md:col-span-1 md:row-span-1",
     },
     {
-      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642372/gallery-4_qk8z3h.jpg",
-      alt: "Lustro staircase architecture",
+      url: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777569685/hero-3_oqrukn.jpg",
+      alt: "Lustro suite",
+      title: "Luxury Suite",
+      spanClasses: "md:col-span-1 md:row-span-2",
     },
     {
-      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642363/gallery-6_sq3uy3.jpg",
-      alt: "Lustro Homes lounge",
+      url: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642372/gallery-4_qk8z3h.jpg",
+      alt: "Lustro architecture",
+      title: "Architecture",
+      spanClasses: "md:col-span-1 md:row-span-1",
     },
     {
-      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777570438/hero-5_gzikdc.png",
-      alt: "Lustro Homes night exterior",
+      url: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642364/gallery-3_p9jeub.jpg",
+      alt: "Lustro detail",
+      title: "Design Detail",
+      spanClasses: "md:col-span-1 md:row-span-1",
     },
     {
-      src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642364/gallery-5_vapgeo.jpg",
-      alt: "Lustro Homes amenities",
+      url: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642364/gallery-5_vapgeo.jpg",
+      alt: "Lustro amenities",
+      title: "Amenities",
+      spanClasses: "md:col-span-1 md:row-span-1",
+    },
+    {
+      url: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642363/gallery-2_poa1ee.jpg",
+      alt: "Lustro dining",
+      title: "Signature Dining",
+      spanClasses: "md:col-span-2 md:row-span-1",
+    },
+    {
+      url: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642363/gallery-6_sq3uy3.jpg",
+      alt: "Lustro lounge",
+      title: "The Lounge",
+      spanClasses: "md:col-span-1 md:row-span-1",
+    },
+    {
+      url: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777570096/hero-4_d2xzfi.jpg",
+      alt: "Lustro experience",
+      title: "The Experience",
+      spanClasses: "md:col-span-1 md:row-span-1",
+    },
+    {
+      url: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777570438/hero-5_gzikdc.png",
+      alt: "Lustro luxury",
+      title: "Pure Luxury",
+      spanClasses: "md:col-span-1 md:row-span-1",
     },
   ];
+
+  const handleMouseEnter = async (e: React.MouseEvent<HTMLDivElement>) => {
+    try {
+      const { gsap } = await import("gsap");
+      const tile = e.currentTarget;
+      const img = tile.querySelector("img");
+      const overlay = tile.querySelector(".bento-overlay");
+      gsap.to(img, { scale: 1.06, duration: 0.5, ease: "power2.out" });
+      gsap.to(overlay, { opacity: 1, duration: 0.35, ease: "power2.out" });
+    } catch {}
+  };
+
+  const handleMouseLeave = async (e: React.MouseEvent<HTMLDivElement>) => {
+    try {
+      const { gsap } = await import("gsap");
+      const tile = e.currentTarget;
+      const img = tile.querySelector("img");
+      const overlay = tile.querySelector(".bento-overlay");
+      gsap.to(img, { scale: 1, duration: 0.5, ease: "power2.out" });
+      gsap.to(overlay, { opacity: 0, duration: 0.35, ease: "power2.out" });
+    } catch {}
+  };
 
   return (
     <section id="gallery" className="bg-cream py-24 md:py-36">
@@ -896,24 +1305,39 @@ function Gallery() {
           <div className="section-line mx-auto mt-6" />
         </div>
 
-        <div className="columns-2 md:columns-3 gap-3">
-  {galleryImages.map((img) => (
-    <div
-      key={img.src}
-      className="gallery-item img-zoom relative rounded-xl overflow-hidden break-inside-avoid mb-3"
-    >
-      <Image
-        src={img.src}
-        alt={img.alt}
-        width={600}
-        height={400}
-        sizes="(max-width: 768px) 50vw, 33vw"
-        className="object-cover w-full h-auto"
-        quality={100}
-      />
-    </div>
-  ))}
-</div>
+        {/* Bento Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[220px]">
+          {galleryImages.map((img, i) => (
+            <div
+              key={img.url}
+              className={`gallery-item relative rounded-2xl overflow-hidden cursor-pointer ${img.spanClasses}`}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              <Image
+                src={img.url}
+                alt={img.alt}
+                fill
+                sizes="(max-width: 768px) 50vw, 25vw"
+                className="object-cover transition-transform duration-500"
+                quality={100}
+              />
+              {/* Hover Overlay */}
+              <div
+                className="bento-overlay absolute inset-0 flex items-end p-5"
+                style={{
+                  opacity: 0,
+                  background:
+                    "linear-gradient(to top, rgba(26,26,26,0.75) 0%, transparent 60%)",
+                }}
+              >
+                <p className="font-cormorant text-xl text-cream tracking-wide">
+                  {img.title}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
 
         {/* Instagram link */}
         <div className="text-center mt-12 reveal-element">
@@ -932,7 +1356,6 @@ function Gallery() {
   );
 }
 
-
 // ─────────────────────────────────────────────────
 // INVESTMENT JOURNEY
 // ─────────────────────────────────────────────────
@@ -942,7 +1365,7 @@ function Investment() {
       title: "LUSTRO 1.0 — THE BLUEPRINT",
       subtitle: "Where Yaba First Met Luxury",
       story:
-        "We started with one goal — build the most sought-after shortlet experience in Yaba. What emerged was more than an apartment. It was a lifestyle statement. Signature in-house dining, world-class aesthetics, and a hospitality standard that Lagos had never seen at this level.",
+        "Started with a simple goal — create the most sought-after shortlet in Yaba. Built an experience with signature in-house dining and world-class aesthetics that set a new benchmark for Lagos staycations.",
       stats: [
         { value: "15,000+", label: "Guests Hosted" },
         { value: "₦2M+", label: "Monthly Revenue" },
@@ -950,13 +1373,12 @@ function Investment() {
       ],
       status: "SOLD OUT & ACTIVE",
       quote: '"The proof is in the staying."',
-      pricing: null,
     },
     {
       title: "LUSTRO 2.0 — THE YANKEE EDITION",
       subtitle: "Luxury Redefined on the Mainland",
       story:
-        "We took everything that made 1.0 exceptional and brought it to the Lagos Mainland. Launched December 16th — sold out before the year ended. No delays. No excuses. Our investors were earning before most people even heard about it. When demand is real, results follow.",
+        "Brought resort-quality living to Lagos Mainland. Yankee by Lustro — launched, sold out, delivering. No delays. No excuses. Just consistent, verifiable results.",
       stats: [
         { value: "Sold Out", label: "Launch Status" },
         { value: "₦1.4M+", label: "Monthly Returns" },
@@ -964,13 +1386,12 @@ function Investment() {
       ],
       status: "SOLD OUT & DELIVERING",
       quote: '"Our standard is now everyone else\'s benchmark."',
-      pricing: null,
     },
     {
       title: "LUSTRO 3.0 — THE SMART ECOSYSTEM",
       subtitle: "The Ultimate Lifestyle Sanctuary",
       story:
-        "Our most ambitious project yet — and it delivered. Fully automated smart apartment units. Yaba's first in-house spa. A fully equipped professional gym. Every detail engineered for maximum occupancy, maximum returns, and a living experience that simply does not exist anywhere else on the Mainland.",
+        "Our most ambitious project yet. Fully automated smart apartments. Yaba's first in-house spa. Professional gym. Built, delivered, and actively earning for investors.",
       stats: [
         { value: "Full Auto", label: "Smart Features" },
         { value: "Yaba's First", label: "In-House Spa" },
@@ -978,51 +1399,29 @@ function Investment() {
       ],
       status: "COMPLETED & EARNING",
       quote: '"We don\'t build houses. We engineer the future."',
-      pricing: [
-        { label: "Part Ownership", value: "₦32.5M", tag: "Sold Out" },
-        { label: "Full Ownership", value: "₦65M", tag: "Sold Out" },
-      ],
     },
   ];
 
   return (
     <section id="invest" className="bg-charcoal-light py-24 md:py-36">
       <div className="max-w-4xl mx-auto px-6">
-
         {/* Header */}
-        <div className="text-center mb-16 reveal-element">
+        <div className="text-center mb-20 reveal-element">
           <p className="font-dm-sans text-[0.65rem] text-gold uppercase tracking-[0.28em] mb-4">
             Investment Journey
           </p>
-          <h2 className="font-cormorant text-4xl md:text-5xl text-cream font-light leading-[1.15] mb-6">
+          <h2 className="font-cormorant text-4xl md:text-5xl text-cream font-light leading-[1.15] mb-4">
             The Lustro Journey —{" "}
             <em className="italic text-gold">From Vision to Value</em>
           </h2>
-          <p className="font-dm-sans text-cream/45 text-sm tracking-wide mb-10">
+          <p className="font-dm-sans text-cream/45 text-sm tracking-wide">
             3 Iconic Projects. 100% Delivery. A New Era.
           </p>
-          {/* Opening hook */}
-          <div className="text-left bg-charcoal/50 rounded-2xl p-8 border border-white/5">
-            <p className="font-cormorant text-2xl md:text-3xl text-cream font-light leading-[1.6] italic">
-              "Most properties sit underperforming — wrong structure, wrong
-              aesthetics, wrong management. At Lustro, we proved that done
-              right, a single apartment can generate over{" "}
-              <span className="text-gold not-italic font-normal">
-                ₦2 million every month
-              </span>{" "}
-              — and deliver{" "}
-              <span className="text-gold not-italic font-normal">
-                ₦1.4 million pure profit
-              </span>{" "}
-              to investors. Consistently. Every month. This is the track
-              record."
-            </p>
-          </div>
         </div>
 
         {/* Timeline */}
         <div className="space-y-14">
-          {milestones.map((m) => (
+          {milestones.map((m, i) => (
             <div key={m.title} className="milestone-card reveal-element">
               {/* Status */}
               <div className="mb-4">
@@ -1043,47 +1442,22 @@ function Investment() {
               </p>
 
               {/* Stats grid */}
-      <div className="grid grid-cols-3 gap-3 mb-7">
-  {m.stats.map((s) => (
-    <div
-      key={s.label}
-      className="bg-charcoal/60 rounded-xl p-4 border border-white/5 overflow-hidden flex flex-col justify-between min-h-[90px]"
-    >
-     <p className="font-cormorant text-lg md:text-2xl text-gold font-light leading-tight whitespace-nowrap">
-        {s.value}
-      </p>
-     <p className="font-dm-sans text-[0.6rem] text-cream/70 uppercase tracking-wider mt-3 leading-tight">
-        {s.label}
-      </p>
-    </div>
-  ))}
-</div>
+              <div className="grid grid-cols-3 gap-3 mb-7">
+                {m.stats.map((s) => (
+                  <div
+                    key={s.label}
+                    className="bg-charcoal/60 rounded-xl p-4 border border-white/5"
+                  >
+                    <p className="font-cormorant text-2xl text-gold font-light">
+                      {s.value}
+                    </p>
+                    <p className="font-dm-sans text-[0.6rem] text-cream/40 uppercase tracking-wider mt-1">
+                      {s.label}
+                    </p>
+                  </div>
+                ))}
+              </div>
 
-              {/* Pricing reference (3.0 only) */}
-              {m.pricing && (
-  <div className="flex gap-4 mb-7">
-    {m.pricing.map((p) => (
-      <div
-        key={p.label}
-        className="flex-1 bg-charcoal/40 rounded-xl p-4 border border-white/5"
-      >
-        {/* Label + Sold Out on same row */}
-        <div className="flex items-center justify-between mb-2">
-          <p className="font-dm-sans text-[0.6rem] text-cream/35 uppercase tracking-wider">
-            {p.label}
-          </p>
-          <span className="font-dm-sans text-[0.55rem] bg-brown/30 text-brown-light border border-brown/20 px-2 py-1 rounded-full uppercase tracking-wider whitespace-nowrap">
-            {p.tag}
-          </span>
-        </div>
-        {/* Price below */}
-        <p className="font-cormorant text-2xl text-cream/50 font-light line-through decoration-gold/50">
-          {p.value}
-        </p>
-      </div>
-    ))}
-  </div>
-)}
               <p className="font-cormorant text-lg text-cream/40 italic">
                 {m.quote}
               </p>
@@ -1091,31 +1465,40 @@ function Investment() {
           ))}
         </div>
 
-        {/* Bottom CTA — credibility focused */}
+        {/* Bottom CTA Card */}
         <div
           className="glass mt-20 rounded-2xl p-10 md:p-14 text-center reveal-element"
           style={{ isolation: "isolate" }}
         >
           <p className="font-dm-sans text-[0.65rem] text-gold uppercase tracking-[0.28em] mb-4">
-            What's Next
+            Coming Soon
           </p>
           <h3 className="font-cormorant text-4xl md:text-5xl text-cream font-light mb-5">
-            Built on a Track Record,{" "}
-            <em className="italic text-gold">Not Promises.</em>
+            Lustro 4.0 Is Coming.
           </h3>
-          <p className="font-dm-sans text-cream/55 text-sm leading-[1.85] max-w-md mx-auto mb-9">
-            Three projects. Three sold-out launches. Three sets of investors
-            earning every month. If you want to be part of what Lustro builds
-            next — get in touch now.
+          <p className="font-dm-sans text-cream/60 text-sm leading-[1.85] max-w-md mx-auto mb-9">
+            People who moved first on 1.0, 2.0, and 3.0 are earning every
+            single month. The next chapter is being written. Don't be last in
+            the room.
           </p>
-          <a
-            href={`${WHATSAPP_URL}?text=I'm interested in upcoming Lustro Homes investment opportunities`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block bg-brown text-cream font-dm-sans px-14 py-4 rounded-full text-sm hover:bg-brown-light transition-colors shadow-lg"
-          >
-            Get In Touch
-          </a>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href={`${WHATSAPP_URL}?text=I'm interested in Lustro 4.0 early access`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-brown text-cream font-dm-sans text-sm px-9 py-3.5 rounded-full hover:bg-brown-light transition-colors"
+            >
+              Get Early Access
+            </a>
+            <a
+              href="https://instagram.com/lustro_homes"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="border border-cream/20 text-cream font-dm-sans text-sm px-9 py-3.5 rounded-full hover:bg-cream/10 transition-colors"
+            >
+              Stay Connected
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -1297,7 +1680,6 @@ function Contact() {
 // ─────────────────────────────────────────────────
 function Footer() {
   const navLinks = [
-    
     { label: "About", href: "#about" },
     { label: "Rooms", href: "#rooms" },
     { label: "Dining", href: "#dining" },
@@ -1311,7 +1693,7 @@ function Footer() {
     href: string
   ) => {
     e.preventDefault();
-    document.querySelector(href)?.scrollIntoView({ behavior: "instant" });
+    document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -1320,16 +1702,11 @@ function Footer() {
         {/* Col 1 — Brand */}
         <div>
           <div className="flex items-center gap-3 mb-5">
-            <div className="relative w-16 h-16">
-  <Image
-    src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777567002/lustrologo_wfervy.png"
-    alt="Lustro Homes Logo"
-    fill
-    sizes="192px"
-    quality={100}
-    className="object-contain"
-  />
-</div>
+            <div className="w-9 h-9 rounded-full bg-brown flex items-center justify-center">
+              <span className="font-cormorant text-cream font-bold text-base">
+                L
+              </span>
+            </div>
             <span className="font-cormorant text-cream font-semibold text-xl tracking-wide">
               Lustro Homes
             </span>
@@ -1615,4 +1992,3 @@ export default function Home() {
     </main>
   );
 }
-
