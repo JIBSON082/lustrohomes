@@ -363,8 +363,7 @@ function Hero() {
             className="hero-sub font-dm-sans text-cream/65 text-sm leading-relaxed mb-8 max-w-sm"
             style={{ opacity: 0 }}
           >
-            World-class comfort woven with Nigerian soul — unforgettable stays
-            and signature dining in the heart of Yaba, Lagos.
+            Luxury you can actually live in. Experience thoughtfully designed suites and in-house dining worth lingering over, right in the heart of Lagos.
           </p>
 
           {/* CTA Buttons */}
