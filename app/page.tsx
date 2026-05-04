@@ -363,9 +363,7 @@ function Hero() {
             className="hero-sub font-dm-sans text-cream/65 text-sm leading-relaxed mb-8 max-w-sm"
             style={{ opacity: 0 }}
           >
-             <em className="text-gold" style={{ fontStyle: "italic" }}>
-              Luxury you can actually live in. 
-Experience thoughtfully designed suites and in-house dining worth lingering over, right in the heart of Lagos.
+         Luxury you can actually live in. Experience thoughtfully designed suites and in-house dining worth lingering over, right in the heart of Lagos.
           </p>
 
           {/* CTA Buttons */}
