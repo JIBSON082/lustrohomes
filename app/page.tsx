@@ -1283,7 +1283,7 @@ function Investment() {
   <div
     onClick={() => setVideoOpen(true)}
     className="relative rounded-2xl overflow-hidden cursor-pointer group"
-    style={{ paddingTop: "65%" }}
+    style={{ paddingTop: "76.25%" }}
   >
     {/* Actual video as background — muted, shows real content */}
     <video
