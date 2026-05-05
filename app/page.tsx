@@ -1189,6 +1189,11 @@ function Gallery() {
 // INVESTMENT JOURNEY
 // ─────────────────────────────────────────────────
 function Investment() {
+  const [videoOpen, setVideoOpen] = useState(false);
+
+  const INVEST_VIDEO_EMBED =
+    "https://player.cloudinary.com/embed/?cloud_name=dx3k7hbnc&public_id=Lustro_investment_jaijaq&autoplay=true&controls=true&quality=auto:best";
+
   const milestones = [
     {
       title: "LUSTRO 1.0 — THE BLUEPRINT",
@@ -1272,18 +1277,70 @@ function Investment() {
           </div>
         </div>
 
+        {/* ── Bento Video Block ── */}
+        <div className="reveal-element mb-16">
+          <div
+            onClick={() => setVideoOpen(true)}
+            className="relative rounded-2xl overflow-hidden cursor-pointer group"
+            style={{ paddingTop: "56.25%" }}
+          >
+            {/* Dark Poster Background */}
+            <div className="absolute inset-0 bg-charcoal border border-white/8 rounded-2xl" />
+
+            {/* Bento decorative tiles behind */}
+            <div className="absolute inset-0 grid grid-cols-3 grid-rows-2 gap-2 p-2 opacity-20 pointer-events-none">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="rounded-xl bg-white/5 border border-white/8" />
+              ))}
+            </div>
+
+            {/* Gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10 rounded-2xl" />
+
+            {/* Center Play Button */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-5">
+              <div className="relative w-20 h-20 rounded-full border-2 border-gold/70 flex items-center justify-center group-hover:border-gold group-hover:scale-110 transition-all duration-700">
+                <div className="absolute inset-0 rounded-full border border-gold/20 scale-125 group-hover:scale-150 transition-transform duration-700 opacity-60" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="w-8 h-8 text-gold ml-1"
+                >
+                  <path d="M8 5.14v14l11-7-11-7z" />
+                </svg>
+              </div>
+              <div className="text-center px-6">
+                <p className="font-cormorant text-2xl md:text-3xl text-cream font-light mb-2">
+                  Watch the{" "}
+                  <em className="italic text-gold">Lustro Story</em>
+                </p>
+                <p className="font-dm-sans text-[0.65rem] text-cream/45 uppercase tracking-[0.25em]">
+                  The vision · The results · What's next
+                </p>
+              </div>
+            </div>
+
+            {/* Bottom label */}
+            <div className="absolute bottom-5 left-5">
+              <span className="status-badge">
+                <span className="pulse-dot" />
+                Investment Showcase
+              </span>
+            </div>
+          </div>
+        </div>
+
         {/* Timeline */}
         <div className="space-y-14">
           {milestones.map((m) => (
             <div key={m.title} className="milestone-card reveal-element">
-              {/* Status */}
               <div className="mb-4">
                 <span className="status-badge">
                   <span className="pulse-dot" />
                   {m.status}
                 </span>
               </div>
-
               <h3 className="font-cormorant text-2xl md:text-3xl text-cream font-light mb-1 tracking-wide">
                 {m.title}
               </h3>
@@ -1295,47 +1352,46 @@ function Investment() {
               </p>
 
               {/* Stats grid */}
-      <div className="grid grid-cols-3 gap-3 mb-7">
-  {m.stats.map((s) => (
-    <div
-      key={s.label}
-      className="bg-charcoal/60 rounded-xl p-4 border border-white/5 overflow-hidden flex flex-col justify-between min-h-[90px]"
-    >
-     <p className="font-cormorant text-lg md:text-2xl text-gold font-light leading-tight whitespace-nowrap">
-        {s.value}
-      </p>
-     <p className="font-dm-sans text-[0.6rem] text-cream/70 uppercase tracking-wider mt-3 leading-tight">
-        {s.label}
-      </p>
-    </div>
-  ))}
-</div>
+              <div className="grid grid-cols-3 gap-3 mb-7">
+                {m.stats.map((s) => (
+                  <div
+                    key={s.label}
+                    className="bg-charcoal/60 rounded-xl p-4 border border-white/5 overflow-hidden flex flex-col justify-between min-h-[90px]"
+                  >
+                    <p className="font-cormorant text-lg md:text-2xl text-gold font-light leading-tight whitespace-nowrap">
+                      {s.value}
+                    </p>
+                    <p className="font-dm-sans text-[0.6rem] text-cream/70 uppercase tracking-wider mt-3 leading-tight">
+                      {s.label}
+                    </p>
+                  </div>
+                ))}
+              </div>
 
               {/* Pricing reference (3.0 only) */}
               {m.pricing && (
-  <div className="flex gap-4 mb-7">
-    {m.pricing.map((p) => (
-      <div
-        key={p.label}
-        className="flex-1 bg-charcoal/40 rounded-xl p-4 border border-white/5"
-      >
-        {/* Label + Sold Out on same row */}
-        <div className="flex items-center justify-between mb-2">
-          <p className="font-dm-sans text-[0.6rem] text-cream/35 uppercase tracking-wider">
-            {p.label}
-          </p>
-          <span className="font-dm-sans text-[0.55rem] bg-brown/30 text-brown-light border border-brown/20 px-2 py-1 rounded-full uppercase tracking-wider whitespace-nowrap">
-            {p.tag}
-          </span>
-        </div>
-        {/* Price below */}
-        <p className="font-cormorant text-2xl text-cream/50 font-light line-through decoration-gold/50">
-          {p.value}
-        </p>
-      </div>
-    ))}
-  </div>
-)}
+                <div className="flex gap-4 mb-7">
+                  {m.pricing.map((p) => (
+                    <div
+                      key={p.label}
+                      className="flex-1 bg-charcoal/40 rounded-xl p-4 border border-white/5"
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <p className="font-dm-sans text-[0.6rem] text-cream/35 uppercase tracking-wider">
+                          {p.label}
+                        </p>
+                        <span className="font-dm-sans text-[0.55rem] bg-brown/30 text-brown-light border border-brown/20 px-2 py-1 rounded-full uppercase tracking-wider whitespace-nowrap">
+                          {p.tag}
+                        </span>
+                      </div>
+                      <p className="font-cormorant text-2xl text-cream/50 font-light line-through decoration-gold/50">
+                        {p.value}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
               <p className="font-cormorant text-lg text-cream/40 italic">
                 {m.quote}
               </p>
@@ -1343,7 +1399,7 @@ function Investment() {
           ))}
         </div>
 
-        {/* Bottom CTA — credibility focused */}
+        {/* Bottom CTA */}
         <div
           className="glass mt-20 rounded-2xl p-10 md:p-14 text-center reveal-element"
           style={{ isolation: "isolate" }}
@@ -1370,10 +1426,44 @@ function Investment() {
           </a>
         </div>
       </div>
+
+      {/* Video Modal */}
+      {videoOpen && (
+        <div
+          className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center px-4"
+          style={{ animation: "modalFadeIn 0.35s ease forwards" }}
+          onClick={() => setVideoOpen(false)}
+        >
+          <div
+            className="relative w-full max-w-3xl rounded-2xl overflow-hidden shadow-2xl"
+            style={{ animation: "modalScaleIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setVideoOpen(false)}
+              className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/60 flex items-center justify-center hover:bg-brown transition-colors"
+              aria-label="Close video"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4 text-cream">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <div className="relative w-full" style={{ paddingTop: "56.25%" }}>
+              <iframe
+                src={INVEST_VIDEO_EMBED}
+                className="absolute inset-0 w-full h-full"
+                allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+                allowFullScreen
+                frameBorder="0"
+                title="Lustro Homes Investment Story"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
-
 // ─────────────────────────────────────────────────
 // TESTIMONIALS
 // ─────────────────────────────────────────────────
