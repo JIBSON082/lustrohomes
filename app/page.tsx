@@ -1283,7 +1283,7 @@ function Investment() {
   <div
     onClick={() => setVideoOpen(true)}
     className="relative rounded-2xl overflow-hidden cursor-pointer group"
-    style={{ paddingTop: "76.25%" }}
+    style={{ paddingTop: "60%" }}
   >
     {/* Actual video as background — muted, shows real content */}
     <video
@@ -1292,7 +1292,7 @@ function Investment() {
       loop
       autoPlay
       playsInline
-      className="absolute inset-0 w-full h-full object-cover"
+      className="absolute inset-0 w-full h-full object-contain"
     />
 
     {/* Dark overlay */}
