@@ -152,7 +152,7 @@ function Navbar({
         </div>
       </nav>
 
-      {/* Mobile Menu Overlay */}
+     
       {/* Mobile Menu Overlay */}
 <div
   className={`mobile-menu ${
@@ -230,7 +230,7 @@ function Navbar({
 // HERO SECTION — Cinematic Video Background
 // ─────────────────────────────────────────────────
 const HERO_VIDEO_URL =
-  "https://res.cloudinary.com/dx3k7hbnc/video/upload/q_auto:good,f_auto/v1777632548/Hero-video_egr33p.mp4";
+  "https://res.cloudinary.com/dx3k7hbnc/video/upload/v1777632548/Hero-video_egr33p.mp4";
 function Hero() {
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -1287,8 +1287,7 @@ function Investment() {
   >
     {/* Actual video as background — muted, shows real content */}
     <video
-      src="<video
-  src="https://res.cloudinary.com/dx3k7hbnc/video/upload/Lustro_investment_jaijaq.mp4"
+      src="https://res.cloudinary.com/dx3k7hbnc/video/upload/Lustro_investment_jaijaq.mp4"
       muted
       loop
       autoPlay
@@ -1415,7 +1414,7 @@ function Investment() {
         </div>
       </div>
 
-      {/* Video Modal */}
+     
     {/* Video Modal — Full Screen */}
       {videoOpen && (
         <div
@@ -1432,8 +1431,7 @@ function Investment() {
             </svg>
           </button>
           <video
-            src="<video
-  src="https://res.cloudinary.com/dx3k7hbnc/video/upload/Lustro_investment_jaijaq.mp4"
+            src="https://res.cloudinary.com/dx3k7hbnc/video/upload/Lustro_investment_jaijaq.mp4"
             controls
             autoPlay
             playsInline
