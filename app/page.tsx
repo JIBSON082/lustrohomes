@@ -1431,13 +1431,15 @@ function Investment() {
             </svg>
           </button>
           <video
-            src="https://res.cloudinary.com/dx3k7hbnc/video/upload/Lustro_investment_jaijaq.mp4"
-            controls
-            autoPlay
-            playsInline
-            className="w-full h-full object-cover"
-            style={{ animation: "modalScaleIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards" }}
-          />
+            <video
+  src="https://res.cloudinary.com/dx3k7hbnc/video/upload/Lustro_investment_jaijaq.mp4"
+  controls
+  autoPlay
+  playsInline
+  preload="auto"
+  className="w-full h-full object-cover"
+  style={{ animation: "modalScaleIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards" }}
+/>
         </div>
       )}
 
