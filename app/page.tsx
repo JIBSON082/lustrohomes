@@ -698,7 +698,7 @@ function Rooms() {
         {/* Gallery Block */}
         <div className="reveal-element">
 
-          {/* Main Video Player — no native controls, no fullscreen */}
+         {/* Main Video Player — no native controls, no fullscreen */}
           <div className="relative rounded-2xl overflow-hidden bg-charcoal mb-4 select-none">
             <video
               ref={videoRef}
@@ -717,11 +717,11 @@ function Rooms() {
                 );
                 if (playing) e.currentTarget.play();
               }}
-              className="w-full h-auto object-cover cursor-pointer"
+              className="w-full object-cover cursor-pointer"
               style={{
                 WebkitMediaControls: "none",
-                // Prevent context-menu fullscreen on mobile
                 pointerEvents: "auto",
+                maxHeight: "480px",
               } as React.CSSProperties}
               controlsList="nodownload nofullscreen noremoteplayback"
               onContextMenu={(e) => e.preventDefault()}
