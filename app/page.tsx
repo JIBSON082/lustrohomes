@@ -1287,7 +1287,8 @@ function Investment() {
   >
     {/* Actual video as background — muted, shows real content */}
     <video
-      src="https://res.cloudinary.com/dx3k7hbnc/video/upload/q_auto:good,f_auto/Lustro_investment_jaijaq.mp4"
+      src="<video
+  src="https://res.cloudinary.com/dx3k7hbnc/video/upload/Lustro_investment_jaijaq.mp4"
       muted
       loop
       autoPlay
@@ -1431,7 +1432,8 @@ function Investment() {
             </svg>
           </button>
           <video
-            src="https://res.cloudinary.com/dx3k7hbnc/video/upload/q_auto:good,f_auto/Lustro_investment_jaijaq.mp4"
+            src="<video
+  src="https://res.cloudinary.com/dx3k7hbnc/video/upload/Lustro_investment_jaijaq.mp4"
             controls
             autoPlay
             playsInline
