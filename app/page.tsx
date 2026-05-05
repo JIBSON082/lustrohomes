@@ -1416,30 +1416,36 @@ function Investment() {
 
       {/* Video Modal */}
     {/* Video Modal — Full Screen */}
-{videoOpen && (
-  <div
-    className="fixed inset-0 z-[100] bg-black flex items-center justify-center"
-    style={{ animation: "modalFadeIn 0.35s ease forwards" }}
-  >
-    <button
-      onClick={() => setVideoOpen(false)}
-      className="absolute top-5 right-5 z-10 w-11 h-11 rounded-full bg-white/10 flex items-center justify-center hover:bg-brown transition-colors"
-      aria-label="Close video"
-    >
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-5 h-5 text-cream">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-      </svg>
-    </button>
-    <video
-      src="https://res.cloudinary.com/dx3k7hbnc/video/upload/q_auto:best,f_auto/Lustro_investment_jaijaq.mp4"
-      controls
-      autoPlay
-      playsInline
-      className="w-full h-full object-cover"
-      style={{ animation: "modalScaleIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards" }}
-    />
-  </div>
-)}
+      {videoOpen && (
+        <div
+          className="fixed inset-0 z-[100] bg-black flex items-center justify-center"
+          style={{ animation: "modalFadeIn 0.35s ease forwards" }}
+        >
+          <button
+            onClick={() => setVideoOpen(false)}
+            className="absolute top-5 right-5 z-10 w-11 h-11 rounded-full bg-white/10 flex items-center justify-center hover:bg-brown transition-colors"
+            aria-label="Close video"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-5 h-5 text-cream">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          <video
+            src="https://res.cloudinary.com/dx3k7hbnc/video/upload/q_auto:best,f_auto/Lustro_investment_jaijaq.mp4"
+            controls
+            autoPlay
+            playsInline
+            className="w-full h-full object-cover"
+            style={{ animation: "modalScaleIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards" }}
+          />
+        </div>
+      )}
+
+    </section>   
+  );             
+}
+
+
 // ─────────────────────────────────────────────────
 // TESTIMONIALS
 // ─────────────────────────────────────────────────
