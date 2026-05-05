@@ -570,57 +570,83 @@ interface Room {
   name: string;
   tier: string;
   price: string;
-  features: string[];
-  image: string;
+  about: string;
   tag: string;
+  publicId: string;
 }
 
 function Rooms() {
+  const [activeIdx, setActiveIdx] = useState(0);
+
   const rooms: Room[] = [
     {
-      name: "The Studio",
-      tier: "Classic Room",
-      price: "₦50,000",
-      features: ["King Bed", "Smart TV", "Fast WiFi", "AC", "En-suite"],
-      image:
-        "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=85",
-      tag: "Most Popular",
+      name: "Mykonos",
+      tier: "City Apartment",
+      price: "₦70,000",
+      about:
+        "A thoughtfully designed apartment offering modern finishes, steady power, fast internet, and a serene environment in the heart of Lagos.",
+      tag: "City Favourite",
+      publicId: "Mykonos_zddgck",
     },
     {
-      name: "The Signature",
-      tier: "Premium Suite",
-      price: "₦85,000",
-      features: [
-        "King Bed",
-        "Glass Shower",
-        "Netflix Ready",
-        "Rattan Wardrobe",
-        "Lounge Area",
-      ],
-      image:
-        "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=85",
-      tag: "Best Value",
+      name: "Malibu",
+      tier: "Coastal Suite",
+      price: "₦60,000",
+      about:
+        "A gently toned, luxuriously simple room designed to bring coastal elegance and effortless calm to your everyday life.",
+      tag: "Coastal Calm",
+      publicId: "Malibu_hnbazg",
     },
     {
-      name: "The Penthouse",
-      tier: "Top Floor Suite",
-      price: "₦120,000",
-      features: [
-        "King Bed",
-        "Panoramic View",
-        "Private Terrace",
-        "Smart Automation",
-        "Butler Ready",
-      ],
-      image:
-        "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=85",
+      name: "Seychelles",
+      tier: "Comfort Apartment",
+      price: "₦90,000",
+      about:
+        "A comfort-forward apartment with modern finishes, steady power, and fast internet nestled in the heart of Lagos City.",
+      tag: "Most Loved",
+      publicId: "Seychelles_qqujgc",
+    },
+    {
+      name: "Beverly Hills",
+      tier: "Luxury Suite",
+      price: "₦150,000",
+      about:
+        "A spacious, thoughtfully designed apartment combining modern finishes with steady power and fast internet for ultimate city living.",
       tag: "Premium",
+      publicId: "Beverly_Hills_vr3clx",
+    },
+    {
+      name: "Cappadocia",
+      tier: "Minimal Retreat",
+      price: "₦70,000",
+      about:
+        "A minimal luxury retreat offering ultimate comfort and a serene escape in the heart of Lagos.",
+      tag: "Retreat",
+      publicId: "Cappadocia_ugh3hc",
+    },
+    {
+      name: "Santorini",
+      tier: "Weekend Suite",
+      price: "₦80,000",
+      about:
+        "A curated weekend getaway room where tranquility meets taste for a seamless, exclusive experience.",
+      tag: "Weekend Escape",
+      publicId: "Santorini_zpgswd",
     },
   ];
 
+  const active = rooms[activeIdx];
+
+  const getVideoUrl = (publicId: string) =>
+    `https://res.cloudinary.com/dx3k7hbnc/video/upload/${publicId}.mp4`;
+
+  const getThumbUrl = (publicId: string) =>
+    `https://res.cloudinary.com/dx3k7hbnc/video/upload/so_2,w_300,h_400,c_fill,q_auto,f_auto/${publicId}.jpg`;
+
   return (
     <section id="rooms" className="bg-cream-dark py-24 md:py-36">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-5xl mx-auto px-6">
+
         {/* Header */}
         <div className="text-center mb-16 reveal-element">
           <p className="font-dm-sans text-[0.65rem] text-brown uppercase tracking-[0.28em] mb-4">
@@ -632,71 +658,112 @@ function Rooms() {
           <div className="section-line mx-auto mt-6" />
         </div>
 
-        {/* Room Cards */}
-        <div className="grid md:grid-cols-3 gap-8">
-          {rooms.map((room, i) => (
-            <div
-              key={room.name}
-              className="card-lift reveal-element bg-cream rounded-2xl overflow-hidden shadow-sm"
-              style={{ transitionDelay: `${i * 0.08}s` }}
-            >
-              {/* Image */}
-              <div className="img-zoom relative h-64">
-                <Image
-                  src={room.image}
-                  alt={room.name}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  className="object-cover"
-                />
-                <div className="absolute top-4 left-4">
-                  <span className="bg-brown text-cream font-dm-sans text-[0.6rem] px-3 py-1.5 rounded-full tracking-wider uppercase">
-                    {room.tag}
-                  </span>
-                </div>
-              </div>
+        {/* Gallery Block */}
+        <div className="reveal-element">
 
-              {/* Body */}
-              <div className="p-7">
-                <p className="font-dm-sans text-[0.6rem] text-brown uppercase tracking-[0.22em] mb-1.5">
-                  {room.tier}
-                </p>
-                <h3 className="font-cormorant text-3xl text-charcoal font-light mb-1">
-                  {room.name}
-                </h3>
-                <div className="flex items-baseline gap-1.5 mb-5">
-                  <p className="font-cormorant text-2xl text-gold">
-                    {room.price}
-                  </p>
-                  <span className="font-dm-sans text-xs text-charcoal/40">
-                    / night
-                  </span>
-                </div>
+          {/* Main Video Player */}
+          <div
+            className="relative rounded-2xl overflow-hidden bg-charcoal mb-4"
+            style={{ paddingTop: "56.25%" }}
+          >
+            <video
+              key={active.publicId}
+              src={getVideoUrl(active.publicId)}
+              autoPlay
+              muted
+              loop
+              playsInline
+              controls
+              className="absolute inset-0 w-full h-full object-cover"
+              onLoadedMetadata={(e) => {
+                Array.from(e.currentTarget.textTracks).forEach(
+                  (t) => (t.mode = "hidden")
+                );
+              }}
+            />
 
-                {/* Feature pills */}
-                <div className="flex flex-wrap gap-2 mb-7">
-                  {room.features.map((f) => (
-                    <span
-                      key={f}
-                      className="font-dm-sans text-[0.65rem] bg-cream-dark text-charcoal/65 px-3 py-1.5 rounded-full"
-                    >
-                      {f}
-                    </span>
-                  ))}
-                </div>
-
-                {/* CTA */}
-                <a
-                  href={`${WHATSAPP_URL}?text=I'd like to book ${room.name} at Lustro Homes`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-center bg-charcoal text-cream font-dm-sans text-sm py-3.5 rounded-full hover:bg-brown transition-colors"
-                >
-                  Book This Room
-                </a>
-              </div>
+            {/* Gradient name overlay */}
+            <div className="absolute bottom-0 left-0 right-0 px-8 py-7 bg-gradient-to-t from-black/65 to-transparent pointer-events-none">
+              <span className="font-dm-sans text-[0.6rem] text-gold/80 uppercase tracking-[0.25em] mb-1.5 block">
+                {active.tier}
+              </span>
+              <h3 className="font-cormorant text-4xl text-cream font-light leading-none">
+                {active.name}
+              </h3>
             </div>
-          ))}
+          </div>
+
+          {/* Thumbnail Strip */}
+          <div className="flex gap-2.5 overflow-x-auto pb-1 no-scrollbar mb-8">
+            {rooms.map((room, i) => (
+              <button
+                key={room.name}
+                onClick={() => setActiveIdx(i)}
+                className={`relative flex-shrink-0 rounded-xl overflow-hidden transition-all duration-500 ${
+                  activeIdx === i
+                    ? "ring-2 ring-gold scale-[1.06] opacity-100"
+                    : "opacity-40 hover:opacity-75"
+                }`}
+                style={{ width: "88px", height: "112px" }}
+              >
+                <img
+                  src={getThumbUrl(room.publicId)}
+                  alt={room.name}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                <p className="absolute bottom-2 left-0 right-0 font-dm-sans text-[0.5rem] text-cream text-center uppercase tracking-wider px-1 truncate">
+                  {room.name}
+                </p>
+              </button>
+            ))}
+          </div>
+
+          {/* Room Detail Card */}
+          <div className="bg-cream rounded-2xl p-8 md:p-10 flex flex-col md:flex-row md:items-center gap-8 shadow-sm">
+
+            {/* Left — Info */}
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-4 flex-wrap">
+                <span className="font-dm-sans text-[0.58rem] bg-brown text-cream px-3 py-1.5 rounded-full tracking-[0.18em] uppercase">
+                  {active.tag}
+                </span>
+                <span className="font-dm-sans text-[0.58rem] text-brown/50 uppercase tracking-[0.18em]">
+                  {active.tier}
+                </span>
+              </div>
+              <h3 className="font-cormorant text-4xl md:text-5xl text-charcoal font-light mb-1 leading-none">
+                The {active.name}
+              </h3>
+              <div className="flex items-baseline gap-2 mb-5">
+                <p className="font-cormorant text-3xl text-gold">
+                  {active.price}
+                </p>
+                <span className="font-dm-sans text-xs text-charcoal/40">
+                  / night
+                </span>
+              </div>
+              <p className="font-dm-sans text-sm text-charcoal/55 leading-[1.9]">
+                {active.about}
+              </p>
+            </div>
+
+            {/* Right — CTA */}
+            <div className="md:w-52 flex-shrink-0 flex flex-col gap-3">
+              <a
+                href={`${WHATSAPP_URL}?text=I'd like to book The ${active.name} at Lustro Homes`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block text-center bg-charcoal text-cream font-dm-sans text-sm py-4 rounded-full hover:bg-brown transition-colors"
+              >
+                Book This Room
+              </a>
+              <p className="font-dm-sans text-[0.58rem] text-charcoal/30 text-center uppercase tracking-wider">
+                Instant confirmation via WhatsApp
+              </p>
+            </div>
+
+          </div>
         </div>
       </div>
     </section>
