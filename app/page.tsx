@@ -1278,58 +1278,45 @@ function Investment() {
         </div>
 
         {/* ── Bento Video Block ── */}
-        <div className="reveal-element mb-16">
-          <div
-            onClick={() => setVideoOpen(true)}
-            className="relative rounded-2xl overflow-hidden cursor-pointer group"
-            style={{ paddingTop: "56.25%" }}
-          >
-            {/* Dark Poster Background */}
-            <div className="absolute inset-0 bg-charcoal border border-white/8 rounded-2xl" />
+        {/* ── Bento Video Block ── */}
+<div className="reveal-element mb-16">
+  <div
+    onClick={() => setVideoOpen(true)}
+    className="relative rounded-2xl overflow-hidden cursor-pointer group"
+    style={{ paddingTop: "56.25%" }}
+  >
+    {/* Actual video as background — muted, shows real content */}
+    <video
+      src="https://res.cloudinary.com/dx3k7hbnc/video/upload/q_auto:best,f_auto/Lustro_investment_jaijaq.mp4"
+      muted
+      loop
+      autoPlay
+      playsInline
+      className="absolute inset-0 w-full h-full object-cover"
+    />
 
-            {/* Bento decorative tiles behind */}
-            <div className="absolute inset-0 grid grid-cols-3 grid-rows-2 gap-2 p-2 opacity-20 pointer-events-none">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="rounded-xl bg-white/5 border border-white/8" />
-              ))}
-            </div>
+    {/* Dark overlay */}
+    <div className="absolute inset-0 bg-black/45 group-hover:bg-black/30 transition-all duration-700" />
 
-            {/* Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10 rounded-2xl" />
-
-            {/* Center Play Button */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-5">
-              <div className="relative w-20 h-20 rounded-full border-2 border-gold/70 flex items-center justify-center group-hover:border-gold group-hover:scale-110 transition-all duration-700">
-                <div className="absolute inset-0 rounded-full border border-gold/20 scale-125 group-hover:scale-150 transition-transform duration-700 opacity-60" />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="w-8 h-8 text-gold ml-1"
-                >
-                  <path d="M8 5.14v14l11-7-11-7z" />
-                </svg>
-              </div>
-              <div className="text-center px-6">
-                <p className="font-cormorant text-2xl md:text-3xl text-cream font-light mb-2">
-                  Watch the{" "}
-                  <em className="italic text-gold">Lustro Story</em>
-                </p>
-                <p className="font-dm-sans text-[0.65rem] text-cream/45 uppercase tracking-[0.25em]">
-                  The vision · The results · What's next
-                </p>
-              </div>
-            </div>
-
-            {/* Bottom label */}
-            <div className="absolute bottom-5 left-5">
-              <span className="status-badge">
-                <span className="pulse-dot" />
-                Investment Showcase
-              </span>
-            </div>
-          </div>
-        </div>
+    {/* Play Button — centered, clean */}
+    <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
+      <div className="relative w-16 h-16 rounded-full border-2 border-cream/70 flex items-center justify-center group-hover:border-gold group-hover:scale-110 transition-all duration-700">
+        <div className="absolute inset-0 rounded-full border border-cream/20 scale-125 group-hover:scale-150 transition-transform duration-700 opacity-60" />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          className="w-6 h-6 text-cream group-hover:text-gold transition-colors ml-0.5"
+        >
+          <path d="M8 5.14v14l11-7-11-7z" />
+        </svg>
+      </div>
+      <p className="font-dm-sans text-[0.65rem] text-cream/60 uppercase tracking-[0.25em] group-hover:text-gold transition-colors">
+        Watch the Lustro Story
+      </p>
+    </div>
+  </div>
+</div>
 
         {/* Timeline */}
         <div className="space-y-14">
