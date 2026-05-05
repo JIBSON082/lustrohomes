@@ -1277,7 +1277,7 @@ function Investment() {
           </div>
         </div>
 
-        {/* ── Bento Video Block ── */}
+       
         {/* ── Bento Video Block ── */}
 <div className="reveal-element mb-16">
   <div
@@ -1415,42 +1415,31 @@ function Investment() {
       </div>
 
       {/* Video Modal */}
-      {videoOpen && (
-        <div
-          className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center px-4"
-          style={{ animation: "modalFadeIn 0.35s ease forwards" }}
-          onClick={() => setVideoOpen(false)}
-        >
-          <div
-            className="relative w-full max-w-3xl rounded-2xl overflow-hidden shadow-2xl"
-            style={{ animation: "modalScaleIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards" }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setVideoOpen(false)}
-              className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/60 flex items-center justify-center hover:bg-brown transition-colors"
-              aria-label="Close video"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4 text-cream">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-            <div className="relative w-full" style={{ paddingTop: "56.25%" }}>
-              <iframe
-                src={INVEST_VIDEO_EMBED}
-                className="absolute inset-0 w-full h-full"
-                allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-                allowFullScreen
-                frameBorder="0"
-                title="Lustro Homes Investment Story"
-              />
-            </div>
-          </div>
-        </div>
-      )}
-    </section>
-  );
-}
+    {/* Video Modal — Full Screen */}
+{videoOpen && (
+  <div
+    className="fixed inset-0 z-[100] bg-black flex items-center justify-center"
+    style={{ animation: "modalFadeIn 0.35s ease forwards" }}
+  >
+    <button
+      onClick={() => setVideoOpen(false)}
+      className="absolute top-5 right-5 z-10 w-11 h-11 rounded-full bg-white/10 flex items-center justify-center hover:bg-brown transition-colors"
+      aria-label="Close video"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-5 h-5 text-cream">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+    <video
+      src="https://res.cloudinary.com/dx3k7hbnc/video/upload/q_auto:best,f_auto/Lustro_investment_jaijaq.mp4"
+      controls
+      autoPlay
+      playsInline
+      className="w-full h-full object-cover"
+      style={{ animation: "modalScaleIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards" }}
+    />
+  </div>
+)}
 // ─────────────────────────────────────────────────
 // TESTIMONIALS
 // ─────────────────────────────────────────────────
