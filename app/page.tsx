@@ -1438,6 +1438,12 @@ function Investment() {
             preload="auto"
             className="w-full h-full object-cover"
             style={{ animation: "modalScaleIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards" }}
+            onLoadedMetadata={(e) => {
+              const video = e.currentTarget;
+              Array.from(video.textTracks).forEach((track) => {
+                track.mode = "hidden";
+              });
+            }}
           />
         </div>
       )}
