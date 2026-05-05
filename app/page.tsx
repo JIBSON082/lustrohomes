@@ -664,7 +664,7 @@ function Rooms() {
           {/* Main Video Player */}
           <div
             className="relative rounded-2xl overflow-hidden bg-charcoal mb-4"
-            style={{ paddingTop: "85%" }}
+            style={{ paddingTop: "100%" }}
           >
             <video
               key={active.publicId}
