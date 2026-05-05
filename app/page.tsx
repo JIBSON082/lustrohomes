@@ -1431,8 +1431,6 @@ function Investment() {
             </svg>
           </button>
           <video
-            <video
-  <video
             src="https://res.cloudinary.com/dx3k7hbnc/video/upload/Lustro_investment_jaijaq.mp4"
             controls
             autoPlay
