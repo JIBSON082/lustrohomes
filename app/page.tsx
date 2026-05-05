@@ -1292,7 +1292,7 @@ function Investment() {
       loop
       autoPlay
       playsInline
-      className="absolute inset-0 w-full h-full object-contain"
+      className="absolute inset-0 w-full h-full object-cover"
     />
 
     {/* Dark overlay */}
