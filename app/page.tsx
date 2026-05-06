@@ -853,10 +853,6 @@ function Rooms() {
 }
 
 
-// ─────────────────────────────────────────────────
-// YANKEE BY LUSTRO 
-// ─────────────────────────────────────────────────
-
 function YankeeByLustro() {
   const [activeIdx, setActiveIdx] = useState(0);
   const [muted, setMuted] = useState(true);
