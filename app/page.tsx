@@ -1450,6 +1450,19 @@ function Dining() {
 // GALLERY
 // ─────────────────────────────────────────────────
 function Gallery() {
+  const [activeVideoIdx, setActiveVideoIdx] = useState(0);
+  const [muted, setMuted] = useState(true);
+  const [playing, setPlaying] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const galleryVideos = [
+    { publicId: "Lustro_Gallery_video_1_oxi2ea", label: "Lustro Life" },
+    { publicId: "Lustro_Gallery_video_2_ui7i9q", label: "The Experience" },
+    { publicId: "Lustro_Gallery_video_3_chx6hw", label: "Inside Lustro" },
+    { publicId: "Lustro_Gallery_video_4_nrxt34", label: "The Spaces" },
+  ];
+
   const galleryImages = [
     {
       src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777562618/hero-1_jlcvld.png",
@@ -1485,9 +1498,53 @@ function Gallery() {
     },
   ];
 
+  const getVideoUrl = (publicId: string) =>
+    `https://res.cloudinary.com/dx3k7hbnc/video/upload/${publicId}.mp4`;
+
+  const getVideoThumb = (publicId: string) =>
+    `https://res.cloudinary.com/dx3k7hbnc/video/upload/so_2,w_300,h_400,c_fill,q_auto,f_auto/${publicId}.jpg`;
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          videoRef.current?.play().catch(() => {});
+          setPlaying(true);
+        } else {
+          videoRef.current?.pause();
+          setPlaying(false);
+        }
+      },
+      { threshold: 0.4 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, [activeVideoIdx]);
+
+  const handleVideoEnded = () => {
+    const next = (activeVideoIdx + 1) % galleryVideos.length;
+    setActiveVideoIdx(next);
+    setPlaying(true);
+  };
+
+  const togglePlay = () => {
+    if (!videoRef.current) return;
+    playing ? videoRef.current.pause() : videoRef.current.play();
+    setPlaying(!playing);
+  };
+
+  const toggleMute = () => {
+    if (!videoRef.current) return;
+    videoRef.current.muted = !muted;
+    setMuted(!muted);
+  };
+
+  const activeVideo = galleryVideos[activeVideoIdx];
+
   return (
-    <section id="gallery" className="bg-cream py-24 md:py-36">
-      <div className="max-w-7xl mx-auto px-6">
+    <section ref={sectionRef} id="gallery" className="bg-cream py-24 md:py-36">
+      <div className="max-w-5xl mx-auto px-6">
+
         {/* Header */}
         <div className="text-center mb-14 reveal-element">
           <p className="font-dm-sans text-[0.65rem] text-brown uppercase tracking-[0.28em] mb-4">
@@ -1499,24 +1556,130 @@ function Gallery() {
           <div className="section-line mx-auto mt-6" />
         </div>
 
+        {/* Video Player */}
+        <div className="reveal-element mb-12">
+          <div className="relative rounded-2xl overflow-hidden bg-charcoal mb-4 select-none">
+            <video
+              ref={videoRef}
+              key={activeVideo.publicId}
+              src={getVideoUrl(activeVideo.publicId)}
+              muted={muted}
+              loop={false}
+              playsInline
+              disablePictureInPicture
+              onClick={togglePlay}
+              onEnded={handleVideoEnded}
+              onLoadedMetadata={(e) => {
+                Array.from(e.currentTarget.textTracks).forEach(
+                  (t) => (t.mode = "hidden")
+                );
+                if (playing) e.currentTarget.play().catch(() => {});
+              }}
+              className="w-full object-cover cursor-pointer"
+              style={{
+                maxHeight: "480px",
+                pointerEvents: "auto",
+              } as React.CSSProperties}
+              controlsList="nodownload nofullscreen noremoteplayback"
+              onContextMenu={(e) => e.preventDefault()}
+            />
+
+            {/* Label overlay */}
+            <div className="absolute top-5 left-5 pointer-events-none">
+              <p className="font-dm-sans text-[0.55rem] text-cream/60 uppercase tracking-[0.22em]">
+                Lustro Homes
+              </p>
+              <h3 className="font-cormorant text-3xl text-cream font-light leading-none drop-shadow-lg">
+                {activeVideo.label}
+              </h3>
+            </div>
+
+            {/* Controls */}
+            <div className="absolute bottom-0 left-0 right-0 px-5 py-4 flex items-center justify-between bg-gradient-to-t from-black/50 to-transparent">
+              <button
+                onClick={togglePlay}
+                className="w-9 h-9 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center hover:bg-white/25 transition-colors"
+                aria-label={playing ? "Pause" : "Play"}
+              >
+                {playing ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-white">
+                    <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                  </svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-white ml-0.5">
+                    <path d="M8 5.14v14l11-7-11-7z" />
+                  </svg>
+                )}
+              </button>
+              <button
+                onClick={toggleMute}
+                className="w-9 h-9 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center hover:bg-white/25 transition-colors"
+                aria-label={muted ? "Unmute" : "Mute"}
+              >
+                {muted ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-white">
+                    <path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0 0 21 12c0-4.28-3-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06A8.99 8.99 0 0 0 17.73 18l1.73 1.73L21 18.46 5.54 3 4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                  </svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-white">
+                    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z" />
+                  </svg>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Video Thumbnail Strip */}
+          <div className="flex gap-2.5 overflow-x-auto pb-1 no-scrollbar">
+            {galleryVideos.map((video, i) => (
+              <button
+                key={video.publicId}
+                onClick={() => { setActiveVideoIdx(i); setPlaying(true); }}
+                className={`relative flex-shrink-0 rounded-xl overflow-hidden transition-all duration-500 ${
+                  activeVideoIdx === i
+                    ? "ring-2 ring-gold scale-[1.06] opacity-100"
+                    : "opacity-40 hover:opacity-75"
+                }`}
+                style={{ width: "88px", height: "112px" }}
+              >
+                <img
+                  src={getVideoThumb(video.publicId)}
+                  alt={video.label}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-white/70">
+                    <path d="M8 5.14v14l11-7-11-7z" />
+                  </svg>
+                </div>
+                <p className="absolute bottom-2 left-0 right-0 font-dm-sans text-[0.5rem] text-cream text-center uppercase tracking-wider px-1 truncate">
+                  {video.label}
+                </p>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Image Grid */}
         <div className="columns-2 md:columns-3 gap-3">
-  {galleryImages.map((img) => (
-    <div
-      key={img.src}
-      className="gallery-item img-zoom relative rounded-xl overflow-hidden break-inside-avoid mb-3"
-    >
-      <Image
-        src={img.src}
-        alt={img.alt}
-        width={600}
-        height={400}
-        sizes="(max-width: 768px) 50vw, 33vw"
-        className="object-cover w-full h-auto"
-        quality={100}
-      />
-    </div>
-  ))}
-</div>
+          {galleryImages.map((img) => (
+            <div
+              key={img.src}
+              className="gallery-item img-zoom relative rounded-xl overflow-hidden break-inside-avoid mb-3"
+            >
+              <Image
+                src={img.src}
+                alt={img.alt}
+                width={600}
+                height={400}
+                sizes="(max-width: 768px) 50vw, 33vw"
+                className="object-cover w-full h-auto"
+                quality={100}
+              />
+            </div>
+          ))}
+        </div>
 
         {/* Instagram link */}
         <div className="text-center mt-12 reveal-element">
