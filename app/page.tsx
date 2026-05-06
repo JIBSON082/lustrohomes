@@ -1567,7 +1567,7 @@ function Gallery() {
 
           {/* ── Main Display ── */}
           <div className="relative rounded-2xl overflow-hidden bg-charcoal mb-4 select-none"
-            style={{ aspectRatio: "16/9" }}
+            style={{ aspectRatio: "4/5" }}
           >
 
             {/* VIDEO */}
