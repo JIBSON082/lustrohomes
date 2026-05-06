@@ -566,23 +566,14 @@ function About() {
 // ─────────────────────────────────────────────────
 // ROOMS & SUITES
 // ─────────────────────────────────────────────────
-interface Room {
-  name: string;
-  tier: string;
-  price: string;
-  about: string;
-  tag: string;
-  publicId: string;
-}
-
 function Rooms() {
   const [activeIdx, setActiveIdx] = useState(0);
   const [muted, setMuted] = useState(true);
-  const [playing, setPlaying] = useState(true);
+  const [playing, setPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
-  // Descending price order
-  const rooms: Room[] = [
+  const rooms = [
     {
       name: "Beverly Hills",
       tier: "Luxury Suite",
@@ -647,6 +638,23 @@ function Rooms() {
   const getThumbUrl = (publicId: string) =>
     `https://res.cloudinary.com/dx3k7hbnc/video/upload/so_2,w_300,h_400,c_fill,q_auto,f_auto/${publicId}.jpg`;
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          videoRef.current?.play().catch(() => {});
+          setPlaying(true);
+        } else {
+          videoRef.current?.pause();
+          setPlaying(false);
+        }
+      },
+      { threshold: 0.4 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, [activeIdx]);
+
   const handleSelect = (i: number) => {
     setActiveIdx(i);
     setPlaying(true);
@@ -660,11 +668,7 @@ function Rooms() {
 
   const togglePlay = () => {
     if (!videoRef.current) return;
-    if (playing) {
-      videoRef.current.pause();
-    } else {
-      videoRef.current.play();
-    }
+    playing ? videoRef.current.pause() : videoRef.current.play();
     setPlaying(!playing);
   };
 
@@ -674,14 +678,8 @@ function Rooms() {
     setMuted(!muted);
   };
 
-  // Prevent native fullscreen on click
-  const handleVideoClick = (e: React.MouseEvent<HTMLVideoElement>) => {
-    e.preventDefault();
-    togglePlay();
-  };
-
   return (
-    <section id="rooms" className="bg-cream-dark py-24 md:py-36">
+    <section ref={sectionRef} id="rooms" className="bg-cream-dark py-24 md:py-36">
       <div className="max-w-5xl mx-auto px-6">
 
         {/* Header */}
@@ -698,38 +696,36 @@ function Rooms() {
         {/* Gallery Block */}
         <div className="reveal-element">
 
-         {/* Main Video Player — no native controls, no fullscreen */}
+          {/* Main Video Player */}
           <div className="relative rounded-2xl overflow-hidden bg-charcoal mb-4 select-none">
             <video
               ref={videoRef}
               key={active.publicId}
               src={getVideoUrl(active.publicId)}
-              autoPlay
               muted={muted}
               loop={false}
               playsInline
               disablePictureInPicture
-              onClick={handleVideoClick}
+              onClick={togglePlay}
               onEnded={handleVideoEnded}
               onLoadedMetadata={(e) => {
                 Array.from(e.currentTarget.textTracks).forEach(
                   (t) => (t.mode = "hidden")
                 );
-                if (playing) e.currentTarget.play();
+                if (playing) e.currentTarget.play().catch(() => {});
               }}
               className="w-full object-cover cursor-pointer"
               style={{
-                WebkitMediaControls: "none",
-                pointerEvents: "auto",
                 maxHeight: "480px",
+                pointerEvents: "auto",
               } as React.CSSProperties}
               controlsList="nodownload nofullscreen noremoteplayback"
               onContextMenu={(e) => e.preventDefault()}
             />
 
-            {/* Room name overlay — top left */}
+            {/* Room name overlay */}
             <div className="absolute top-5 left-5 pointer-events-none">
-              <span className="font-dm-sans text-[0.55rem] text-cream/60 uppercase tracking-[0.22em] block mb-0.5">
+              <span className="font-dm-sans text-[0.55rem] text-cream/60 uppercase tracking-[0.22em] mb-1 block">
                 {active.tier}
               </span>
               <h3 className="font-cormorant text-3xl text-cream font-light leading-none drop-shadow-lg">
@@ -737,48 +733,40 @@ function Rooms() {
               </h3>
             </div>
 
-            {/* Price tag — top right */}
+            {/* Tag — top right */}
             <div className="absolute top-5 right-5 pointer-events-none">
               <span className="font-dm-sans text-[0.58rem] bg-brown text-cream px-3 py-1.5 rounded-full tracking-[0.15em] uppercase">
                 {active.tag}
               </span>
             </div>
 
-            {/* Custom Controls — bottom bar */}
+            {/* Custom Controls */}
             <div className="absolute bottom-0 left-0 right-0 px-5 py-4 flex items-center justify-between bg-gradient-to-t from-black/50 to-transparent">
-
-              {/* Play / Pause — bottom left */}
               <button
                 onClick={togglePlay}
                 className="w-9 h-9 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center hover:bg-white/25 transition-colors"
                 aria-label={playing ? "Pause" : "Play"}
               >
                 {playing ? (
-                  /* Pause icon */
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-white">
                     <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
                   </svg>
                 ) : (
-                  /* Play icon */
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-white ml-0.5">
                     <path d="M8 5.14v14l11-7-11-7z" />
                   </svg>
                 )}
               </button>
-
-              {/* Mute / Unmute — bottom right */}
               <button
                 onClick={toggleMute}
                 className="w-9 h-9 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center hover:bg-white/25 transition-colors"
                 aria-label={muted ? "Unmute" : "Mute"}
               >
                 {muted ? (
-                  /* Muted icon */
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-white">
                     <path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0 0 21 12c0-4.28-3-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06A8.99 8.99 0 0 0 17.73 18l1.73 1.73L21 18.46 5.54 3 4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
                   </svg>
                 ) : (
-                  /* Unmuted icon */
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-white">
                     <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z" />
                   </svg>
