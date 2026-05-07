@@ -1590,15 +1590,7 @@ function Gallery() {
                   onContextMenu={(e) => e.preventDefault()}
                 />
 
-                {/* Video label overlay */}
-                <div className="absolute top-5 left-5 pointer-events-none">
-                  <p className="font-dm-sans text-[0.55rem] text-cream/50 uppercase tracking-[0.22em] mb-1">
-                    Lustro Homes
-                  </p>
-                  <h3 className="font-cormorant text-3xl text-cream font-light leading-none drop-shadow-lg">
-                    {activeItem.label}
-                  </h3>
-                </div>
+                
 
                 {/* Video Controls */}
                 <div className="absolute bottom-0 left-0 right-0 px-5 py-4 flex items-center justify-between bg-gradient-to-t from-black/55 to-transparent">
