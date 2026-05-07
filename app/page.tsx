@@ -1582,11 +1582,11 @@ function Gallery() {
     if (playing) e.currentTarget.play().catch(() => {});
   }}
   className="w-full cursor-pointer"
-  style={{
-    height: "480px",
-    objectFit: "contain",
-    pointerEvents: "auto",
-  } as React.CSSProperties}
+style={{
+  height: "70vh",
+  objectFit: "contain",
+  pointerEvents: "auto",
+} as React.CSSProperties}
   controlsList="nodownload nofullscreen noremoteplayback"
   onContextMenu={(e) => e.preventDefault()}
 />
@@ -1643,10 +1643,10 @@ function Gallery() {
   src={activeItem.src}
   alt={activeItem.alt}
   className="w-full"
-  style={{
-    height: "480px",
-    objectFit: "contain",
-  }}
+style={{
+  height: "70vh",
+  objectFit: "contain",
+}}
 />
                 {/* Counter */}
                 <div className="absolute top-5 right-5 pointer-events-none">
