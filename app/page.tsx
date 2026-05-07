@@ -1566,9 +1566,7 @@ function Gallery() {
         <div className="reveal-element">
 
           {/* ── Main Display ── */}
-          <div className="relative rounded-2xl overflow-hidden bg-charcoal mb-4 select-none"
-            style={{ aspectRatio: "1/1" }}
-          >
+       <div className="relative rounded-2xl overflow-hidden bg-charcoal mb-4 select-none">
 
             {/* VIDEO */}
             {activeItem.type === "video" && (
@@ -1589,7 +1587,11 @@ function Gallery() {
                     );
                     if (playing) e.currentTarget.play().catch(() => {});
                   }}
-                  className="absolute inset-0 w-full h-full object-cover cursor-pointer"
+                  className="w-full object-cover cursor-pointer"
+style={{
+  maxHeight: "480px",
+  pointerEvents: "auto",
+} as React.CSSProperties}
                   controlsList="nodownload nofullscreen noremoteplayback"
                   onContextMenu={(e) => e.preventDefault()}
                 />
@@ -1642,25 +1644,15 @@ function Gallery() {
 
             {/* IMAGE */}
             {activeItem.type === "image" && (
-              <>
-                <Image
-                  key={activeItem.src}
-                  src={activeItem.src}
-                  alt={activeItem.alt}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 900px"
-                  className="object-cover"
-                  quality={100}
-                  priority
-                />
-                {/* Label overlay */}
-                <div className="absolute bottom-0 left-0 right-0 px-6 py-5 bg-gradient-to-t from-black/50 to-transparent pointer-events-none">
-                  <p className="font-cormorant text-2xl text-cream font-light">
-                    {activeItem.label}
-                  </p>
-                </div>
-              </>
-            )}
+  <Image
+    <img
+  key={activeItem.src}
+  src={activeItem.src}
+  alt={activeItem.alt}
+  className="w-full object-cover"
+  style={{ maxHeight: "480px" }}
+/>
+)}
 
             {/* Item counter — top right */}
             <div className="absolute top-5 right-5 pointer-events-none">
