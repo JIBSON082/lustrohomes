@@ -1565,31 +1565,31 @@ function Gallery() {
             {/* VIDEO */}
             {activeItem.type === "video" && (
               <>
-                <video
-                  ref={videoRef}
-                  key={activeItem.publicId}
-                  src={getVideoUrl(activeItem.publicId)}
-                  muted={muted}
-                  loop={false}
-                  playsInline
-                  disablePictureInPicture
-                  onClick={togglePlay}
-                  onEnded={handleVideoEnded}
-                  onLoadedMetadata={(e) => {
-                    Array.from(e.currentTarget.textTracks).forEach(
-                      (t) => (t.mode = "hidden")
-                    );
-                    if (playing) e.currentTarget.play().catch(() => {});
-                  }}
-                  className="w-full object-cover cursor-pointer"
-                  style={{
-                    maxHeight: "500px",
-                    pointerEvents: "auto",
-                  } as React.CSSProperties}
-                  controlsList="nodownload nofullscreen noremoteplayback"
-                  onContextMenu={(e) => e.preventDefault()}
-                />
-
+             <video
+  ref={videoRef}
+  key={activeItem.publicId}
+  src={getVideoUrl(activeItem.publicId)}
+  muted={muted}
+  loop={false}
+  playsInline
+  disablePictureInPicture
+  onClick={togglePlay}
+  onEnded={handleVideoEnded}
+  onLoadedMetadata={(e) => {
+    Array.from(e.currentTarget.textTracks).forEach(
+      (t) => (t.mode = "hidden")
+    );
+    if (playing) e.currentTarget.play().catch(() => {});
+  }}
+  className="w-full cursor-pointer"
+  style={{
+    height: "480px",
+    objectFit: "contain",
+    pointerEvents: "auto",
+  } as React.CSSProperties}
+  controlsList="nodownload nofullscreen noremoteplayback"
+  onContextMenu={(e) => e.preventDefault()}
+/>
                 
 
                 {/* Video Controls */}
@@ -1638,13 +1638,16 @@ function Gallery() {
             {/* IMAGE — no labels */}
             {activeItem.type === "image" && (
               <>
-                <img
-                  key={activeItem.src}
-                  src={activeItem.src}
-                  alt={activeItem.alt}
-                  className="w-full object-cover"
-                  style={{ maxHeight: "500px" }}
-                />
+             <img
+  key={activeItem.src}
+  src={activeItem.src}
+  alt={activeItem.alt}
+  className="w-full"
+  style={{
+    height: "480px",
+    objectFit: "contain",
+  }}
+/>
                 {/* Counter */}
                 <div className="absolute top-5 right-5 pointer-events-none">
                   <span className="font-dm-sans text-[0.55rem] text-cream/50 uppercase tracking-[0.2em]">
