@@ -1462,12 +1462,10 @@ function Gallery() {
   const thumbsRef = useRef<HTMLDivElement>(null);
 
   const items: GalleryItem[] = [
-    // Videos first
     { type: "video", publicId: "Lustro_Gallery_video_1_oxi2ea", label: "Lustro Life" },
     { type: "video", publicId: "Lustro_Gallery_video_2_ui7i9q", label: "The Experience" },
     { type: "video", publicId: "Lustro_Gallery_video_3_chx6hw", label: "Inside Lustro" },
     { type: "video", publicId: "Lustro_Gallery_video_4_nrxt34", label: "The Spaces" },
-    // Images follow
     { type: "image", src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777562618/hero-1_jlcvld.png", alt: "Lustro Homes exterior", label: "Exterior" },
     { type: "image", src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642365/gallery-7_tmifgb.jpg", alt: "Lustro Lagos neon sign", label: "Neon Sign" },
     { type: "image", src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777569685/hero-3_oqrukn.jpg", alt: "Lustro Homes suite", label: "The Suite" },
@@ -1486,7 +1484,6 @@ function Gallery() {
   const getVideoThumb = (publicId: string) =>
     `https://res.cloudinary.com/dx3k7hbnc/video/upload/so_2,w_300,h_400,c_fill,q_auto,f_auto/${publicId}.jpg`;
 
-  // Scroll active thumb into view
   useEffect(() => {
     const container = thumbsRef.current;
     if (!container) return;
@@ -1496,7 +1493,6 @@ function Gallery() {
     }
   }, [activeIdx]);
 
-  // IntersectionObserver — play only when section is visible
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -1517,14 +1513,12 @@ function Gallery() {
   }, [activeIdx, activeItem.type]);
 
   const handleSelect = (i: number) => {
-    // Pause current video immediately before switching
     videoRef.current?.pause();
     setActiveIdx(i);
     setPlaying(true);
   };
 
   const handleVideoEnded = () => {
-    // Auto-advance to next video only
     const nextVideoIdx = items.findIndex(
       (item, i) => i > activeIdx && item.type === "video"
     );
@@ -1565,8 +1559,8 @@ function Gallery() {
 
         <div className="reveal-element">
 
-          {/* ── Main Display ── */}
-       <div className="relative rounded-2xl overflow-hidden bg-charcoal mb-4 select-none">
+          {/* Main Display */}
+          <div className="relative rounded-2xl overflow-hidden bg-charcoal mb-4 select-none">
 
             {/* VIDEO */}
             {activeItem.type === "video" && (
@@ -1588,15 +1582,15 @@ function Gallery() {
                     if (playing) e.currentTarget.play().catch(() => {});
                   }}
                   className="w-full object-cover cursor-pointer"
-style={{
-  maxHeight: "480px",
-  pointerEvents: "auto",
-} as React.CSSProperties}
+                  style={{
+                    maxHeight: "480px",
+                    pointerEvents: "auto",
+                  } as React.CSSProperties}
                   controlsList="nodownload nofullscreen noremoteplayback"
                   onContextMenu={(e) => e.preventDefault()}
                 />
 
-                {/* Label */}
+                {/* Video label overlay */}
                 <div className="absolute top-5 left-5 pointer-events-none">
                   <p className="font-dm-sans text-[0.55rem] text-cream/50 uppercase tracking-[0.22em] mb-1">
                     Lustro Homes
@@ -1639,30 +1633,37 @@ style={{
                     )}
                   </button>
                 </div>
+
+                {/* Counter */}
+                <div className="absolute top-5 right-5 pointer-events-none">
+                  <span className="font-dm-sans text-[0.55rem] text-cream/50 uppercase tracking-[0.2em]">
+                    {activeIdx + 1} / {items.length}
+                  </span>
+                </div>
               </>
             )}
 
-            {/* IMAGE */}
+            {/* IMAGE — no labels */}
             {activeItem.type === "image" && (
-  <Image
-    <img
-  key={activeItem.src}
-  src={activeItem.src}
-  alt={activeItem.alt}
-  className="w-full object-cover"
-  style={{ maxHeight: "480px" }}
-/>
-)}
-
-            {/* Item counter — top right */}
-            <div className="absolute top-5 right-5 pointer-events-none">
-              <span className="font-dm-sans text-[0.55rem] text-cream/50 uppercase tracking-[0.2em]">
-                {activeIdx + 1} / {items.length}
-              </span>
-            </div>
+              <>
+                <img
+                  key={activeItem.src}
+                  src={activeItem.src}
+                  alt={activeItem.alt}
+                  className="w-full object-cover"
+                  style={{ maxHeight: "480px" }}
+                />
+                {/* Counter */}
+                <div className="absolute top-5 right-5 pointer-events-none">
+                  <span className="font-dm-sans text-[0.55rem] text-cream/50 uppercase tracking-[0.2em]">
+                    {activeIdx + 1} / {items.length}
+                  </span>
+                </div>
+              </>
+            )}
           </div>
 
-          {/* ── Thumbnail Strip ── */}
+          {/* Thumbnail Strip */}
           <div
             ref={thumbsRef}
             className="flex gap-2.5 overflow-x-auto pb-1 no-scrollbar"
@@ -1678,24 +1679,12 @@ style={{
                 }`}
                 style={{ width: "88px", height: "112px" }}
               >
-                {/* Thumb image */}
-                {item.type === "video" ? (
-                  <img
-                    src={getVideoThumb(item.publicId)}
-                    alt={item.label}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <img
-                    src={item.src}
-                    alt={item.alt}
-                    className="w-full h-full object-cover"
-                  />
-                )}
-
+                <img
+                  src={item.type === "video" ? getVideoThumb(item.publicId) : item.src}
+                  alt={item.type === "video" ? item.label : item.alt}
+                  className="w-full h-full object-cover"
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/65 to-transparent" />
-
-                {/* Play icon for videos */}
                 {item.type === "video" && (
                   <div className="absolute inset-0 flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-white/80">
@@ -1703,7 +1692,6 @@ style={{
                     </svg>
                   </div>
                 )}
-
                 <p className="absolute bottom-2 left-0 right-0 font-dm-sans text-[0.48rem] text-cream text-center uppercase tracking-wider px-1 truncate">
                   {item.label}
                 </p>
