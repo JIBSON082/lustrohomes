@@ -1583,7 +1583,7 @@ function Gallery() {
                   }}
                   className="w-full object-cover cursor-pointer"
                   style={{
-                    maxHeight: "480px",
+                    maxHeight: "560px",
                     pointerEvents: "auto",
                   } as React.CSSProperties}
                   controlsList="nodownload nofullscreen noremoteplayback"
@@ -1651,7 +1651,7 @@ function Gallery() {
                   src={activeItem.src}
                   alt={activeItem.alt}
                   className="w-full object-cover"
-                  style={{ maxHeight: "480px" }}
+                  style={{ maxHeight: "560px" }}
                 />
                 {/* Counter */}
                 <div className="absolute top-5 right-5 pointer-events-none">
@@ -1692,9 +1692,7 @@ function Gallery() {
                     </svg>
                   </div>
                 )}
-                <p className="absolute bottom-2 left-0 right-0 font-dm-sans text-[0.48rem] text-cream text-center uppercase tracking-wider px-1 truncate">
-                  {item.label}
-                </p>
+             
               </button>
             ))}
           </div>
