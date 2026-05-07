@@ -1583,7 +1583,7 @@ function Gallery() {
                   }}
                   className="w-full object-cover cursor-pointer"
                   style={{
-                    maxHeight: "520px",
+                    maxHeight: "500px",
                     pointerEvents: "auto",
                   } as React.CSSProperties}
                   controlsList="nodownload nofullscreen noremoteplayback"
@@ -1643,7 +1643,7 @@ function Gallery() {
                   src={activeItem.src}
                   alt={activeItem.alt}
                   className="w-full object-cover"
-                  style={{ maxHeight: "520px" }}
+                  style={{ maxHeight: "500px" }}
                 />
                 {/* Counter */}
                 <div className="absolute top-5 right-5 pointer-events-none">
