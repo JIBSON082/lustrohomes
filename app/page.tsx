@@ -338,24 +338,13 @@ function Hero() {
             </span>
           </button>
 
-          {/* Eyebrow */}
-          <p
-            className="hero-eyebrow font-dm-sans text-[0.65rem] text-gold uppercase tracking-[0.35em] mb-4"
-            style={{ opacity: 0 }}
-          >
-            Staycation in Lagos · Signature Dining · Investment
-          </p>
-
-          {/* Headline */}
+          {/* Hero Statement */}
           <h1
-            className="hero-title font-cormorant text-5xl sm:text-6xl md:text-7xl text-cream font-light leading-[1.08] mb-10 max-w-2xl"
+            className="hero-eyebrow font-cormorant text-3xl sm:text-4xl text-cream font-light leading-[1.4] mb-10 max-w-xs tracking-wide"
             style={{ opacity: 0 }}
           >
-            Your Lagos{" "}
-            <em className="text-gold" style={{ fontStyle: "italic" }}>
-              Staycation
-            </em>{" "}
-            Awaits.
+            Staycation in Lagos.<br />
+            <em className="text-gold italic">Signature Dining. Investment.</em>
           </h1>
 
           
