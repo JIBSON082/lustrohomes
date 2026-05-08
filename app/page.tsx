@@ -1559,49 +1559,36 @@ function Gallery() {
 
         <div className="reveal-element">
 
-          {/* Main Display */}
-          <div className="relative rounded-2xl overflow-hidden bg-charcoal mb-4 select-none">
+          {/* Main Display — portrait frame, centered */}
+          <div
+            className="relative rounded-2xl overflow-hidden bg-charcoal mb-4 select-none"
+            style={{ height: "70vh", maxWidth: "400px", margin: "0 auto" }}
+          >
 
             {/* VIDEO */}
             {activeItem.type === "video" && (
               <>
-                <div className="relative w-full overflow-hidden" style={{ height: "70vh" }}>
-                  {/* Blurred background */}
-                  <video
-                    key={activeItem.publicId + "-bg"}
-                    src={getVideoUrl(activeItem.publicId)}
-                    muted
-                    autoPlay
-                    loop
-                    playsInline
-                    aria-hidden="true"
-                    className="absolute inset-0 w-full h-full object-cover scale-110"
-                    style={{ filter: "blur(20px)", opacity: 0.6 }}
-                  />
-                  <div className="absolute inset-0 bg-black/30" />
-                  {/* Foreground video */}
-                  <video
-                    ref={videoRef}
-                    key={activeItem.publicId}
-                    src={getVideoUrl(activeItem.publicId)}
-                    muted={muted}
-                    loop={false}
-                    playsInline
-                    disablePictureInPicture
-                    onClick={togglePlay}
-                    onEnded={handleVideoEnded}
-                    onLoadedMetadata={(e) => {
-                      Array.from(e.currentTarget.textTracks).forEach(
-                        (t) => (t.mode = "hidden")
-                      );
-                      if (playing) e.currentTarget.play().catch(() => {});
-                    }}
-                    className="relative w-full h-full cursor-pointer"
-                    style={{ objectFit: "contain", pointerEvents: "auto" } as React.CSSProperties}
-                    controlsList="nodownload nofullscreen noremoteplayback"
-                    onContextMenu={(e) => e.preventDefault()}
-                  />
-                </div>
+                <video
+                  ref={videoRef}
+                  key={activeItem.publicId}
+                  src={getVideoUrl(activeItem.publicId)}
+                  muted={muted}
+                  loop={false}
+                  playsInline
+                  disablePictureInPicture
+                  onClick={togglePlay}
+                  onEnded={handleVideoEnded}
+                  onLoadedMetadata={(e) => {
+                    Array.from(e.currentTarget.textTracks).forEach(
+                      (t) => (t.mode = "hidden")
+                    );
+                    if (playing) e.currentTarget.play().catch(() => {});
+                  }}
+                  className="absolute inset-0 w-full h-full cursor-pointer"
+                  style={{ objectFit: "cover", pointerEvents: "auto" } as React.CSSProperties}
+                  controlsList="nodownload nofullscreen noremoteplayback"
+                  onContextMenu={(e) => e.preventDefault()}
+                />
 
                 {/* Controls */}
                 <div className="absolute bottom-0 left-0 right-0 px-5 py-4 flex items-center justify-between bg-gradient-to-t from-black/55 to-transparent">
@@ -1649,26 +1636,13 @@ function Gallery() {
             {/* IMAGE */}
             {activeItem.type === "image" && (
               <>
-                <div className="relative w-full overflow-hidden" style={{ height: "70vh" }}>
-                  {/* Blurred background */}
-                  <img
-                    src={activeItem.src}
-                    alt=""
-                    aria-hidden="true"
-                    className="absolute inset-0 w-full h-full object-cover scale-110"
-                    style={{ filter: "blur(20px)", opacity: 0.6 }}
-                  />
-                  <div className="absolute inset-0 bg-black/30" />
-                  {/* Foreground image */}
-                  <img
-                    key={activeItem.src}
-                    src={activeItem.src}
-                    alt={activeItem.alt}
-                    className="relative w-full h-full"
-                    style={{ objectFit: "contain" }}
-                  />
-                </div>
-
+                <img
+                  key={activeItem.src}
+                  src={activeItem.src}
+                  alt={activeItem.alt}
+                  className="absolute inset-0 w-full h-full"
+                  style={{ objectFit: "cover" }}
+                />
                 {/* Counter */}
                 <div className="absolute top-5 right-5 pointer-events-none">
                   <span className="font-dm-sans text-[0.55rem] text-cream/50 uppercase tracking-[0.2em]">
@@ -1683,6 +1657,7 @@ function Gallery() {
           <div
             ref={thumbsRef}
             className="flex gap-2.5 overflow-x-auto pb-1 no-scrollbar"
+            style={{ maxWidth: "400px", margin: "0 auto" }}
           >
             {items.map((item, i) => (
               <button
