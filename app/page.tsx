@@ -348,7 +348,7 @@ function Hero() {
 
           {/* Headline */}
           <h1
-            className="hero-title font-cormorant text-5xl sm:text-6xl md:text-7xl text-cream font-light leading-[1.08] mb-4 max-w-2xl"
+            className="hero-title font-cormorant text-5xl sm:text-6xl md:text-7xl text-cream font-light leading-[1.08] mb-10 max-w-2xl"
             style={{ opacity: 0 }}
           >
             Your Lagos{" "}
@@ -358,13 +358,7 @@ function Hero() {
             Awaits.
           </h1>
 
-          {/* Subtext */}
-          <p
-            className="hero-sub font-dm-sans text-cream/65 text-sm leading-relaxed mb-8 max-w-sm"
-            style={{ opacity: 0 }}
-          >
-            Experience thoughtfully designed suites and in-house dining worth lingering over, right in the heart of Lagos.
-          </p>
+          
 
           {/* CTA Buttons */}
           <div
