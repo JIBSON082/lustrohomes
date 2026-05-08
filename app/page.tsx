@@ -343,7 +343,7 @@ function Hero() {
             className="hero-eyebrow font-dm-sans text-[0.65rem] text-gold uppercase tracking-[0.35em] mb-4"
             style={{ opacity: 0 }}
           >
-            Premium Staycation · Lagos
+            Staycation in Lagos · Signature Dining · Investment
           </p>
 
           {/* Headline */}
