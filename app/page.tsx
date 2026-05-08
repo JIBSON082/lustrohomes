@@ -1564,125 +1564,120 @@ function Gallery() {
 
             {/* VIDEO */}
             {activeItem.type === "video" && (
-  <>
-    {/* Container with blurred background */}
-    <div className="relative w-full overflow-hidden" style={{ height: "70vh" }}>
+              <>
+                <div className="relative w-full overflow-hidden" style={{ height: "70vh" }}>
+                  {/* Blurred background */}
+                  <video
+                    key={activeItem.publicId + "-bg"}
+                    src={getVideoUrl(activeItem.publicId)}
+                    muted
+                    autoPlay
+                    loop
+                    playsInline
+                    aria-hidden="true"
+                    className="absolute inset-0 w-full h-full object-cover scale-110"
+                    style={{ filter: "blur(20px)", opacity: 0.6 }}
+                  />
+                  <div className="absolute inset-0 bg-black/30" />
+                  {/* Foreground video */}
+                  <video
+                    ref={videoRef}
+                    key={activeItem.publicId}
+                    src={getVideoUrl(activeItem.publicId)}
+                    muted={muted}
+                    loop={false}
+                    playsInline
+                    disablePictureInPicture
+                    onClick={togglePlay}
+                    onEnded={handleVideoEnded}
+                    onLoadedMetadata={(e) => {
+                      Array.from(e.currentTarget.textTracks).forEach(
+                        (t) => (t.mode = "hidden")
+                      );
+                      if (playing) e.currentTarget.play().catch(() => {});
+                    }}
+                    className="relative w-full h-full cursor-pointer"
+                    style={{ objectFit: "contain", pointerEvents: "auto" } as React.CSSProperties}
+                    controlsList="nodownload nofullscreen noremoteplayback"
+                    onContextMenu={(e) => e.preventDefault()}
+                  />
+                </div>
 
-      {/* Blurred background layer */}
-      <video
-        key={activeItem.publicId + "-bg"}
-        src={getVideoUrl(activeItem.publicId)}
-        muted
-        autoPlay
-        loop
-        playsInline
-        aria-hidden="true"
-        className="absolute inset-0 w-full h-full object-cover scale-110"
-        style={{ filter: "blur(20px)", opacity: 0.6 }}
-      />
+                {/* Controls */}
+                <div className="absolute bottom-0 left-0 right-0 px-5 py-4 flex items-center justify-between bg-gradient-to-t from-black/55 to-transparent">
+                  <button
+                    onClick={togglePlay}
+                    className="w-9 h-9 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center hover:bg-white/25 transition-colors"
+                    aria-label={playing ? "Pause" : "Play"}
+                  >
+                    {playing ? (
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-white">
+                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                      </svg>
+                    ) : (
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-white ml-0.5">
+                        <path d="M8 5.14v14l11-7-11-7z" />
+                      </svg>
+                    )}
+                  </button>
+                  <button
+                    onClick={toggleMute}
+                    className="w-9 h-9 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center hover:bg-white/25 transition-colors"
+                    aria-label={muted ? "Unmute" : "Mute"}
+                  >
+                    {muted ? (
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-white">
+                        <path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0 0 21 12c0-4.28-3-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06A8.99 8.99 0 0 0 17.73 18l1.73 1.73L21 18.46 5.54 3 4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                      </svg>
+                    ) : (
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-white">
+                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
 
-      {/* Dark tint over blur */}
-      <div className="absolute inset-0 bg-black/30" />
+                {/* Counter */}
+                <div className="absolute top-5 right-5 pointer-events-none">
+                  <span className="font-dm-sans text-[0.55rem] text-cream/50 uppercase tracking-[0.2em]">
+                    {activeIdx + 1} / {items.length}
+                  </span>
+                </div>
+              </>
+            )}
 
-      {/* Actual video — centered, full detail */}
-      <video
-        ref={videoRef}
-        key={activeItem.publicId}
-        src={getVideoUrl(activeItem.publicId)}
-        muted={muted}
-        loop={false}
-        playsInline
-        disablePictureInPicture
-        onClick={togglePlay}
-        onEnded={handleVideoEnded}
-        onLoadedMetadata={(e) => {
-          Array.from(e.currentTarget.textTracks).forEach(
-            (t) => (t.mode = "hidden")
-          );
-          if (playing) e.currentTarget.play().catch(() => {});
-        }}
-        className="relative w-full h-full cursor-pointer"
-        style={{
-          objectFit: "contain",
-          pointerEvents: "auto",
-        } as React.CSSProperties}
-        controlsList="nodownload nofullscreen noremoteplayback"
-        onContextMenu={(e) => e.preventDefault()}
-      />
-    </div>
+            {/* IMAGE */}
+            {activeItem.type === "image" && (
+              <>
+                <div className="relative w-full overflow-hidden" style={{ height: "70vh" }}>
+                  {/* Blurred background */}
+                  <img
+                    src={activeItem.src}
+                    alt=""
+                    aria-hidden="true"
+                    className="absolute inset-0 w-full h-full object-cover scale-110"
+                    style={{ filter: "blur(20px)", opacity: 0.6 }}
+                  />
+                  <div className="absolute inset-0 bg-black/30" />
+                  {/* Foreground image */}
+                  <img
+                    key={activeItem.src}
+                    src={activeItem.src}
+                    alt={activeItem.alt}
+                    className="relative w-full h-full"
+                    style={{ objectFit: "contain" }}
+                  />
+                </div>
 
-    {/* Controls */}
-    <div className="absolute bottom-0 left-0 right-0 px-5 py-4 flex items-center justify-between bg-gradient-to-t from-black/55 to-transparent">
-      <button
-        onClick={togglePlay}
-        className="w-9 h-9 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center hover:bg-white/25 transition-colors"
-        aria-label={playing ? "Pause" : "Play"}
-      >
-        {playing ? (
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-white">
-            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
-          </svg>
-        ) : (
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-white ml-0.5">
-            <path d="M8 5.14v14l11-7-11-7z" />
-          </svg>
-        )}
-      </button>
-      <button
-        onClick={toggleMute}
-        className="w-9 h-9 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center hover:bg-white/25 transition-colors"
-        aria-label={muted ? "Unmute" : "Mute"}
-      >
-        {muted ? (
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-white">
-            <path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0 0 21 12c0-4.28-3-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06A8.99 8.99 0 0 0 17.73 18l1.73 1.73L21 18.46 5.54 3 4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
-          </svg>
-        ) : (
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-white">
-            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z" />
-          </svg>
-        )}
-      </button>
-    </div>
-
-    {/* Counter */}
-    <div className="absolute top-5 right-5 pointer-events-none">
-      <span className="font-dm-sans text-[0.55rem] text-cream/50 uppercase tracking-[0.2em]">
-        {activeIdx + 1} / {items.length}
-      </span>
-    </div>
-  </>
-)}
-            {/* IMAGE — no labels */}
-          {activeItem.type === "image" && (
-  <>
-    <div className="relative w-full overflow-hidden" style={{ height: "70vh" }}>
-      {/* Blurred background */}
-      <img
-        src={activeItem.src}
-        alt=""
-        aria-hidden="true"
-        className="absolute inset-0 w-full h-full object-cover scale-110"
-        style={{ filter: "blur(20px)", opacity: 0.6 }}
-      />
-      <div className="absolute inset-0 bg-black/30" />
-      {/* Actual image */}
-      <img
-        key={activeItem.src}
-        src={activeItem.src}
-        alt={activeItem.alt}
-        className="relative w-full h-full"
-        style={{ objectFit: "contain" }}
-      />
-    </div>
-    {/* Counter */}
-    <div className="absolute top-5 right-5 pointer-events-none">
-      <span className="font-dm-sans text-[0.55rem] text-cream/50 uppercase tracking-[0.2em]">
-        {activeIdx + 1} / {items.length}
-      </span>
-    </div>
-  </>
-)}
+                {/* Counter */}
+                <div className="absolute top-5 right-5 pointer-events-none">
+                  <span className="font-dm-sans text-[0.55rem] text-cream/50 uppercase tracking-[0.2em]">
+                    {activeIdx + 1} / {items.length}
+                  </span>
+                </div>
+              </>
+            )}
+          </div>
 
           {/* Thumbnail Strip */}
           <div
@@ -1713,7 +1708,6 @@ function Gallery() {
                     </svg>
                   </div>
                 )}
-             
               </button>
             ))}
           </div>
