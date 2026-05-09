@@ -286,7 +286,9 @@ function Hero() {
 
   useEffect(() => {
     document.body.style.overflow = modalOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [modalOpen]);
 
   return (
@@ -310,7 +312,6 @@ function Hero() {
           transform: translateY(-110%);
           opacity: 0;
         }
-
         @keyframes rotateCircle {
           from { transform: rotate(0deg); }
           to   { transform: rotate(360deg); }
@@ -355,8 +356,6 @@ function Hero() {
 
             {/* Left — Crafted for + script word */}
             <div className="hero-text" style={{ opacity: 0 }}>
-
-              {/* "Crafted for" with decorative line */}
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-6 h-px bg-gold/60" />
                 <p
@@ -366,16 +365,14 @@ function Hero() {
                   Crafted for
                 </p>
               </div>
-
-              {/* Masked sliding word */}
               <div className="phrase-mask">
                 <span
                   className={`phrase-word ${animating ? "exit" : "visible"}`}
                   style={{
                     fontFamily: "'Great Vibes', cursive",
-                    fontSize: "clamp(45px, 12vw, 64px)",
+                    fontSize: "clamp(42px, 11vw, 58px)",
                     color: "#C8922A",
-                    lineHeight: 1.0,
+                    lineHeight: 1.05,
                   }}
                 >
                   {HERO_PHRASES[phraseIdx]}
@@ -383,80 +380,79 @@ function Hero() {
               </div>
             </div>
 
-          
-        {/* Right — Rotating play button */}
-<div
-  className="hero-play flex-shrink-0 ml-3 mb-1"
-  style={{ opacity: 0 }}
->
-  <button
-    onClick={() => setModalOpen(true)}
-    className="relative w-[130px] h-[130px] flex items-center justify-center group"
-    aria-label="Watch for more"
-  >
-    <svg
-      viewBox="0 0 160 160"
-      className="absolute inset-0 w-full h-full"
-      style={{ animation: "rotateCircle 9s linear infinite" }}
-    >
-      <defs>
-        <path
-          id="circle-path-hero"
-          d="M 80,80 m -60,0 a 60,60 0 1,1 120,0 a 60,60 0 1,1 -120,0"
-        />
-      </defs>
-      <text
-        style={{
-          fontSize: "12px",
-          letterSpacing: "5px",
-          fill: "#C8922A",
-          fontFamily: "DM Sans, sans-serif",
-        }}
-      >
-        <textPath href="#circle-path-hero">
-          WATCH FOR MORE ·
-        </textPath>
-      </text>
-    </svg>
-    <div className="relative w-16 h-16 rounded-full border border-cream/60 flex items-center justify-center bg-white/10 backdrop-blur-sm group-hover:scale-110 group-hover:border-gold transition-all duration-500">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        className="w-6 h-6 text-cream group-hover:text-gold transition-colors ml-0.5"
-      >
-        <path d="M8 5.14v14l11-7-11-7z" />
-      </svg>
-    </div>
-  </button>
-</div>
+            {/* Right — Rotating play button */}
+            <div
+              className="hero-play flex-shrink-0 ml-3 mb-1"
+              style={{ opacity: 0 }}
+            >
+              <button
+                onClick={() => setModalOpen(true)}
+                className="relative w-[130px] h-[130px] flex items-center justify-center group"
+                aria-label="Watch for more"
+              >
+                <svg
+                  viewBox="0 0 160 160"
+                  className="absolute inset-0 w-full h-full"
+                  style={{ animation: "rotateCircle 9s linear infinite" }}
+                >
+                  <defs>
+                    <path
+                      id="circle-path-hero"
+                      d="M 80,80 m -60,0 a 60,60 0 1,1 120,0 a 60,60 0 1,1 -120,0"
+                    />
+                  </defs>
+                  <text
+                    style={{
+                      fontSize: "12px",
+                      letterSpacing: "5px",
+                      fill: "#C8922A",
+                      fontFamily: "DM Sans, sans-serif",
+                    }}
+                  >
+                    <textPath href="#circle-path-hero">
+                      WATCH FOR MORE ·
+                    </textPath>
+                  </text>
+                </svg>
+                <div className="relative w-16 h-16 rounded-full border border-cream/60 flex items-center justify-center bg-white/10 backdrop-blur-sm group-hover:scale-110 group-hover:border-gold transition-all duration-500">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    className="w-6 h-6 text-cream group-hover:text-gold transition-colors ml-0.5"
+                  >
+                    <path d="M8 5.14v14l11-7-11-7z" />
+                  </svg>
+                </div>
+              </button>
+            </div>
+          </div>
 
-        
-         {/* CTA Buttons */}
-<div className="hero-ctas flex flex-row gap-3 w-full" style={{ opacity: 0 }}>
-  <a
-    href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="flex-1 text-center bg-brown text-cream font-dm-sans text-[0.9rem] py-4 rounded-full hover:bg-brown-light transition-colors shadow-lg"
-  >
-    Book Your Stay
-  </a>
-  <a
-    href="#rooms"
-    onClick={(e) => {
-      e.preventDefault();
-      const target = document.querySelector("#rooms");
-      if (target) {
-        const y = target.getBoundingClientRect().top + window.scrollY;
-        window.scrollTo({ top: y, behavior: "instant" });
-      }
-    }}
-    className="flex-1 text-center border border-cream/35 text-cream font-dm-sans text-[0.9rem] py-4 rounded-full hover:bg-cream/10 transition-colors"
-  >
-    Explore Rooms
-  </a>
-</div>
+          {/* CTA Buttons */}
+          <div className="hero-ctas flex flex-row gap-3 w-full" style={{ opacity: 0 }}>
+            <a
+              href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 text-center bg-brown text-cream font-dm-sans text-[0.9rem] py-4 rounded-full hover:bg-brown-light transition-colors shadow-lg"
+            >
+              Book Your Stay
+            </a>
+            <a
+              href="#rooms"
+              onClick={(e) => {
+                e.preventDefault();
+                const target = document.querySelector("#rooms");
+                if (target) {
+                  const y = target.getBoundingClientRect().top + window.scrollY;
+                  window.scrollTo({ top: y, behavior: "instant" });
+                }
+              }}
+              className="flex-1 text-center border border-cream/35 text-cream font-dm-sans text-[0.9rem] py-4 rounded-full hover:bg-cream/10 transition-colors"
+            >
+              Explore Rooms
+            </a>
+          </div>
         </div>
       </section>
 
