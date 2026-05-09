@@ -363,10 +363,10 @@ useEffect(() => {
         <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />
 
         {/* Hero Content */}
-        <div className="relative z-20 flex flex-col justify-end h-full px-6 pb-14">
+        <div className="relative z-20 flex flex-col justify-end h-full px-6 pb-6">
 
           {/* Text + Play button row */}
-          <div className="flex items-end justify-between mb-5">
+          <div className="flex items-end justify-between mb-3">
 
             {/* Left — Crafted for + crossfade script word */}
             <div className="hero-text" style={{ opacity: 0 }}>
