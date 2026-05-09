@@ -232,38 +232,55 @@ function Navbar({
 const HERO_VIDEO_URL =
   "https://res.cloudinary.com/dx3k7hbnc/video/upload/v1777632548/Hero-video_egr33p.mp4";
 
+const HERO_PHRASES = ["Staycation", "Dining", "Investment"];
+
 function Hero() {
   const [modalOpen, setModalOpen] = useState(false);
+  const [phraseIdx, setPhraseIdx] = useState(0);
+  const [visible, setVisible] = useState(true);
 
+  // Cycling phrases
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setVisible(false);
+      setTimeout(() => {
+        setPhraseIdx((prev) => (prev + 1) % HERO_PHRASES.length);
+        setVisible(true);
+      }, 500);
+    }, 3500);
+    return () => clearInterval(interval);
+  }, []);
+
+  // GSAP entrance
   useEffect(() => {
     const initAnim = async () => {
       try {
         const { gsap } = await import("gsap");
-        const tl = gsap.timeline({ delay: 0.6 });
+        const tl = gsap.timeline({ delay: 0.5 });
         tl.fromTo(
-          ".hero-play",
-          { opacity: 0, scale: 0.85 },
-          { opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.4)" }
+          ".hero-text",
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 1, ease: "power3.out" }
         )
           .fromTo(
-            ".hero-headline",
-            { opacity: 0, y: 28 },
-            { opacity: 1, y: 0, duration: 1, ease: "power3.out" },
-            "-=0.3"
+            ".hero-play",
+            { opacity: 0, scale: 0.85 },
+            { opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.4)" },
+            "-=0.5"
           )
           .fromTo(
             ".hero-ctas",
             { opacity: 0, y: 18 },
             { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" },
-            "-=0.4"
+            "-=0.3"
           );
-      } catch (err) {
-        document
-          .querySelectorAll(".hero-play,.hero-headline,.hero-ctas")
-          .forEach((el) => {
+      } catch {
+        [".hero-text", ".hero-play", ".hero-ctas"].forEach((sel) => {
+          document.querySelectorAll(sel).forEach((el) => {
             (el as HTMLElement).style.opacity = "1";
             (el as HTMLElement).style.transform = "none";
           });
+        });
       }
     };
     initAnim();
@@ -278,6 +295,34 @@ function Hero() {
 
   return (
     <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+        .phrase-word {
+          transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.16,1,0.3,1);
+        }
+        .phrase-word.in {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        .phrase-word.out {
+          opacity: 0;
+          transform: translateY(-28px);
+        }
+        @keyframes rotateCircle {
+          from { transform: rotate(0deg); }
+          to   { transform: rotate(360deg); }
+        }
+        @keyframes modalFadeIn {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+        @keyframes modalScaleIn {
+          from { opacity: 0; transform: scale(0.96); }
+          to   { opacity: 1; transform: scale(1); }
+        }
+      `}</style>
+
       <section
         id="hero"
         className="relative h-[100dvh] w-full overflow-hidden bg-charcoal"
@@ -297,71 +342,88 @@ function Hero() {
           />
         </div>
 
-        {/* Dark Overlay */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/85 via-black/25 to-black/10" />
+        {/* Gradient overlay — stronger at bottom only */}
+        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/80 via-black/15 to-transparent" />
 
-        {/* Hero Content */}
+        {/* Hero Content — pinned to bottom */}
         <div className="relative z-20 flex flex-col justify-end h-full px-6 pb-8">
 
-          {/* Rotating Circular Play Button */}
-          <div className="hero-play mb-6 w-fit" style={{ opacity: 0 }}>
-            <button
-              onClick={() => setModalOpen(true)}
-              className="relative w-24 h-24 flex items-center justify-center group"
-              aria-label="Watch for more"
-            >
-              {/* Rotating text ring */}
-              <svg
-                viewBox="0 0 120 120"
-                className="absolute inset-0 w-full h-full"
-                style={{ animation: "rotateCircle 9s linear infinite" }}
+          {/* Text row: cycling phrase left, play button right */}
+          <div className="flex items-end justify-between mb-5">
+
+            {/* Left — Crafted for + script word */}
+            <div className="hero-text" style={{ opacity: 0 }}>
+              <p
+                className="font-dm-sans text-cream/45 uppercase mb-1"
+                style={{ fontSize: "0.58rem", letterSpacing: "0.42em" }}
               >
-                <defs>
-                  <path
-                    id="circle-path"
-                    d="M 60,60 m -44,0 a 44,44 0 1,1 88,0 a 44,44 0 1,1 -88,0"
-                  />
-                </defs>
-                <text
+                Crafted for
+              </p>
+              <div style={{ height: "88px", overflow: "hidden" }}>
+                <span
+                  className={`phrase-word ${visible ? "in" : "out"}`}
                   style={{
-                    fontSize: "10px",
-                    letterSpacing: "4px",
-                    fill: "#C8922A",
-                    fontFamily: "DM Sans, sans-serif",
+                    fontFamily: "'Great Vibes', cursive",
+                    fontSize: "clamp(56px, 15vw, 76px)",
+                    color: "#C8922A",
+                    lineHeight: 1.1,
+                    display: "block",
                   }}
                 >
-                  <textPath href="#circle-path">WATCH FOR MORE ·</textPath>
-                </text>
-              </svg>
-
-              {/* Centre play circle */}
-              <div className="relative w-12 h-12 rounded-full border border-cream/70 flex items-center justify-center bg-white/10 backdrop-blur-sm group-hover:scale-110 group-hover:border-gold transition-all duration-500">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="w-5 h-5 text-cream group-hover:text-gold transition-colors ml-0.5"
-                >
-                  <path d="M8 5.14v14l11-7-11-7z" />
-                </svg>
+                  {HERO_PHRASES[phraseIdx]}
+                </span>
               </div>
-            </button>
-          </div>
+            </div>
 
-          {/* Headline */}
-          <div className="hero-headline mb-6" style={{ opacity: 0 }}>
-            <p className="font-dm-sans text-[0.58rem] text-cream/40 uppercase tracking-[0.45em] mb-3">
-              Lustro Homes · Lagos
-            </p>
-            <h1 className="font-cormorant text-4xl sm:text-5xl text-cream font-light leading-[1.15]">
-              Staycation
-            </h1>
-            <p className="font-cormorant text-xl sm:text-2xl text-gold italic font-light leading-[1.4]">
-              Signature Dining
-            </p>
-            <p className="font-cormorant text-xl sm:text-2xl text-cream/60 font-light leading-[1.4]">
-              Investment
-            </p>
+            {/* Right — Rotating circular play button */}
+            <div
+              className="hero-play flex-shrink-0 ml-4 mb-1"
+              style={{ opacity: 0 }}
+            >
+              <button
+                onClick={() => setModalOpen(true)}
+                className="relative w-[88px] h-[88px] flex items-center justify-center group"
+                aria-label="Watch for more"
+              >
+                {/* Rotating text ring */}
+                <svg
+                  viewBox="0 0 120 120"
+                  className="absolute inset-0 w-full h-full"
+                  style={{ animation: "rotateCircle 9s linear infinite" }}
+                >
+                  <defs>
+                    <path
+                      id="circle-path-hero"
+                      d="M 60,60 m -44,0 a 44,44 0 1,1 88,0 a 44,44 0 1,1 -88,0"
+                    />
+                  </defs>
+                  <text
+                    style={{
+                      fontSize: "10px",
+                      letterSpacing: "4px",
+                      fill: "#C8922A",
+                      fontFamily: "DM Sans, sans-serif",
+                    }}
+                  >
+                    <textPath href="#circle-path-hero">
+                      WATCH FOR MORE ·
+                    </textPath>
+                  </text>
+                </svg>
+
+                {/* Centre play circle */}
+                <div className="relative w-11 h-11 rounded-full border border-cream/60 flex items-center justify-center bg-white/10 backdrop-blur-sm group-hover:scale-110 group-hover:border-gold transition-all duration-500">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    className="w-4 h-4 text-cream group-hover:text-gold transition-colors ml-0.5"
+                  >
+                    <path d="M8 5.14v14l11-7-11-7z" />
+                  </svg>
+                </div>
+              </button>
+            </div>
           </div>
 
           {/* CTA Buttons */}
@@ -380,7 +442,8 @@ function Hero() {
                 e.preventDefault();
                 const target = document.querySelector("#rooms");
                 if (target) {
-                  const y = target.getBoundingClientRect().top + window.scrollY;
+                  const y =
+                    target.getBoundingClientRect().top + window.scrollY;
                   window.scrollTo({ top: y, behavior: "instant" });
                 }
               }}
@@ -392,22 +455,7 @@ function Hero() {
         </div>
       </section>
 
-      <style>{`
-        @keyframes rotateCircle {
-          from { transform: rotate(0deg); }
-          to   { transform: rotate(360deg); }
-        }
-        @keyframes modalFadeIn {
-          from { opacity: 0; }
-          to   { opacity: 1; }
-        }
-        @keyframes modalScaleIn {
-          from { opacity: 0; transform: scale(0.96); }
-          to   { opacity: 1; transform: scale(1); }
-        }
-      `}</style>
-
-      {/* Full Screen Modal Player */}
+      {/* Full Screen Modal */}
       {modalOpen && (
         <div
           className="fixed inset-0 z-[100] bg-black flex items-center justify-center"
@@ -439,7 +487,10 @@ function Hero() {
             autoPlay
             playsInline
             className="w-full h-full object-cover"
-            style={{ animation: "modalScaleIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards" }}
+            style={{
+              animation:
+                "modalScaleIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards",
+            }}
             onLoadedMetadata={(e) => {
               Array.from(e.currentTarget.textTracks).forEach(
                 (t) => (t.mode = "hidden")
