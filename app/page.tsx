@@ -405,14 +405,14 @@ useEffect(() => {
             >
               <button
                 onClick={() => setModalOpen(true)}
-                className="relative w-[104px] h-[104px] flex items-center justify-center group"
+                className="relative w-[101px] h-[101px] flex items-center justify-center group"
                 aria-label="Watch for more"
               >
                 {/* Rotating text ring */}
                 <svg
                   viewBox="0 0 180 180"
                   className="absolute inset-0 w-full h-full"
-                  style={{ animation: "rotateCircle 16s linear infinite" }}
+                  style={{ animation: "rotateCircle 20s linear infinite" }}
                 >
                   <defs>
                     <path
