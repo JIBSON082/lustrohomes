@@ -359,7 +359,7 @@ useEffect(() => {
 
             {/* Left — Crafted for + crossfade script word */}
           <div className="hero-text self-end" style={{ opacity: 0 }}>
-              <div className="flex items-center gap-3 mb-2">
+              <div className="flex items-center gap-3 mb-4">
                 <div className="w-6 h-px bg-gold/60" />
                 <p
                   className="font-dm-sans text-cream/50 uppercase"
