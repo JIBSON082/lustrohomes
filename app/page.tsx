@@ -383,53 +383,53 @@ function Hero() {
               </div>
             </div>
 
-            {/* Right — Rotating play button */}
-            <div
-              className="hero-play flex-shrink-0 ml-3 mb-1"
-              style={{ opacity: 0 }}
-            >
-              <button
-                onClick={() => setModalOpen(true)}
-                className="relative w-[100px] h-[100px] flex items-center justify-center group"
-                aria-label="Watch for more"
-              >
-                <svg
-                  viewBox="0 0 120 120"
-                  className="absolute inset-0 w-full h-full"
-                  style={{ animation: "rotateCircle 9s linear infinite" }}
-                >
-                  <defs>
-                    <path
-                      id="circle-path-hero"
-                      d="M 60,60 m -44,0 a 44,44 0 1,1 88,0 a 44,44 0 1,1 -88,0"
-                    />
-                  </defs>
-                  <text
-                    style={{
-                      fontSize: "11.5px",
-                      letterSpacing: "3.5px",
-                      fill: "#C8922A",
-                      fontFamily: "DM Sans, sans-serif",
-                    }}
-                  >
-                    <textPath href="#circle-path-hero">
-                      WATCH FOR MORE ·
-                    </textPath>
-                  </text>
-                </svg>
-                <div className="relative w-13 h-13 rounded-full border border-cream/60 flex items-center justify-center bg-white/10 backdrop-blur-sm group-hover:scale-110 group-hover:border-gold transition-all duration-500">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    className="w-4 h-4 text-cream group-hover:text-gold transition-colors ml-0.5"
-                  >
-                    <path d="M8 5.14v14l11-7-11-7z" />
-                  </svg>
-                </div>
-              </button>
-            </div>
-          </div>
+          
+        {/* Right — Rotating play button */}
+<div
+  className="hero-play flex-shrink-0 ml-3 mb-1"
+  style={{ opacity: 0 }}
+>
+  <button
+    onClick={() => setModalOpen(true)}
+    className="relative w-[130px] h-[130px] flex items-center justify-center group"
+    aria-label="Watch for more"
+  >
+    <svg
+      viewBox="0 0 160 160"
+      className="absolute inset-0 w-full h-full"
+      style={{ animation: "rotateCircle 9s linear infinite" }}
+    >
+      <defs>
+        <path
+          id="circle-path-hero"
+          d="M 80,80 m -60,0 a 60,60 0 1,1 120,0 a 60,60 0 1,1 -120,0"
+        />
+      </defs>
+      <text
+        style={{
+          fontSize: "12px",
+          letterSpacing: "5px",
+          fill: "#C8922A",
+          fontFamily: "DM Sans, sans-serif",
+        }}
+      >
+        <textPath href="#circle-path-hero">
+          WATCH FOR MORE ·
+        </textPath>
+      </text>
+    </svg>
+    <div className="relative w-16 h-16 rounded-full border border-cream/60 flex items-center justify-center bg-white/10 backdrop-blur-sm group-hover:scale-110 group-hover:border-gold transition-all duration-500">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        className="w-6 h-6 text-cream group-hover:text-gold transition-colors ml-0.5"
+      >
+        <path d="M8 5.14v14l11-7-11-7z" />
+      </svg>
+    </div>
+  </button>
+</div>
 
         
          {/* CTA Buttons */}
