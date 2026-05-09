@@ -422,8 +422,8 @@ useEffect(() => {
                   </defs>
                   <text
                     style={{
-                      fontSize: "12px",
-                      letterSpacing: "7px",
+                      fontSize: "14px",
+                      letterSpacing: "6px",
                       fill: "rgba(255,255,255,0.7)",
                       fontFamily: "'Tenor Sans', sans-serif",
                     }}
