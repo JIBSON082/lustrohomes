@@ -355,11 +355,11 @@ useEffect(() => {
         <div className="relative z-20 flex flex-col justify-end h-full px-6 pb-14">
 
           {/* Text + Play button row */}
-          <div className="flex items-end justify-between mb-6">
+          <div className="flex items-end justify-between mb-10">
 
             {/* Left — Crafted for + crossfade script word */}
           <div className="hero-text self-end" style={{ opacity: 0 }}>
-              <div className="flex items-center gap-3 mb-5">
+              <div className="flex items-center gap-3 mb-6">
                 <div className="w-6 h-px bg-gold/60" />
                 <p
                   className="font-dm-sans text-cream/50 uppercase"
