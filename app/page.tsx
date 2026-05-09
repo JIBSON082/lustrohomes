@@ -303,15 +303,15 @@ useEffect(() => {
 }
 .phrase-word {
   display: block;
-  transition: clip-path 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.4s ease;
+  transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.6s ease;
 }
 .phrase-word.visible {
-  clip-path: inset(0% 0% 0% 0%);
+  transform: translateY(0px);
   opacity: 1;
 }
 .phrase-word.hidden {
-  clip-path: inset(100% 0% 0% 0%);
+  transform: translateY(30px);
   opacity: 0;
 }
 
@@ -394,7 +394,7 @@ useEffect(() => {
             >
               <button
                 onClick={() => setModalOpen(true)}
-                className="relative w-[101px] h-[101px] flex items-center justify-center group"
+                className="relative w-[98px] h-[98px] flex items-center justify-center group"
                 aria-label="Watch for more"
               >
                 {/* Rotating text ring */}
