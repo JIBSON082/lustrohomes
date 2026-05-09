@@ -387,7 +387,7 @@ function Hero() {
             >
               <button
                 onClick={() => setModalOpen(true)}
-                className="relative w-[92px] h-[92px] flex items-center justify-center group"
+                className="relative w-[100px] h-[100px] flex items-center justify-center group"
                 aria-label="Watch for more"
               >
                 <svg
@@ -403,8 +403,8 @@ function Hero() {
                   </defs>
                   <text
                     style={{
-                      fontSize: "12px",
-                      letterSpacing: "5px",
+                      fontSize: "10px",
+                      letterSpacing: "4px",
                       fill: "#C8922A",
                       fontFamily: "DM Sans, sans-serif",
                     }}
