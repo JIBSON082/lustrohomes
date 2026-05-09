@@ -298,33 +298,22 @@ useEffect(() => {
         @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Tenor+Sans&display=swap');
 
         .phrase-container {
-          position: relative;
-          height: 80px;
-        }
-        .phrase-current {
-          position: absolute;
-          top: 0;
-          left: 0;
-          transition: opacity 0.9s ease;
-        }
-        .phrase-current.fading {
-          opacity: 0;
-        }
-        .phrase-current.visible {
-          opacity: 1;
-        }
-        .phrase-next {
-          position: absolute;
-          top: 0;
-          left: 0;
-          transition: opacity 0.9s ease;
-        }
-        .phrase-next.fading {
-          opacity: 1;
-        }
-        .phrase-next.hidden {
-          opacity: 0;
-        }
+  position: relative;
+  padding-bottom: 0px;
+}
+.phrase-word {
+  display: block;
+  transition: clip-path 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.4s ease;
+}
+.phrase-word.visible {
+  clip-path: inset(0% 0% 0% 0%);
+  opacity: 1;
+}
+.phrase-word.hidden {
+  clip-path: inset(100% 0% 0% 0%);
+  opacity: 0;
+}
 
         @keyframes rotateCircle {
           from { transform: rotate(0deg); }
