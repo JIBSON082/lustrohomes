@@ -339,21 +339,75 @@ function Hero() {
           </button>
 
           {/* Hero Statement */}
-          <h1
-            className="hero-eyebrow font-cormorant text-3xl sm:text-4xl text-cream font-light leading-[1.4] mb-10 max-w-xs tracking-wide"
-            style={{ opacity: 0 }}
-          >
-            Staycation in Lagos.<br />
-            <em className="text-gold italic">Signature Dining. Investment.</em>
-          </h1>
+       {/* Circular rotating text + play button */}
+          <div className="hero-play relative flex items-center gap-5 mb-10 w-fit" style={{ opacity: 0 }}>
+            {/* Rotating circular text */}
+            <div className="relative w-20 h-20 flex-shrink-0">
+              <svg
+                viewBox="0 0 100 100"
+                className="absolute inset-0 w-full h-full animate-spin-slow"
+                style={{ animation: "rotateCircle 10s linear infinite" }}
+              >
+                <defs>
+                  <path
+                    id="circle-path"
+                    d="M 50,50 m -32,0 a 32,32 0 1,1 64,0 a 32,32 0 1,1 -64,0"
+                  />
+                </defs>
+                <text className="fill-gold" style={{ fontSize: "11.5px", letterSpacing: "3.5px", fill: "#C8922A" }}>
+                  <textPath href="#circle-path">
+                    WATCH FOR MORE · WATCH FOR MORE ·
+                  </textPath>
+                </text>
+              </svg>
 
-          
+              {/* Play button centred */}
+              <button
+                onClick={() => setModalOpen(true)}
+                className="absolute inset-0 flex items-center justify-center group"
+                aria-label="Watch for more"
+              >
+                <div className="w-10 h-10 rounded-full border-2 border-cream/80 flex items-center justify-center group-hover:border-cream group-hover:scale-110 transition-all duration-500 bg-white/10 backdrop-blur-sm">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-cream ml-0.5">
+                    <path d="M8 5.14v14l11-7-11-7z" />
+                  </svg>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          {/* Cycling luxury text */}
+          <div className="mb-10 h-36 flex flex-col justify-end overflow-hidden" style={{ opacity: 0 }} id="hero-cycling-text">
+            {["Staycation\nin Lagos.", "Signature\nDining.", "Investment\nOpportunities."].map((phrase, i) => (
+              <div
+                key={i}
+                className="hero-phrase absolute"
+                style={{
+                  animation: `phraseIn 1.2s cubic-bezier(0.16,1,0.3,1) ${i * 3.5}s forwards, phraseOut 0.8s cubic-bezier(0.76,0,0.24,1) ${i * 3.5 + 2.5}s forwards`,
+                  opacity: 0,
+                  position: i === 0 ? "relative" : "absolute",
+                }}
+              >
+                {phrase.split("\n").map((line, li) => (
+                  <p
+                    key={li}
+                    className={
+                      li === 0
+                        ? "font-dm-sans text-[0.6rem] text-cream/50 uppercase tracking-[0.4em] mb-1"
+                        : li === 1 && i === 0
+                        ? "font-cormorant text-5xl sm:text-6xl text-cream font-light leading-[1.05] italic"
+                        : "font-cormorant text-5xl sm:text-6xl text-gold font-light leading-[1.05] italic"
+                    }
+                  >
+                    {line}
+                  </p>
+                ))}
+              </div>
+            ))}
+          </div>
 
           {/* CTA Buttons */}
-          <div
-            className="hero-ctas flex flex-row gap-3"
-            style={{ opacity: 0 }}
-          >
+          <div className="hero-ctas flex flex-row gap-3" style={{ opacity: 0 }}>
             <a
               href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
               target="_blank"
@@ -377,6 +431,21 @@ function Hero() {
               Explore Rooms
             </a>
           </div>
+
+          <style>{`
+            @keyframes rotateCircle {
+              from { transform: rotate(0deg); }
+              to   { transform: rotate(360deg); }
+            }
+            @keyframes phraseIn {
+              from { opacity: 0; transform: translateY(40px) skewY(2deg); }
+              to   { opacity: 1; transform: translateY(0)  skewY(0deg); }
+            }
+            @keyframes phraseOut {
+              from { opacity: 1; transform: translateY(0)   skewY(0deg); }
+              to   { opacity: 0; transform: translateY(-30px) skewY(-1deg); }
+            }
+          `}</style>
         </div>
       </section>
 
