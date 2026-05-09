@@ -387,7 +387,7 @@ function Hero() {
             >
               <button
                 onClick={() => setModalOpen(true)}
-                className="relative w-[160px] h-[160px] flex items-center justify-center group"
+                className="relative w-[192px] h-[192px] flex items-center justify-center group"
                 aria-label="Watch for more"
               >
                 <svg
