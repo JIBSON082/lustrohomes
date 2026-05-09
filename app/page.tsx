@@ -231,6 +231,7 @@ function Navbar({
 // ─────────────────────────────────────────────────
 const HERO_VIDEO_URL =
   "https://res.cloudinary.com/dx3k7hbnc/video/upload/v1777632548/Hero-video_egr33p.mp4";
+
 function Hero() {
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -300,22 +301,23 @@ function Hero() {
           className="absolute inset-0 z-0"
           style={{ transform: "translateZ(0)", willChange: "transform" }}
         >
-    <video
-  src={HERO_VIDEO_URL}
-  autoPlay
-  muted
-  loop
-  playsInline
-  className="w-full h-full object-cover"
-/>
+          <video
+            src={HERO_VIDEO_URL}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-full object-cover"
+          />
         </div>
 
-        {/* Dark Overlay — stronger at bottom where text sits */}
+        {/* Dark Overlay */}
         <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/85 via-black/30 to-black/10" />
 
-        {/* Hero Content — pinned to bottom */}
-        <div className="relative z-20 flex flex-col justify-end h-full px-6 pb-10 md:pb-14" >
-          {/* Watch for more — top left of content area */}
+        {/* Hero Content */}
+        <div className="relative z-20 flex flex-col justify-end h-full px-6 pb-10 md:pb-14">
+
+          {/* Watch for more button */}
           <button
             onClick={() => setModalOpen(true)}
             className="hero-play group mb-8 flex items-center gap-3 w-fit"
@@ -337,45 +339,6 @@ function Hero() {
               Watch for more
             </span>
           </button>
-
-          {/* Hero Statement */}
-       {/* Hero Content */}
-        <div className="relative z-20 flex flex-col justify-end h-full px-6 pb-14">
-
-          {/* Circular Watch Button */}
-          <div className="hero-play mb-10 w-fit" style={{ opacity: 0 }}>
-            <button
-              onClick={() => setModalOpen(true)}
-              className="relative w-28 h-28 flex items-center justify-center group"
-              aria-label="Watch for more"
-            >
-              {/* Rotating text ring */}
-              <svg
-                viewBox="0 0 120 120"
-                className="absolute inset-0 w-full h-full"
-                style={{ animation: "rotateCircle 9s linear infinite" }}
-              >
-                <defs>
-                  <path
-                    id="circle-path"
-                    d="M 60,60 m -44,0 a 44,44 0 1,1 88,0 a 44,44 0 1,1 -88,0"
-                  />
-                </defs>
-                <text style={{ fontSize: "10px", letterSpacing: "4px", fill: "#C8922A", fontFamily: "DM Sans, sans-serif" }}>
-                  <textPath href="#circle-path">
-                    WATCH FOR MORE · WATCH FOR MORE ·
-                  </textPath>
-                </text>
-              </svg>
-
-              {/* Centre play circle */}
-              <div className="relative w-14 h-14 rounded-full border border-cream/70 flex items-center justify-center bg-white/10 backdrop-blur-sm group-hover:scale-110 group-hover:border-cream transition-all duration-500">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-cream ml-1">
-                  <path d="M8 5.14v14l11-7-11-7z" />
-                </svg>
-              </div>
-            </button>
-          </div>
 
           {/* Cycling phrases */}
           <div className="relative mb-10 h-40 overflow-hidden">
@@ -447,15 +410,22 @@ function Hero() {
           from { opacity: 1; transform: translateY(0); }
           to   { opacity: 0; transform: translateY(-40px); }
         }
+        @keyframes modalFadeIn {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+        @keyframes modalScaleIn {
+          from { opacity: 0; transform: scale(0.96); }
+          to   { opacity: 1; transform: scale(1); }
+        }
       `}</style>
 
-      {/* ── Full Screen Modal Player ── */}
+      {/* Full Screen Modal Player */}
       {modalOpen && (
         <div
           className="fixed inset-0 z-[100] bg-black flex items-center justify-center"
           style={{ animation: "modalFadeIn 0.35s ease forwards" }}
         >
-          {/* Close Button */}
           <button
             onClick={() => setModalOpen(false)}
             className="absolute top-5 right-5 z-10 w-11 h-11 rounded-full bg-white/10 flex items-center justify-center hover:bg-brown transition-colors"
@@ -476,8 +446,6 @@ function Hero() {
               />
             </svg>
           </button>
-
-          {/* Full Screen Native Video — no Cloudinary branding */}
           <video
             src={HERO_VIDEO_URL}
             controls
@@ -485,20 +453,14 @@ function Hero() {
             playsInline
             className="w-full h-full object-cover"
             style={{ animation: "modalScaleIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards" }}
+            onLoadedMetadata={(e) => {
+              Array.from(e.currentTarget.textTracks).forEach(
+                (t) => (t.mode = "hidden")
+              );
+            }}
           />
         </div>
       )}
-
-      <style>{`
-        @keyframes modalFadeIn {
-          from { opacity: 0; }
-          to   { opacity: 1; }
-        }
-        @keyframes modalScaleIn {
-          from { opacity: 0; transform: scale(0.96); }
-          to   { opacity: 1; transform: scale(1); }
-        }
-      `}</style>
     </>
   );
 }
