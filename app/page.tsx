@@ -237,21 +237,19 @@ const HERO_PHRASES = ["Staycation", "Dining", "Investment"];
 function Hero() {
   const [modalOpen, setModalOpen] = useState(false);
   const [phraseIdx, setPhraseIdx] = useState(0);
-  const [visible, setVisible] = useState(true);
+  const [animating, setAnimating] = useState(false);
 
-  // Cycling phrases
   useEffect(() => {
     const interval = setInterval(() => {
-      setVisible(false);
+      setAnimating(true);
       setTimeout(() => {
         setPhraseIdx((prev) => (prev + 1) % HERO_PHRASES.length);
-        setVisible(true);
-      }, 500);
-    }, 3500);
+        setAnimating(false);
+      }, 600);
+    }, 3800);
     return () => clearInterval(interval);
   }, []);
 
-  // GSAP entrance
   useEffect(() => {
     const initAnim = async () => {
       try {
@@ -259,8 +257,8 @@ function Hero() {
         const tl = gsap.timeline({ delay: 0.5 });
         tl.fromTo(
           ".hero-text",
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 1, ease: "power3.out" }
+          { opacity: 0, y: 40 },
+          { opacity: 1, y: 0, duration: 1.1, ease: "power3.out" }
         )
           .fromTo(
             ".hero-play",
@@ -288,9 +286,7 @@ function Hero() {
 
   useEffect(() => {
     document.body.style.overflow = modalOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
+    return () => { document.body.style.overflow = ""; };
   }, [modalOpen]);
 
   return (
@@ -298,17 +294,24 @@ function Hero() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
 
+        .phrase-mask {
+          overflow: hidden;
+          padding-bottom: 8px;
+        }
         .phrase-word {
-          transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.16,1,0.3,1);
+          display: block;
+          will-change: transform, opacity;
+          transition: transform 0.65s cubic-bezier(0.16,1,0.3,1), opacity 0.45s ease;
         }
-        .phrase-word.in {
+        .phrase-word.visible {
+          transform: translateY(0%);
           opacity: 1;
-          transform: translateY(0);
         }
-        .phrase-word.out {
+        .phrase-word.exit {
+          transform: translateY(-110%);
           opacity: 0;
-          transform: translateY(-28px);
         }
+
         @keyframes rotateCircle {
           from { transform: rotate(0deg); }
           to   { transform: rotate(360deg); }
@@ -342,32 +345,38 @@ function Hero() {
           />
         </div>
 
-        {/* Gradient overlay — stronger at bottom only */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/80 via-black/15 to-transparent" />
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />
 
-        {/* Hero Content — pinned to bottom */}
+        {/* Hero Content */}
         <div className="relative z-20 flex flex-col justify-end h-full px-6 pb-8">
 
-          {/* Text row: cycling phrase left, play button right */}
+          {/* Text + Play button row */}
           <div className="flex items-end justify-between mb-5">
 
             {/* Left — Crafted for + script word */}
             <div className="hero-text" style={{ opacity: 0 }}>
-              <p
-                className="font-dm-sans text-cream/45 uppercase mb-1"
-                style={{ fontSize: "0.58rem", letterSpacing: "0.42em" }}
-              >
-                Crafted for
-              </p>
-              <div style={{ height: "88px", overflow: "hidden" }}>
+
+              {/* "Crafted for" with decorative line */}
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-6 h-px bg-gold/60" />
+                <p
+                  className="font-dm-sans text-cream/50 uppercase"
+                  style={{ fontSize: "0.6rem", letterSpacing: "0.4em" }}
+                >
+                  Crafted for
+                </p>
+              </div>
+
+              {/* Masked sliding word */}
+              <div className="phrase-mask">
                 <span
-                  className={`phrase-word ${visible ? "in" : "out"}`}
+                  className={`phrase-word ${animating ? "exit" : "visible"}`}
                   style={{
                     fontFamily: "'Great Vibes', cursive",
-                    fontSize: "clamp(56px, 15vw, 76px)",
+                    fontSize: "clamp(58px, 16vw, 80px)",
                     color: "#C8922A",
-                    lineHeight: 1.1,
-                    display: "block",
+                    lineHeight: 1.05,
                   }}
                 >
                   {HERO_PHRASES[phraseIdx]}
@@ -375,17 +384,16 @@ function Hero() {
               </div>
             </div>
 
-            {/* Right — Rotating circular play button */}
+            {/* Right — Rotating play button */}
             <div
-              className="hero-play flex-shrink-0 ml-4 mb-1"
+              className="hero-play flex-shrink-0 ml-3 mb-1"
               style={{ opacity: 0 }}
             >
               <button
                 onClick={() => setModalOpen(true)}
-                className="relative w-[88px] h-[88px] flex items-center justify-center group"
+                className="relative w-[86px] h-[86px] flex items-center justify-center group"
                 aria-label="Watch for more"
               >
-                {/* Rotating text ring */}
                 <svg
                   viewBox="0 0 120 120"
                   className="absolute inset-0 w-full h-full"
@@ -410,8 +418,6 @@ function Hero() {
                     </textPath>
                   </text>
                 </svg>
-
-                {/* Centre play circle */}
                 <div className="relative w-11 h-11 rounded-full border border-cream/60 flex items-center justify-center bg-white/10 backdrop-blur-sm group-hover:scale-110 group-hover:border-gold transition-all duration-500">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -442,8 +448,7 @@ function Hero() {
                 e.preventDefault();
                 const target = document.querySelector("#rooms");
                 if (target) {
-                  const y =
-                    target.getBoundingClientRect().top + window.scrollY;
+                  const y = target.getBoundingClientRect().top + window.scrollY;
                   window.scrollTo({ top: y, behavior: "instant" });
                 }
               }}
@@ -488,8 +493,7 @@ function Hero() {
             playsInline
             className="w-full h-full object-cover"
             style={{
-              animation:
-                "modalScaleIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards",
+              animation: "modalScaleIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards",
             }}
             onLoadedMetadata={(e) => {
               Array.from(e.currentTarget.textTracks).forEach(
@@ -502,6 +506,7 @@ function Hero() {
     </>
   );
 }
+
 
 // ─────────────────────────────────────────────────
 // STATS BAR
