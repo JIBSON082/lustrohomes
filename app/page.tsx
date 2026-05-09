@@ -236,16 +236,18 @@ const HERO_PHRASES = ["Staycation", "Dining", "Investment"];
 
 function Hero() {
   const [modalOpen, setModalOpen] = useState(false);
-  const [phraseIdx, setPhraseIdx] = useState(0);
-  const [animating, setAnimating] = useState(false);
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [nextIdx, setNextIdx] = useState(1);
+  const [transitioning, setTransitioning] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setAnimating(true);
+      setTransitioning(true);
       setTimeout(() => {
-        setPhraseIdx((prev) => (prev + 1) % HERO_PHRASES.length);
-        setAnimating(false);
-      }, 600);
+        setCurrentIdx((prev) => (prev + 1) % HERO_PHRASES.length);
+        setNextIdx((prev) => (prev + 1) % HERO_PHRASES.length);
+        setTransitioning(false);
+      }, 900);
     }, 3800);
     return () => clearInterval(interval);
   }, []);
@@ -294,24 +296,37 @@ function Hero() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Tenor+Sans&display=swap');
 
-        .phrase-mask {
-          padding-bottom: 8px;
+        .phrase-container {
+          position: relative;
+          height: 80px;
         }
-        .phrase-word {
-          display: block;
-          will-change: transform, opacity;
-          transition: transform 0.65s cubic-bezier(0.16,1,0.3,1), opacity 0.45s ease;
+        .phrase-current {
+          position: absolute;
+          top: 0;
+          left: 0;
+          transition: opacity 0.9s ease;
         }
-        .phrase-word.visible {
-          transform: translateY(0%);
-          opacity: 1;
-        }
-        .phrase-word.exit {
-          transform: translateY(-110%);
+        .phrase-current.fading {
           opacity: 0;
         }
+        .phrase-current.visible {
+          opacity: 1;
+        }
+        .phrase-next {
+          position: absolute;
+          top: 0;
+          left: 0;
+          transition: opacity 0.9s ease;
+        }
+        .phrase-next.fading {
+          opacity: 1;
+        }
+        .phrase-next.hidden {
+          opacity: 0;
+        }
+
         @keyframes rotateCircle {
           from { transform: rotate(0deg); }
           to   { transform: rotate(360deg); }
@@ -349,12 +364,12 @@ function Hero() {
         <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />
 
         {/* Hero Content */}
-        <div className="relative z-20 flex flex-col justify-end h-full px-6 pb-8">
+        <div className="relative z-20 flex flex-col justify-end h-full px-6 pb-14">
 
           {/* Text + Play button row */}
           <div className="flex items-end justify-between mb-5">
 
-            {/* Left — Crafted for + script word */}
+            {/* Left — Crafted for + crossfade script word */}
             <div className="hero-text" style={{ opacity: 0 }}>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-6 h-px bg-gold/60" />
@@ -365,65 +380,85 @@ function Hero() {
                   Crafted for
                 </p>
               </div>
-              <div className="phrase-mask">
+
+              {/* Crossfade container */}
+              <div className="phrase-container">
+                {/* Current word — fades out */}
                 <span
-                  className={`phrase-word ${animating ? "exit" : "visible"}`}
+                  className={`phrase-current ${transitioning ? "fading" : "visible"}`}
                   style={{
                     fontFamily: "'Great Vibes', cursive",
                     fontSize: "clamp(42px, 11vw, 58px)",
                     color: "#C8922A",
                     lineHeight: 1.05,
+                    whiteSpace: "nowrap",
                   }}
                 >
-                  {HERO_PHRASES[phraseIdx]}
+                  {HERO_PHRASES[currentIdx]}
+                </span>
+
+                {/* Next word — fades in over current */}
+                <span
+                  className={`phrase-next ${transitioning ? "fading" : "hidden"}`}
+                  style={{
+                    fontFamily: "'Great Vibes', cursive",
+                    fontSize: "clamp(42px, 11vw, 58px)",
+                    color: "#C8922A",
+                    lineHeight: 1.05,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {HERO_PHRASES[nextIdx]}
                 </span>
               </div>
             </div>
 
-            {/* Right — Rotating play button */}
+            {/* Right — Play button, no inner circle */}
             <div
               className="hero-play flex-shrink-0 ml-3 mb-1"
               style={{ opacity: 0 }}
             >
               <button
                 onClick={() => setModalOpen(true)}
-                className="relative w-[100px] h-[100px] flex items-center justify-center group"
+                className="relative w-[160px] h-[160px] flex items-center justify-center group"
                 aria-label="Watch for more"
               >
+                {/* Rotating text ring */}
                 <svg
-                  viewBox="0 0 160 160"
+                  viewBox="0 0 180 180"
                   className="absolute inset-0 w-full h-full"
                   style={{ animation: "rotateCircle 9s linear infinite" }}
                 >
                   <defs>
                     <path
                       id="circle-path-hero"
-                      d="M 80,80 m -60,0 a 60,60 0 1,1 120,0 a 60,60 0 1,1 -120,0"
+                      d="M 90,90 m -70,0 a 70,70 0 1,1 140,0 a 70,70 0 1,1 -140,0"
                     />
                   </defs>
                   <text
                     style={{
-                      fontSize: "10px",
-                      letterSpacing: "4px",
-                      fill: "#C8922A",
-                      fontFamily: "DM Sans, sans-serif",
+                      fontSize: "11px",
+                      letterSpacing: "6px",
+                      fill: "rgba(255,255,255,0.7)",
+                      fontFamily: "'Tenor Sans', sans-serif",
                     }}
                   >
                     <textPath href="#circle-path-hero">
-                      WATCH FOR MORE ·
+                      WATCH FOR MORE · WATCH FOR MORE ·
                     </textPath>
                   </text>
                 </svg>
-                <div className="relative w-16 h-16 rounded-full border border-cream/60 flex items-center justify-center bg-white/10 backdrop-blur-sm group-hover:scale-110 group-hover:border-gold transition-all duration-500">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    className="w-6 h-6 text-cream group-hover:text-gold transition-colors ml-0.5"
-                  >
-                    <path d="M8 5.14v14l11-7-11-7z" />
-                  </svg>
-                </div>
+
+                {/* Just the play triangle — no circle */}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="w-14 h-14 text-cream group-hover:text-gold transition-colors ml-2"
+                  style={{ filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.4))" }}
+                >
+                  <path d="M8 5.14v14l11-7-11-7z" />
+                </svg>
               </button>
             </div>
           </div>
