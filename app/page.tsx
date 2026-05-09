@@ -295,7 +295,6 @@ function Hero() {
         @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
 
         .phrase-mask {
-          overflow: hidden;
           padding-bottom: 8px;
         }
         .phrase-word {
@@ -362,7 +361,7 @@ function Hero() {
                 <div className="w-6 h-px bg-gold/60" />
                 <p
                   className="font-dm-sans text-cream/50 uppercase"
-                  style={{ fontSize: "0.6rem", letterSpacing: "0.4em" }}
+                  style={{ fontSize: "0.85rem", letterSpacing: "0.35em" }}
                 >
                   Crafted for
                 </p>
@@ -432,31 +431,32 @@ function Hero() {
             </div>
           </div>
 
-          {/* CTA Buttons */}
-          <div className="hero-ctas flex flex-row gap-3" style={{ opacity: 0 }}>
-            <a
-              href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-brown text-cream font-dm-sans text-sm px-8 py-3 rounded-full hover:bg-brown-light transition-colors shadow-lg w-fit"
-            >
-              Book Your Stay
-            </a>
-            <a
-              href="#rooms"
-              onClick={(e) => {
-                e.preventDefault();
-                const target = document.querySelector("#rooms");
-                if (target) {
-                  const y = target.getBoundingClientRect().top + window.scrollY;
-                  window.scrollTo({ top: y, behavior: "instant" });
-                }
-              }}
-              className="border border-cream/35 text-cream font-dm-sans text-sm px-8 py-3 rounded-full hover:bg-cream/10 transition-colors w-fit"
-            >
-              Explore Rooms
-            </a>
-          </div>
+        
+         {/* CTA Buttons */}
+<div className="hero-ctas flex flex-row gap-3 w-full" style={{ opacity: 0 }}>
+  <a
+    href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="flex-1 text-center bg-brown text-cream font-dm-sans text-[0.9rem] py-4 rounded-full hover:bg-brown-light transition-colors shadow-lg"
+  >
+    Book Your Stay
+  </a>
+  <a
+    href="#rooms"
+    onClick={(e) => {
+      e.preventDefault();
+      const target = document.querySelector("#rooms");
+      if (target) {
+        const y = target.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({ top: y, behavior: "instant" });
+      }
+    }}
+    className="flex-1 text-center border border-cream/35 text-cream font-dm-sans text-[0.9rem] py-4 rounded-full hover:bg-cream/10 transition-colors"
+  >
+    Explore Rooms
+  </a>
+</div>
         </div>
       </section>
 
