@@ -241,39 +241,25 @@ function Hero() {
         const { gsap } = await import("gsap");
         const tl = gsap.timeline({ delay: 0.6 });
         tl.fromTo(
-          ".hero-eyebrow",
-          { opacity: 0, y: 22 },
-          { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" }
+          ".hero-play",
+          { opacity: 0, scale: 0.85 },
+          { opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.4)" }
         )
           .fromTo(
-            ".hero-title",
-            { opacity: 0, y: 32 },
+            ".hero-headline",
+            { opacity: 0, y: 28 },
             { opacity: 1, y: 0, duration: 1, ease: "power3.out" },
-            "-=0.5"
-          )
-          .fromTo(
-            ".hero-sub",
-            { opacity: 0, y: 24 },
-            { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
-            "-=0.5"
-          )
-          .fromTo(
-            ".hero-play",
-            { opacity: 0, scale: 0.85 },
-            { opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.4)" },
-            "-=0.4"
+            "-=0.3"
           )
           .fromTo(
             ".hero-ctas",
             { opacity: 0, y: 18 },
             { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" },
-            "-=0.3"
+            "-=0.4"
           );
       } catch (err) {
         document
-          .querySelectorAll(
-            ".hero-eyebrow,.hero-title,.hero-sub,.hero-play,.hero-ctas"
-          )
+          .querySelectorAll(".hero-play,.hero-headline,.hero-ctas")
           .forEach((el) => {
             (el as HTMLElement).style.opacity = "1";
             (el as HTMLElement).style.transform = "none";
@@ -294,7 +280,7 @@ function Hero() {
     <>
       <section
         id="hero"
-        className="relative h-screen overflow-hidden bg-charcoal"
+        className="relative h-[100dvh] w-full overflow-hidden bg-charcoal"
       >
         {/* Background Video */}
         <div
@@ -312,61 +298,70 @@ function Hero() {
         </div>
 
         {/* Dark Overlay */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/85 via-black/30 to-black/10" />
+        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/85 via-black/25 to-black/10" />
 
         {/* Hero Content */}
-        <div className="relative z-20 flex flex-col justify-end h-full px-6 pb-10 md:pb-14">
+        <div className="relative z-20 flex flex-col justify-end h-full px-6 pb-8">
 
-          {/* Watch for more button */}
-          <button
-            onClick={() => setModalOpen(true)}
-            className="hero-play group mb-8 flex items-center gap-3 w-fit"
-            style={{ opacity: 0 }}
-            aria-label="Watch for more"
-          >
-            <div className="relative w-12 h-12 rounded-full border-2 border-cream/60 flex items-center justify-center group-hover:border-gold group-hover:scale-110 transition-all duration-400">
-              <div className="absolute inset-0 rounded-full border border-cream/20 scale-125 group-hover:scale-150 transition-transform duration-500 opacity-60" />
+          {/* Rotating Circular Play Button */}
+          <div className="hero-play mb-6 w-fit" style={{ opacity: 0 }}>
+            <button
+              onClick={() => setModalOpen(true)}
+              className="relative w-24 h-24 flex items-center justify-center group"
+              aria-label="Watch for more"
+            >
+              {/* Rotating text ring */}
               <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="w-5 h-5 text-cream group-hover:text-gold transition-colors ml-0.5"
+                viewBox="0 0 120 120"
+                className="absolute inset-0 w-full h-full"
+                style={{ animation: "rotateCircle 9s linear infinite" }}
               >
-                <path d="M8 5.14v14l11-7-11-7z" />
+                <defs>
+                  <path
+                    id="circle-path"
+                    d="M 60,60 m -44,0 a 44,44 0 1,1 88,0 a 44,44 0 1,1 -88,0"
+                  />
+                </defs>
+                <text
+                  style={{
+                    fontSize: "10px",
+                    letterSpacing: "4px",
+                    fill: "#C8922A",
+                    fontFamily: "DM Sans, sans-serif",
+                  }}
+                >
+                  <textPath href="#circle-path">WATCH FOR MORE ·</textPath>
+                </text>
               </svg>
-            </div>
-            <span className="font-dm-sans text-[0.65rem] text-cream/70 uppercase tracking-[0.25em] group-hover:text-gold transition-colors">
-              Watch for more
-            </span>
-          </button>
 
-          {/* Cycling phrases */}
-          <div className="relative mb-10 h-40 overflow-hidden">
-            {[
-              { label: "Shortlets", headline: "Staycation", sub: "in Lagos" },
-              { label: "Restaurant", headline: "Signature", sub: "Dining" },
-              { label: "Opportunities", headline: "Investment", sub: "Returns" },
-            ].map((phrase, i) => (
-              <div
-                key={i}
-                className="absolute bottom-0 left-0"
-                style={{
-                  animation: `phraseIn 1s cubic-bezier(0.16,1,0.3,1) ${0.8 + i * 3.8}s forwards, phraseOut 0.7s cubic-bezier(0.76,0,0.24,1) ${0.8 + i * 3.8 + 3}s forwards`,
-                  opacity: 0,
-                  transform: "translateY(50px)",
-                }}
-              >
-                <p className="font-dm-sans text-[0.58rem] text-cream/40 uppercase tracking-[0.45em] mb-1">
-                  {phrase.label}
-                </p>
-                <h1 className="font-cormorant text-6xl sm:text-7xl text-cream font-light leading-[0.95]">
-                  {phrase.headline}
-                </h1>
-                <p className="font-cormorant text-3xl sm:text-4xl text-gold italic font-light leading-[1.3] mt-1">
-                  {phrase.sub}
-                </p>
+              {/* Centre play circle */}
+              <div className="relative w-12 h-12 rounded-full border border-cream/70 flex items-center justify-center bg-white/10 backdrop-blur-sm group-hover:scale-110 group-hover:border-gold transition-all duration-500">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="w-5 h-5 text-cream group-hover:text-gold transition-colors ml-0.5"
+                >
+                  <path d="M8 5.14v14l11-7-11-7z" />
+                </svg>
               </div>
-            ))}
+            </button>
+          </div>
+
+          {/* Headline */}
+          <div className="hero-headline mb-6" style={{ opacity: 0 }}>
+            <p className="font-dm-sans text-[0.58rem] text-cream/40 uppercase tracking-[0.45em] mb-3">
+              Lustro Homes · Lagos
+            </p>
+            <h1 className="font-cormorant text-4xl sm:text-5xl text-cream font-light leading-[1.15]">
+              Staycation
+            </h1>
+            <p className="font-cormorant text-xl sm:text-2xl text-gold italic font-light leading-[1.4]">
+              Signature Dining
+            </p>
+            <p className="font-cormorant text-xl sm:text-2xl text-cream/60 font-light leading-[1.4]">
+              Investment
+            </p>
           </div>
 
           {/* CTA Buttons */}
@@ -375,7 +370,7 @@ function Hero() {
               href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-brown text-cream font-dm-sans text-sm px-9 py-3.5 rounded-full hover:bg-brown-light transition-colors shadow-lg w-fit"
+              className="bg-brown text-cream font-dm-sans text-sm px-8 py-3 rounded-full hover:bg-brown-light transition-colors shadow-lg w-fit"
             >
               Book Your Stay
             </a>
@@ -389,7 +384,7 @@ function Hero() {
                   window.scrollTo({ top: y, behavior: "instant" });
                 }
               }}
-              className="border border-cream/35 text-cream font-dm-sans text-sm px-9 py-3.5 rounded-full hover:bg-cream/10 transition-colors w-fit"
+              className="border border-cream/35 text-cream font-dm-sans text-sm px-8 py-3 rounded-full hover:bg-cream/10 transition-colors w-fit"
             >
               Explore Rooms
             </a>
@@ -401,14 +396,6 @@ function Hero() {
         @keyframes rotateCircle {
           from { transform: rotate(0deg); }
           to   { transform: rotate(360deg); }
-        }
-        @keyframes phraseIn {
-          from { opacity: 0; transform: translateY(50px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes phraseOut {
-          from { opacity: 1; transform: translateY(0); }
-          to   { opacity: 0; transform: translateY(-40px); }
         }
         @keyframes modalFadeIn {
           from { opacity: 0; }
