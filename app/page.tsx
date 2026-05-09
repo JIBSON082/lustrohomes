@@ -369,7 +369,7 @@ useEffect(() => {
           <div className="flex items-end justify-between mb-5">
 
             {/* Left — Crafted for + crossfade script word */}
-            <div className="hero-text" style={{ opacity: 0 }}>
+          <div className="hero-text self-end" style={{ opacity: 0 }}>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-6 h-px bg-gold/60" />
                 <p
