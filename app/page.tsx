@@ -422,7 +422,7 @@ useEffect(() => {
                   </defs>
                   <text
                     style={{
-                      fontSize: "16px",
+                      fontSize: "15px",
                       letterSpacing: "6px",
                       fill: "rgba(255,255,255,0.7)",
                       fontFamily: "'Tenor Sans', sans-serif",
@@ -439,7 +439,7 @@ useEffect(() => {
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   fill="currentColor"
-                  className="w-18 h-18 text-cream group-hover:text-gold transition-colors ml-2"
+                  className="w-16 h-16 text-cream group-hover:text-gold transition-colors ml-2"
                   style={{ filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.4))" }}
                 >
                   <path d="M8 5.14v14l11-7-11-7z" />
