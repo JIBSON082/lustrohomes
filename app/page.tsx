@@ -412,7 +412,7 @@ useEffect(() => {
                 <svg
                   viewBox="0 0 180 180"
                   className="absolute inset-0 w-full h-full"
-                  style={{ animation: "rotateCircle 20s linear infinite" }}
+                  style={{ animation: "rotateCircle 24s linear infinite" }}
                 >
                   <defs>
                     <path
@@ -422,7 +422,7 @@ useEffect(() => {
                   </defs>
                   <text
                     style={{
-                      fontSize: "15px",
+                      fontSize: "16px",
                       letterSpacing: "6px",
                       fill: "rgba(255,255,255,0.7)",
                       fontFamily: "'Tenor Sans', sans-serif",
@@ -439,7 +439,7 @@ useEffect(() => {
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   fill="currentColor"
-                  className="w-14 h-14 text-cream group-hover:text-gold transition-colors ml-2"
+                  className="w-18 h-18 text-cream group-hover:text-gold transition-colors ml-2"
                   style={{ filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.4))" }}
                 >
                   <path d="M8 5.14v14l11-7-11-7z" />
