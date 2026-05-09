@@ -339,69 +339,69 @@ function Hero() {
           </button>
 
           {/* Hero Statement */}
-       {/* Circular rotating text + play button */}
-          <div className="hero-play relative flex items-center gap-5 mb-10 w-fit" style={{ opacity: 0 }}>
-            {/* Rotating circular text */}
-            <div className="relative w-20 h-20 flex-shrink-0">
+       {/* Hero Content */}
+        <div className="relative z-20 flex flex-col justify-end h-full px-6 pb-14">
+
+          {/* Circular Watch Button */}
+          <div className="hero-play mb-10 w-fit" style={{ opacity: 0 }}>
+            <button
+              onClick={() => setModalOpen(true)}
+              className="relative w-28 h-28 flex items-center justify-center group"
+              aria-label="Watch for more"
+            >
+              {/* Rotating text ring */}
               <svg
-                viewBox="0 0 100 100"
-                className="absolute inset-0 w-full h-full animate-spin-slow"
-                style={{ animation: "rotateCircle 10s linear infinite" }}
+                viewBox="0 0 120 120"
+                className="absolute inset-0 w-full h-full"
+                style={{ animation: "rotateCircle 9s linear infinite" }}
               >
                 <defs>
                   <path
                     id="circle-path"
-                    d="M 50,50 m -32,0 a 32,32 0 1,1 64,0 a 32,32 0 1,1 -64,0"
+                    d="M 60,60 m -44,0 a 44,44 0 1,1 88,0 a 44,44 0 1,1 -88,0"
                   />
                 </defs>
-                <text className="fill-gold" style={{ fontSize: "11.5px", letterSpacing: "3.5px", fill: "#C8922A" }}>
+                <text style={{ fontSize: "10px", letterSpacing: "4px", fill: "#C8922A", fontFamily: "DM Sans, sans-serif" }}>
                   <textPath href="#circle-path">
                     WATCH FOR MORE · WATCH FOR MORE ·
                   </textPath>
                 </text>
               </svg>
 
-              {/* Play button centred */}
-              <button
-                onClick={() => setModalOpen(true)}
-                className="absolute inset-0 flex items-center justify-center group"
-                aria-label="Watch for more"
-              >
-                <div className="w-10 h-10 rounded-full border-2 border-cream/80 flex items-center justify-center group-hover:border-cream group-hover:scale-110 transition-all duration-500 bg-white/10 backdrop-blur-sm">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-cream ml-0.5">
-                    <path d="M8 5.14v14l11-7-11-7z" />
-                  </svg>
-                </div>
-              </button>
-            </div>
+              {/* Centre play circle */}
+              <div className="relative w-14 h-14 rounded-full border border-cream/70 flex items-center justify-center bg-white/10 backdrop-blur-sm group-hover:scale-110 group-hover:border-cream transition-all duration-500">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-cream ml-1">
+                  <path d="M8 5.14v14l11-7-11-7z" />
+                </svg>
+              </div>
+            </button>
           </div>
 
-          {/* Cycling luxury text */}
-          <div className="mb-10 h-36 flex flex-col justify-end overflow-hidden" style={{ opacity: 0 }} id="hero-cycling-text">
-            {["Staycation\nin Lagos.", "Signature\nDining.", "Investment\nOpportunities."].map((phrase, i) => (
+          {/* Cycling phrases */}
+          <div className="relative mb-10 h-40 overflow-hidden">
+            {[
+              { label: "Shortlets", headline: "Staycation", sub: "in Lagos" },
+              { label: "Restaurant", headline: "Signature", sub: "Dining" },
+              { label: "Opportunities", headline: "Investment", sub: "Returns" },
+            ].map((phrase, i) => (
               <div
                 key={i}
-                className="hero-phrase absolute"
+                className="absolute bottom-0 left-0"
                 style={{
-                  animation: `phraseIn 1.2s cubic-bezier(0.16,1,0.3,1) ${i * 3.5}s forwards, phraseOut 0.8s cubic-bezier(0.76,0,0.24,1) ${i * 3.5 + 2.5}s forwards`,
+                  animation: `phraseIn 1s cubic-bezier(0.16,1,0.3,1) ${0.8 + i * 3.8}s forwards, phraseOut 0.7s cubic-bezier(0.76,0,0.24,1) ${0.8 + i * 3.8 + 3}s forwards`,
                   opacity: 0,
-                  position: i === 0 ? "relative" : "absolute",
+                  transform: "translateY(50px)",
                 }}
               >
-                {phrase.split("\n").map((line, li) => (
-                  <p
-                    key={li}
-                    className={
-                      li === 0
-                        ? "font-dm-sans text-[0.6rem] text-cream/50 uppercase tracking-[0.4em] mb-1"
-                        : li === 1 && i === 0
-                        ? "font-cormorant text-5xl sm:text-6xl text-cream font-light leading-[1.05] italic"
-                        : "font-cormorant text-5xl sm:text-6xl text-gold font-light leading-[1.05] italic"
-                    }
-                  >
-                    {line}
-                  </p>
-                ))}
+                <p className="font-dm-sans text-[0.58rem] text-cream/40 uppercase tracking-[0.45em] mb-1">
+                  {phrase.label}
+                </p>
+                <h1 className="font-cormorant text-6xl sm:text-7xl text-cream font-light leading-[0.95]">
+                  {phrase.headline}
+                </h1>
+                <p className="font-cormorant text-3xl sm:text-4xl text-gold italic font-light leading-[1.3] mt-1">
+                  {phrase.sub}
+                </p>
               </div>
             ))}
           </div>
@@ -431,23 +431,23 @@ function Hero() {
               Explore Rooms
             </a>
           </div>
-
-          <style>{`
-            @keyframes rotateCircle {
-              from { transform: rotate(0deg); }
-              to   { transform: rotate(360deg); }
-            }
-            @keyframes phraseIn {
-              from { opacity: 0; transform: translateY(40px) skewY(2deg); }
-              to   { opacity: 1; transform: translateY(0)  skewY(0deg); }
-            }
-            @keyframes phraseOut {
-              from { opacity: 1; transform: translateY(0)   skewY(0deg); }
-              to   { opacity: 0; transform: translateY(-30px) skewY(-1deg); }
-            }
-          `}</style>
         </div>
       </section>
+
+      <style>{`
+        @keyframes rotateCircle {
+          from { transform: rotate(0deg); }
+          to   { transform: rotate(360deg); }
+        }
+        @keyframes phraseIn {
+          from { opacity: 0; transform: translateY(50px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes phraseOut {
+          from { opacity: 1; transform: translateY(0); }
+          to   { opacity: 0; transform: translateY(-40px); }
+        }
+      `}</style>
 
       {/* ── Full Screen Modal Player ── */}
       {modalOpen && (
