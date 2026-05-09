@@ -373,9 +373,9 @@ function Hero() {
                   className={`phrase-word ${animating ? "exit" : "visible"}`}
                   style={{
                     fontFamily: "'Great Vibes', cursive",
-                    fontSize: "clamp(58px, 16vw, 80px)",
+                    fontSize: "clamp(45px, 12vw, 64px)",
                     color: "#C8922A",
-                    lineHeight: 1.05,
+                    lineHeight: 1.0,
                   }}
                 >
                   {HERO_PHRASES[phraseIdx]}
@@ -390,7 +390,7 @@ function Hero() {
             >
               <button
                 onClick={() => setModalOpen(true)}
-                className="relative w-[86px] h-[86px] flex items-center justify-center group"
+                className="relative w-[100px] h-[100px] flex items-center justify-center group"
                 aria-label="Watch for more"
               >
                 <svg
@@ -406,8 +406,8 @@ function Hero() {
                   </defs>
                   <text
                     style={{
-                      fontSize: "10px",
-                      letterSpacing: "4px",
+                      fontSize: "11.5px",
+                      letterSpacing: "3.5px",
                       fill: "#C8922A",
                       fontFamily: "DM Sans, sans-serif",
                     }}
@@ -417,7 +417,7 @@ function Hero() {
                     </textPath>
                   </text>
                 </svg>
-                <div className="relative w-11 h-11 rounded-full border border-cream/60 flex items-center justify-center bg-white/10 backdrop-blur-sm group-hover:scale-110 group-hover:border-gold transition-all duration-500">
+                <div className="relative w-13 h-13 rounded-full border border-cream/60 flex items-center justify-center bg-white/10 backdrop-blur-sm group-hover:scale-110 group-hover:border-gold transition-all duration-500">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
