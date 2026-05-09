@@ -412,7 +412,7 @@ useEffect(() => {
                   <text
                     style={{
                       fontSize: "15px",
-                      letterSpacing: "6px",
+                      letterSpacing: "4px",
                       fill: "rgba(255,255,255,0.7)",
                       fontFamily: "'Tenor Sans', sans-serif",
                     }}
