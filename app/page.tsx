@@ -238,20 +238,18 @@ const HERO_PHRASES = ["Staycation", "Dining", "Investment"];
 function Hero() {
   const [modalOpen, setModalOpen] = useState(false);
   const [currentIdx, setCurrentIdx] = useState(0);
-  const [nextIdx, setNextIdx] = useState(1);
-  const [transitioning, setTransitioning] = useState(false);
+const [transitioning, setTransitioning] = useState(false);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTransitioning(true);
-      setTimeout(() => {
-        setCurrentIdx((prev) => (prev + 1) % HERO_PHRASES.length);
-        setNextIdx((prev) => (prev + 1) % HERO_PHRASES.length);
-        setTransitioning(false);
-      }, 900);
-    }, 3800);
-    return () => clearInterval(interval);
-  }, []);
+useEffect(() => {
+  const interval = setInterval(() => {
+    setTransitioning(true);
+    setTimeout(() => {
+      setCurrentIdx((prev) => (prev + 1) % HERO_PHRASES.length);
+      setTransitioning(false);
+    }, 200);
+  }, 3800);
+  return () => clearInterval(interval);
+}, []);
 
   useEffect(() => {
     const initAnim = async () => {
@@ -382,36 +380,22 @@ function Hero() {
                 </p>
               </div>
 
-              {/* Crossfade container */}
-              <div className="phrase-container">
-                {/* Current word — fades out */}
-                <span
-                  className={`phrase-current ${transitioning ? "fading" : "visible"}`}
-                  style={{
-                    fontFamily: "'Great Vibes', cursive",
-                    fontSize: "clamp(42px, 11vw, 58px)",
-                    color: "#C8922A",
-                    lineHeight: 1.05,
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {HERO_PHRASES[currentIdx]}
-                </span>
-
-                {/* Next word — fades in over current */}
-                <span
-                  className={`phrase-next ${transitioning ? "fading" : "hidden"}`}
-                  style={{
-                    fontFamily: "'Great Vibes', cursive",
-                    fontSize: "clamp(42px, 11vw, 58px)",
-                    color: "#C8922A",
-                    lineHeight: 1.05,
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {HERO_PHRASES[nextIdx]}
-                </span>
-              </div>
+            
+             {/* Clip Reveal container */}
+<div className="phrase-container">
+  <span
+    className={`phrase-word ${transitioning ? "hidden" : "visible"}`}
+    style={{
+      fontFamily: "'Great Vibes', cursive",
+      fontSize: "clamp(42px, 11vw, 58px)",
+      color: "#C8922A",
+      lineHeight: 1.05,
+      whiteSpace: "nowrap",
+    }}
+  >
+    {HERO_PHRASES[currentIdx]}
+  </span>
+</div>
             </div>
 
             {/* Right — Play button, no inner circle */}
