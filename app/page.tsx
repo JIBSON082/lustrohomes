@@ -229,29 +229,30 @@ function Navbar({
 // ─────────────────────────────────────────────────
 // HERO SECTION — Cinematic Video Background
 // ─────────────────────────────────────────────────
+
 const HERO_VIDEO_URL =
   "https://res.cloudinary.com/dx3k7hbnc/video/upload/v1777632548/Hero-video_egr33p.mp4";
 
-const HERO_PHRASES = ["Staycation", "Dining", "Investment"];
+const HERO_PHRASES = ["Staycation", "Signature Dining", "Investment"];
 
 function Hero() {
   const [modalOpen, setModalOpen] = useState(false);
   const [currentIdx, setCurrentIdx] = useState(0);
-  const [nextIdx, setNextIdx] = useState(1);
-  const [transitioning, setTransitioning] = useState(false);
+  const [isSliding, setIsSliding] = useState(false);
 
+  // Vertical slot cycle
   useEffect(() => {
     const interval = setInterval(() => {
-      setTransitioning(true);
+      setIsSliding(true);
       setTimeout(() => {
         setCurrentIdx((prev) => (prev + 1) % HERO_PHRASES.length);
-        setNextIdx((prev) => (prev + 1) % HERO_PHRASES.length);
-        setTransitioning(false);
-      }, 900);
-    }, 3800);
+        setIsSliding(false);
+      }, 650);
+    }, 3600);
     return () => clearInterval(interval);
   }, []);
 
+  // GSAP entrance
   useEffect(() => {
     const initAnim = async () => {
       try {
@@ -265,7 +266,7 @@ function Hero() {
           .fromTo(
             ".hero-play",
             { opacity: 0, scale: 0.85 },
-            { opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.4)" },
+            { opacity: 1, scale: 1, duration: 0.8, ease: "back.out(1.4)" },
             "-=0.5"
           )
           .fromTo(
@@ -288,43 +289,53 @@ function Hero() {
 
   useEffect(() => {
     document.body.style.overflow = modalOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
+    return () => { document.body.style.overflow = ""; };
   }, [modalOpen]);
+
+  const nextIdx = (currentIdx + 1) % HERO_PHRASES.length;
 
   return (
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Tenor+Sans&display=swap');
 
-        .phrase-container {
+        /* ── Slot machine container ── */
+        .slot-window {
+          overflow: hidden;
           position: relative;
-          height: 80px;
+          height: clamp(52px, 13vw, 72px);
+          display: flex;
+          align-items: flex-start;
         }
-        .phrase-current {
+
+        /* Current word — slides UP and out */
+        .slot-current {
           position: absolute;
           top: 0;
           left: 0;
-          transition: opacity 0.9s ease;
-        }
-        .phrase-current.fading {
-          opacity: 0;
-        }
-        .phrase-current.visible {
+          transition: transform 0.65s cubic-bezier(0.76, 0, 0.24, 1),
+                      opacity  0.45s cubic-bezier(0.76, 0, 0.24, 1);
+          transform: translateY(0);
           opacity: 1;
         }
-        .phrase-next {
+        .slot-current.slide {
+          transform: translateY(-105%);
+          opacity: 0;
+        }
+
+        /* Next word — arrives from below, slides UP into place */
+        .slot-next {
           position: absolute;
           top: 0;
           left: 0;
-          transition: opacity 0.9s ease;
-        }
-        .phrase-next.fading {
-          opacity: 1;
-        }
-        .phrase-next.hidden {
+          transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+                      opacity  0.45s cubic-bezier(0.16, 1, 0.3, 1);
+          transform: translateY(105%);
           opacity: 0;
+        }
+        .slot-next.slide {
+          transform: translateY(0);
+          opacity: 1;
         }
 
         @keyframes rotateCircle {
@@ -361,34 +372,36 @@ function Hero() {
         </div>
 
         {/* Gradient overlay */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />
+        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/88 via-black/15 to-transparent" />
 
-        {/* Hero Content */}
-        <div className="relative z-20 flex flex-col justify-end h-full px-6 pb-14">
+        {/* Hero Content — pb-10 moves everything up vs pb-14 */}
+        <div className="relative z-20 flex flex-col justify-end h-full px-6 pb-10">
 
           {/* Text + Play button row */}
-          <div className="flex items-end justify-between mb-5">
+          <div className="flex items-end justify-between mb-4">
 
-            {/* Left — Crafted for + crossfade script word */}
+            {/* Left — label + slot word */}
             <div className="hero-text" style={{ opacity: 0 }}>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-6 h-px bg-gold/60" />
+
+              {/* Static label line */}
+              <div className="flex items-center gap-3 mb-1.5">
+                <div className="w-5 h-px bg-gold/50" />
                 <p
-                  className="font-dm-sans text-cream/50 uppercase"
-                  style={{ fontSize: "0.85rem", letterSpacing: "0.35em" }}
+                  className="font-dm-sans text-cream/55 uppercase"
+                  style={{ fontSize: "0.72rem", letterSpacing: "0.38em" }}
                 >
                   Crafted for
                 </p>
               </div>
 
-              {/* Crossfade container */}
-              <div className="phrase-container">
-                {/* Current word — fades out */}
+              {/* Slot window — overflow hidden, words slide vertically */}
+              <div className="slot-window">
+                {/* Current word — exits upward */}
                 <span
-                  className={`phrase-current ${transitioning ? "fading" : "visible"}`}
+                  className={`slot-current${isSliding ? " slide" : ""}`}
                   style={{
                     fontFamily: "'Great Vibes', cursive",
-                    fontSize: "clamp(42px, 11vw, 58px)",
+                    fontSize: "clamp(40px, 11vw, 60px)",
                     color: "#C8922A",
                     lineHeight: 1.05,
                     whiteSpace: "nowrap",
@@ -397,12 +410,12 @@ function Hero() {
                   {HERO_PHRASES[currentIdx]}
                 </span>
 
-                {/* Next word — fades in over current */}
+                {/* Next word — enters from below */}
                 <span
-                  className={`phrase-next ${transitioning ? "fading" : "hidden"}`}
+                  className={`slot-next${isSliding ? " slide" : ""}`}
                   style={{
                     fontFamily: "'Great Vibes', cursive",
-                    fontSize: "clamp(42px, 11vw, 58px)",
+                    fontSize: "clamp(40px, 11vw, 60px)",
                     color: "#C8922A",
                     lineHeight: 1.05,
                     whiteSpace: "nowrap",
@@ -413,33 +426,33 @@ function Hero() {
               </div>
             </div>
 
-            {/* Right — Play button, no inner circle */}
+            {/* Right — Rotating text + bare play triangle */}
             <div
-              className="hero-play flex-shrink-0 ml-3 mb-1"
+              className="hero-play flex-shrink-0 ml-2 mb-1"
               style={{ opacity: 0 }}
             >
               <button
                 onClick={() => setModalOpen(true)}
-                className="relative w-[160px] h-[160px] flex items-center justify-center group"
+                className="relative w-[148px] h-[148px] flex items-center justify-center group"
                 aria-label="Watch for more"
               >
                 {/* Rotating text ring */}
                 <svg
                   viewBox="0 0 180 180"
                   className="absolute inset-0 w-full h-full"
-                  style={{ animation: "rotateCircle 9s linear infinite" }}
+                  style={{ animation: "rotateCircle 10s linear infinite" }}
                 >
                   <defs>
                     <path
                       id="circle-path-hero"
-                      d="M 90,90 m -70,0 a 70,70 0 1,1 140,0 a 70,70 0 1,1 -140,0"
+                      d="M 90,90 m -68,0 a 68,68 0 1,1 136,0 a 68,68 0 1,1 -136,0"
                     />
                   </defs>
                   <text
                     style={{
-                      fontSize: "11px",
-                      letterSpacing: "6px",
-                      fill: "rgba(255,255,255,0.7)",
+                      fontSize: "10.5px",
+                      letterSpacing: "5.5px",
+                      fill: "rgba(255,255,255,0.65)",
                       fontFamily: "'Tenor Sans', sans-serif",
                     }}
                   >
@@ -449,13 +462,13 @@ function Hero() {
                   </text>
                 </svg>
 
-                {/* Just the play triangle — no circle */}
+                {/* Bare play triangle — no border ring, exactly like Wheatbaker */}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   fill="currentColor"
-                  className="w-14 h-14 text-cream group-hover:text-gold transition-colors ml-2"
-                  style={{ filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.4))" }}
+                  className="w-12 h-12 text-cream group-hover:text-gold transition-colors duration-400 ml-1.5"
+                  style={{ filter: "drop-shadow(0 2px 12px rgba(0,0,0,0.5))" }}
                 >
                   <path d="M8 5.14v14l11-7-11-7z" />
                 </svg>
@@ -463,13 +476,17 @@ function Hero() {
             </div>
           </div>
 
-          {/* CTA Buttons */}
-          <div className="hero-ctas flex flex-row gap-3 w-full" style={{ opacity: 0 }}>
+          {/* CTA Buttons — slightly smaller, still full width */}
+          <div
+            className="hero-ctas flex flex-row gap-3 w-full"
+            style={{ opacity: 0 }}
+          >
             <a
               href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 text-center bg-brown text-cream font-dm-sans text-[0.9rem] py-4 rounded-full hover:bg-brown-light transition-colors shadow-lg"
+              className="flex-1 text-center bg-brown text-cream font-dm-sans py-3 rounded-full hover:bg-brown-light transition-colors shadow-lg"
+              style={{ fontSize: "0.82rem" }}
             >
               Book Your Stay
             </a>
@@ -483,11 +500,13 @@ function Hero() {
                   window.scrollTo({ top: y, behavior: "instant" });
                 }
               }}
-              className="flex-1 text-center border border-cream/35 text-cream font-dm-sans text-[0.9rem] py-4 rounded-full hover:bg-cream/10 transition-colors"
+              className="flex-1 text-center border border-cream/35 text-cream font-dm-sans py-3 rounded-full hover:bg-cream/10 transition-colors"
+              style={{ fontSize: "0.82rem" }}
             >
               Explore Rooms
             </a>
           </div>
+
         </div>
       </section>
 
@@ -524,7 +543,8 @@ function Hero() {
             playsInline
             className="w-full h-full object-cover"
             style={{
-              animation: "modalScaleIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards",
+              animation:
+                "modalScaleIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards",
             }}
             onLoadedMetadata={(e) => {
               Array.from(e.currentTarget.textTracks).forEach(
@@ -537,7 +557,6 @@ function Hero() {
     </>
   );
 }
-
 
 // ─────────────────────────────────────────────────
 // STATS BAR
