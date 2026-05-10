@@ -2756,10 +2756,6 @@ export default function Home() {
 
   return (
     <main className="overflow-x-hidden">
-      <Navbar
-        scrolled={navScrolled}
-        menuOpen={mobileMenuOpen}
-        setMenuOpen={setMobileMenuOpen}
       />
       <Hero />
       <StatsBar />
