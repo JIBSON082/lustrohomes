@@ -238,51 +238,64 @@ const HERO_PHRASES = ["Staycation", "Dining", "Investment"];
 function Hero() {
   const [modalOpen, setModalOpen] = useState(false);
   const [currentIdx, setCurrentIdx] = useState(0);
-const [transitioning, setTransitioning] = useState(false);
+  const [transitioning, setTransitioning] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isMuted, setIsMuted] = useState(true);
+  const [progress, setProgress] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const progressRef = useRef<HTMLDivElement>(null);
 
-useEffect(() => {
-  const interval = setInterval(() => {
-    setTransitioning(true);
-    setTimeout(() => {
-      setCurrentIdx((prev) => (prev + 1) % HERO_PHRASES.length);
-      setTransitioning(false);
-    }, 200);
-  }, 3800);
-  return () => clearInterval(interval);
-}, []);
+  // Cycling phrases
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTransitioning(true);
+      setTimeout(() => {
+        setCurrentIdx((prev) => (prev + 1) % HERO_PHRASES.length);
+        setTransitioning(false);
+      }, 200);
+    }, 3800);
+    return () => clearInterval(interval);
+  }, []);
 
+  // GSAP entrance
   useEffect(() => {
     const initAnim = async () => {
       try {
         const { gsap } = await import("gsap");
-        const tl = gsap.timeline({ delay: 0.5 });
+        const tl = gsap.timeline({ delay: 0.4 });
         tl.fromTo(
-          ".hero-text",
-          { opacity: 0, y: 40 },
-          { opacity: 1, y: 0, duration: 1.1, ease: "power3.out" }
-        )
-          .fromTo(
-            ".hero-play",
-            { opacity: 0, scale: 0.85 },
-            { opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.4)" },
-            "-=0.5"
-          )
-          .fromTo(
-            ".hero-ctas",
-            { opacity: 0, y: 18 },
-            { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" },
-            "-=0.3"
-          );
+          ".hero-video-block",
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 1.2, ease: "expo.out" }
+        ).fromTo(
+          ".hero-content-block",
+          { opacity: 0, y: 24 },
+          { opacity: 1, y: 0, duration: 1.2, ease: "expo.out" },
+          "-=0.6"
+        );
       } catch {
-        [".hero-text", ".hero-play", ".hero-ctas"].forEach((sel) => {
+        [".hero-video-block", ".hero-content-block"].forEach((sel) => {
           document.querySelectorAll(sel).forEach((el) => {
             (el as HTMLElement).style.opacity = "1";
-            (el as HTMLElement).style.transform = "none";
           });
         });
       }
     };
     initAnim();
+  }, []);
+
+  // Video progress tracking
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const updateProgress = () => {
+      if (video.duration) {
+        setProgress((video.currentTime / video.duration) * 100);
+      }
+    };
+    video.addEventListener("timeupdate", updateProgress);
+    return () => video.removeEventListener("timeupdate", updateProgress);
   }, []);
 
   useEffect(() => {
@@ -292,31 +305,90 @@ useEffect(() => {
     };
   }, [modalOpen]);
 
+  const togglePlay = () => {
+    if (!videoRef.current) return;
+    if (isPlaying) {
+      videoRef.current.pause();
+    } else {
+      videoRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  const toggleMute = () => {
+    if (!videoRef.current) return;
+    videoRef.current.muted = !isMuted;
+    setIsMuted(!isMuted);
+  };
+
+  const toggleFullscreen = () => {
+    if (!videoRef.current) return;
+    if (!document.fullscreenElement) {
+      videoRef.current.requestFullscreen();
+      setIsFullscreen(true);
+    } else {
+      document.exitFullscreen();
+      setIsFullscreen(false);
+    }
+  };
+
+  const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!videoRef.current || !progressRef.current) return;
+    const rect = progressRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const ratio = x / rect.width;
+    videoRef.current.currentTime = ratio * videoRef.current.duration;
+  };
+
   return (
     <>
       <style>{`
-   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Montserrat:wght@700&family=Tenor+Sans&display=swap');
-        .phrase-container {
-  position: relative;
-  padding-bottom: 0px;
-}
-.phrase-word {
-  display: block;
-  transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.6s ease;
-}
-.phrase-word.visible {
-  transform: translateY(0px);
-  opacity: 1;
-}
-.phrase-word.hidden {
-  transform: translateY(30px);
-  opacity: 0;
-}
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Tenor+Sans&display=swap');
 
-        @keyframes rotateCircle {
-          from { transform: rotate(0deg); }
-          to   { transform: rotate(360deg); }
+        .phrase-container {
+          position: relative;
+          padding-bottom: 0px;
+        }
+        .phrase-word {
+          display: block;
+          transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+                      opacity 0.6s ease;
+        }
+        .phrase-word.visible {
+          transform: translateY(0px);
+          opacity: 1;
+        }
+        .phrase-word.hidden {
+          transform: translateY(30px);
+          opacity: 0;
+        }
+        .underline-link {
+          position: relative;
+          display: inline-block;
+        }
+        .underline-link::after {
+          content: '';
+          position: absolute;
+          bottom: -2px;
+          left: 0;
+          width: 100%;
+          height: 1px;
+          background: currentColor;
+          opacity: 0.5;
+        }
+        .video-progress-bar {
+          cursor: pointer;
+          height: 2px;
+          background: rgba(255,255,255,0.3);
+          flex: 1;
+          position: relative;
+          border-radius: 1px;
+        }
+        .video-progress-fill {
+          height: 100%;
+          background: rgba(255,255,255,0.9);
+          border-radius: 1px;
+          transition: width 0.1s linear;
         }
         @keyframes modalFadeIn {
           from { opacity: 0; }
@@ -328,142 +400,245 @@ useEffect(() => {
         }
       `}</style>
 
-      <section
-        id="hero"
-        className="relative h-[100dvh] w-full overflow-hidden bg-charcoal"
-      >
-        {/* Background Video */}
-        <div
-          className="absolute inset-0 z-0"
-          style={{ transform: "translateZ(0)", willChange: "transform" }}
+      {/* ── Navbar ── */}
+      <nav className="w-full bg-cream-dark border-b border-charcoal/8 px-6 py-4 flex items-center justify-between sticky top-0 z-50">
+        {/* Hamburger */}
+        <button
+          className="flex flex-col gap-[5px] group"
+          aria-label="Menu"
+          onClick={() => {
+            const nav = document.getElementById("mobile-nav");
+            if (nav) nav.classList.toggle("translate-x-full");
+          }}
         >
-          <video
-            src={HERO_VIDEO_URL}
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="w-full h-full object-cover"
+          <span className="w-5 h-px bg-charcoal block transition-all" />
+          <span className="w-5 h-px bg-charcoal block transition-all" />
+          <span className="w-3 h-px bg-charcoal block transition-all" />
+        </button>
+
+        {/* Centered wordmark */}
+        <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2">
+          <Image
+            src="https://res.cloudinary.com/dx3k7hbnc/image/upload/v1777562618/hero-1_jlcvld.png"
+            alt="Lustro Homes"
+            width={28}
+            height={28}
+            className="rounded-full object-cover opacity-90"
           />
+          <span className="font-cormorant text-charcoal text-lg font-light tracking-[0.18em] uppercase">
+            Lustro Homes
+          </span>
         </div>
 
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />
+        {/* Search icon */}
+        <button aria-label="Search" className="text-charcoal">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
+            <circle cx="11" cy="11" r="7" />
+            <path strokeLinecap="round" d="M16.5 16.5l3.5 3.5" />
+          </svg>
+        </button>
+      </nav>
 
-        {/* Hero Content */}
-        <div className="relative z-20 flex flex-col justify-end h-full px-6 pb-14">
+      {/* ── Hero Video Block ── */}
+      <div
+        className="hero-video-block w-full bg-charcoal relative"
+        style={{ opacity: 0, height: "65vh" }}
+      >
+        <video
+          ref={videoRef}
+          src={HERO_VIDEO_URL}
+          autoPlay
+          muted
+          loop
+          playsInline
+          disablePictureInPicture
+          className="w-full h-full object-cover"
+          onLoadedMetadata={(e) => {
+            Array.from(e.currentTarget.textTracks).forEach(
+              (t) => (t.mode = "hidden")
+            );
+          }}
+          onContextMenu={(e) => e.preventDefault()}
+        />
 
-          {/* Text + Play button row */}
-          <div className="flex items-end justify-between mb-10">
+        {/* Subtle dark gradient — bottom only for controls */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
 
-            {/* Left — Crafted for + crossfade script word */}
-          <div className="hero-text self-end" style={{ opacity: 0 }}>
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-6 h-px bg-gold/60" />
-                <p
-                  className="text-cream/50 uppercase italic"
-style={{ fontFamily: "'Playfair Display', serif", fontSize: "0.85rem", letterSpacing: "0.25em" }}
-                >
-                  Crafted for
-                </p>
-              </div>
+        {/* Lustro watermark — centered like Aman */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <span
+            className="font-cormorant text-cream/20 font-light tracking-[0.35em] uppercase"
+            style={{ fontSize: "clamp(18px, 4vw, 28px)" }}
+          >
+            Lustro Homes
+          </span>
+        </div>
 
-            
-             {/* Clip Reveal container */}
-<div className="phrase-container">
-  <span
-    className={`phrase-word ${transitioning ? "hidden" : "visible"}`}
-    style={{
-      fontFamily: "'CaliforniaStreet', cursive",
-fontSize: "clamp(36px, 10vw, 52px)",
-fontWeight: "700",
-color: "#C8922A",
-      lineHeight: 1.05,
-      whiteSpace: "nowrap",
-    }}
-  >
-    {HERO_PHRASES[currentIdx]}
-  </span>
-</div>
-            </div>
+        {/* Custom video controls — Aman style */}
+        <div className="absolute bottom-0 left-0 right-0 px-4 py-3 flex items-center gap-3">
 
-            {/* Right — Play button, no inner circle */}
+          {/* Play / Pause */}
+          <button
+            onClick={togglePlay}
+            className="text-white/80 hover:text-white transition-colors flex-shrink-0"
+            aria-label={isPlaying ? "Pause" : "Play"}
+          >
+            {isPlaying ? (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                <path d="M8 5.14v14l11-7-11-7z" />
+              </svg>
+            )}
+          </button>
+
+          {/* Progress bar */}
+          <div
+            ref={progressRef}
+            className="video-progress-bar"
+            onClick={handleProgressClick}
+          >
             <div
-              className="hero-play flex-shrink-0 ml-3 mb-1"
-              style={{ opacity: 0 }}
-            >
-              <button
-                onClick={() => setModalOpen(true)}
-                className="relative w-[98px] h-[98px] flex items-center justify-center group"
-                aria-label="Watch for more"
-              >
-                {/* Rotating text ring */}
-                <svg
-                  viewBox="0 0 180 180"
-                  className="absolute inset-0 w-full h-full"
-                  style={{ animation: "rotateCircle 27s linear infinite" }}
-                >
-                  <defs>
-                    <path
-                      id="circle-path-hero"
-                      d="M 90,90 m -70,0 a 70,70 0 1,1 140,0 a 70,70 0 1,1 -140,0"
-                    />
-                  </defs>
-                  <text
-                    style={{
-                      fontSize: "15px",
-                      letterSpacing: "4px",
-                      fill: "rgba(255,255,255,0.7)",
-                      fontFamily: "'Tenor Sans', sans-serif",
-                    }}
-                  >
-                    <textPath href="#circle-path-hero">
-                      WATCH FOR MORE
-                    </textPath>
-                  </text>
-                </svg>
-
-                {/* Just the play triangle — no circle */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="w-16 h-16 text-cream group-hover:text-gold transition-colors ml-2"
-                  style={{ filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.4))" }}
-                >
-                  <path d="M8 5.14v14l11-7-11-7z" />
-                </svg>
-              </button>
-            </div>
+              className="video-progress-fill"
+              style={{ width: `${progress}%` }}
+            />
           </div>
 
-          {/* CTA Buttons */}
-          <div className="hero-ctas flex flex-row gap-3 w-full" style={{ opacity: 0 }}>
-            <a
-              href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1 text-center bg-brown text-cream font-dm-sans text-[0.9rem] py-4 rounded-full hover:bg-brown-light transition-colors shadow-lg"
-            >
-              Book Your Stay
-            </a>
-            <a
-              href="#rooms"
-              onClick={(e) => {
-                e.preventDefault();
-                const target = document.querySelector("#rooms");
-                if (target) {
-                  const y = target.getBoundingClientRect().top + window.scrollY;
-                  window.scrollTo({ top: y, behavior: "instant" });
-                }
+          {/* Mute */}
+          <button
+            onClick={toggleMute}
+            className="text-white/80 hover:text-white transition-colors flex-shrink-0"
+            aria-label={isMuted ? "Unmute" : "Mute"}
+          >
+            {isMuted ? (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                <path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0 0 21 12c0-4.28-3-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06A8.99 8.99 0 0 0 17.73 18l1.73 1.73L21 18.46 5.54 3 4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z" />
+              </svg>
+            )}
+          </button>
+
+          {/* Picture in picture */}
+          <button
+            onClick={() => videoRef.current?.requestPictureInPicture?.()}
+            className="text-white/80 hover:text-white transition-colors flex-shrink-0"
+            aria-label="Picture in picture"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+              <path d="M19 7H9c-1.1 0-2 .9-2 2v6H5V9c0-2.2 1.8-4 4-4h10v2zm0 4h-8c-.6 0-1 .4-1 1v5c0 .6.4 1 1 1h8c.6 0 1-.4 1-1v-5c0-.6-.4-1-1-1z" />
+            </svg>
+          </button>
+
+          {/* Fullscreen */}
+          <button
+            onClick={toggleFullscreen}
+            className="text-white/80 hover:text-white transition-colors flex-shrink-0"
+            aria-label="Fullscreen"
+          >
+            {isFullscreen ? (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" />
+              </svg>
+            )}
+          </button>
+
+          {/* Forward arrow */}
+          <button
+            onClick={() => setModalOpen(true)}
+            className="text-white/80 hover:text-white transition-colors flex-shrink-0"
+            aria-label="Watch full video"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+              <path d="M6 18l8.5-6L6 6v12zm2-8.14L11.03 12 8 14.14V9.86zM16 6h2v12h-2z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      {/* ── Content Below Video — Aman style ── */}
+      <div
+        className="hero-content-block bg-cream-dark px-6 pt-10 pb-8"
+        style={{ opacity: 0 }}
+      >
+        {/* Eyebrow */}
+        <p
+          className="font-dm-sans text-charcoal/40 uppercase mb-4"
+          style={{ fontSize: "0.6rem", letterSpacing: "0.38em" }}
+        >
+          Lustro Homes · Lagos
+        </p>
+
+        {/* Crafted for + cycling script word */}
+        <div className="mb-8">
+          <p
+            className="font-dm-sans text-charcoal/35 uppercase mb-1"
+            style={{ fontSize: "0.7rem", letterSpacing: "0.3em" }}
+          >
+            Crafted for
+          </p>
+          <div className="phrase-container">
+            <span
+              className={`phrase-word ${transitioning ? "hidden" : "visible"}`}
+              style={{
+                fontFamily: "'Great Vibes', cursive",
+                fontSize: "clamp(44px, 12vw, 62px)",
+                color: "#C8922A",
+                lineHeight: 1.05,
+                whiteSpace: "nowrap",
               }}
-              className="flex-1 text-center border border-cream/35 text-cream font-dm-sans text-[0.9rem] py-4 rounded-full hover:bg-cream/10 transition-colors"
             >
-              Explore Rooms
-            </a>
+              {HERO_PHRASES[currentIdx]}
+            </span>
           </div>
         </div>
-      </section>
+
+        {/* Underlined text link — Aman style, no pill button */}
+        <div className="flex items-center gap-8">
+          <a
+            href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline-link font-dm-sans text-charcoal text-sm tracking-wide hover:text-brown transition-colors"
+          >
+            Book Your Stay
+          </a>
+          <a
+            href="#rooms"
+            onClick={(e) => {
+              e.preventDefault();
+              const target = document.querySelector("#rooms");
+              if (target) {
+                const y = target.getBoundingClientRect().top + window.scrollY;
+                window.scrollTo({ top: y, behavior: "smooth" });
+              }
+            }}
+            className="underline-link font-dm-sans text-charcoal/50 text-sm tracking-wide hover:text-charcoal transition-colors"
+          >
+            Explore Rooms
+          </a>
+        </div>
+      </div>
+
+      {/* ── Full Screen Reserve Bar — Aman style ── */}
+      <div className="w-full bg-charcoal">
+        <a
+          href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block w-full text-center font-dm-sans text-cream text-sm tracking-[0.25em] uppercase py-4 hover:bg-brown transition-colors"
+        >
+          Reserve
+        </a>
+      </div>
 
       {/* Full Screen Modal */}
       {modalOpen && (
@@ -476,19 +651,8 @@ color: "#C8922A",
             className="absolute top-5 right-5 z-10 w-11 h-11 rounded-full bg-white/10 flex items-center justify-center hover:bg-brown transition-colors"
             aria-label="Close video"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              className="w-5 h-5 text-cream"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-5 h-5 text-cream">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
           <video
@@ -496,10 +660,8 @@ color: "#C8922A",
             controls
             autoPlay
             playsInline
-            className="w-full h-full object-cover"
-            style={{
-              animation: "modalScaleIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards",
-            }}
+            className="w-full h-full object-contain"
+            style={{ animation: "modalScaleIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards" }}
             onLoadedMetadata={(e) => {
               Array.from(e.currentTarget.textTracks).forEach(
                 (t) => (t.mode = "hidden")
