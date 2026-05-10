@@ -235,8 +235,28 @@ const HERO_VIDEO_URL =
 
 const HERO_PHRASES = ["Staycation", "Dining", "Investment"];
 
+const NAV_LINKS = [
+  { label: "Rooms & Suites", href: "#rooms" },
+  { label: "Gallery", href: "#gallery" },
+  { label: "Dining", href: "#dining" },
+  { label: "Investment", href: "#invest" },
+  { label: "Yankee by Lustro", href: "#yankee" },
+  { label: "Contact", href: "#contact" },
+];
+
+const SEARCHABLE_SECTIONS = [
+  { label: "Rooms & Suites", href: "#rooms", keywords: ["rooms", "suites", "bedroom", "mykonos", "malibu", "seychelles", "beverly hills", "cappadocia", "santorini", "book"] },
+  { label: "Gallery", href: "#gallery", keywords: ["gallery", "photos", "images", "videos", "life at lustro"] },
+  { label: "Investment", href: "#invest", keywords: ["invest", "investment", "returns", "roi", "profit", "investor"] },
+  { label: "Yankee by Lustro", href: "#yankee", keywords: ["yankee", "sister property"] },
+  { label: "Book Your Stay", href: `${WHATSAPP_URL}?text=I'd like to book`, keywords: ["book", "reservation", "reserve", "stay", "check in"] },
+  { label: "Dining Experience", href: "#dining", keywords: ["dining", "restaurant", "food", "eat", "menu"] },
+];
+
 function Hero() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentIdx, setCurrentIdx] = useState(0);
   const [transitioning, setTransitioning] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -245,6 +265,12 @@ function Hero() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  const searchResults = SEARCHABLE_SECTIONS.filter((s) =>
+    searchQuery.length > 1 &&
+    s.keywords.some((k) => k.includes(searchQuery.toLowerCase()))
+  );
 
   // Cycling phrases
   useEffect(() => {
@@ -263,17 +289,16 @@ function Hero() {
     const initAnim = async () => {
       try {
         const { gsap } = await import("gsap");
-        const tl = gsap.timeline({ delay: 0.4 });
-        tl.fromTo(
-          ".hero-video-block",
-          { opacity: 0, y: 20 },
-          { opacity: 1, y: 0, duration: 1.2, ease: "expo.out" }
-        ).fromTo(
-          ".hero-content-block",
-          { opacity: 0, y: 24 },
-          { opacity: 1, y: 0, duration: 1.2, ease: "expo.out" },
-          "-=0.6"
-        );
+        gsap.timeline({ delay: 0.3 })
+          .fromTo(".hero-video-block",
+            { opacity: 0 },
+            { opacity: 1, duration: 1.2, ease: "expo.out" }
+          )
+          .fromTo(".hero-content-block",
+            { opacity: 0, y: 24 },
+            { opacity: 1, y: 0, duration: 1.2, ease: "expo.out" },
+            "-=0.6"
+          );
       } catch {
         [".hero-video-block", ".hero-content-block"].forEach((sel) => {
           document.querySelectorAll(sel).forEach((el) => {
@@ -285,23 +310,56 @@ function Hero() {
     initAnim();
   }, []);
 
+  // Animate menu links when opened
+  useEffect(() => {
+    if (!menuOpen) return;
+    const animateMenu = async () => {
+      try {
+        const { gsap } = await import("gsap");
+        gsap.fromTo(".menu-link",
+          { opacity: 0, x: -30 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.6,
+            ease: "power3.out",
+            stagger: 0.08,
+            delay: 0.15,
+          }
+        );
+        gsap.fromTo(".menu-cta",
+          { opacity: 0, y: 16 },
+          { opacity: 1, y: 0, duration: 0.5, ease: "power3.out", delay: 0.65 }
+        );
+      } catch {}
+    };
+    animateMenu();
+  }, [menuOpen]);
+
+  // Focus search input when opened
+  useEffect(() => {
+    if (searchOpen) {
+      setTimeout(() => searchInputRef.current?.focus(), 100);
+    } else {
+      setSearchQuery("");
+    }
+  }, [searchOpen]);
+
   // Video progress
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    const updateProgress = () => {
-      if (video.duration) {
-        setProgress((video.currentTime / video.duration) * 100);
-      }
+    const update = () => {
+      if (video.duration) setProgress((video.currentTime / video.duration) * 100);
     };
-    video.addEventListener("timeupdate", updateProgress);
-    return () => video.removeEventListener("timeupdate", updateProgress);
+    video.addEventListener("timeupdate", update);
+    return () => video.removeEventListener("timeupdate", update);
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
+    document.body.style.overflow = (menuOpen || searchOpen) ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
-  }, [menuOpen]);
+  }, [menuOpen, searchOpen]);
 
   const togglePlay = () => {
     if (!videoRef.current) return;
@@ -333,18 +391,34 @@ function Hero() {
     videoRef.current.currentTime = ratio * videoRef.current.duration;
   };
 
+  const handleSearchNavigate = (href: string) => {
+    setSearchOpen(false);
+    setSearchQuery("");
+    if (href.startsWith("#")) {
+      const target = document.querySelector(href);
+      if (target) {
+        setTimeout(() => {
+          const y = target.getBoundingClientRect().top + window.scrollY;
+          window.scrollTo({ top: y, behavior: "smooth" });
+        }, 200);
+      }
+    } else {
+      window.open(href, "_blank");
+    }
+  };
+
   return (
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Tenor+Sans&display=swap');
 
-        .phrase-container { position: relative; padding-bottom: 0px; }
+        .phrase-container { position: relative; padding-bottom: 0; }
         .phrase-word {
           display: block;
           transition: transform 0.85s cubic-bezier(0.16,1,0.3,1), opacity 0.6s ease;
         }
-        .phrase-word.visible { transform: translateY(0px); opacity: 1; }
-        .phrase-word.hidden  { transform: translateY(30px); opacity: 0; }
+        .phrase-word.visible { transform: translateY(0); opacity: 1; }
+        .phrase-word.hidden  { transform: translateY(28px); opacity: 0; }
 
         .underline-link {
           position: relative;
@@ -353,10 +427,8 @@ function Hero() {
         .underline-link::after {
           content: '';
           position: absolute;
-          bottom: -2px;
-          left: 0;
-          width: 100%;
-          height: 1px;
+          bottom: -2px; left: 0;
+          width: 100%; height: 1px;
           background: currentColor;
           opacity: 0.4;
         }
@@ -374,32 +446,28 @@ function Hero() {
           transition: width 0.1s linear;
           pointer-events: none;
         }
-        @keyframes modalFadeIn {
-          from { opacity: 0; } to { opacity: 1; }
-        }
-        @keyframes modalScaleIn {
-          from { opacity: 0; transform: scale(0.96); }
-          to   { opacity: 1; transform: scale(1); }
-        }
-
-        /* Mobile menu */
         .mobile-menu {
           transform: translateX(100%);
+          transition: transform 0.45s cubic-bezier(0.16,1,0.3,1);
+        }
+        .mobile-menu.open { transform: translateX(0); }
+        .search-overlay {
+          transform: translateY(-100%);
           transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
         }
-        .mobile-menu.open {
-          transform: translateX(0%);
-        }
+        .search-overlay.open { transform: translateY(0); }
+        .menu-link { opacity: 0; }
+        .menu-cta { opacity: 0; }
       `}</style>
 
       {/* ── Navbar ── */}
-      <nav className="w-full bg-cream-dark px-6 py-4 flex items-center justify-between sticky top-0 z-50"
-        style={{ borderBottom: "1px solid rgba(0,0,0,0.08)" }}
+      <nav
+        className="w-full bg-cream-dark px-6 py-4 flex items-center justify-between sticky top-0 z-50"
+        style={{ borderBottom: "1px solid rgba(0,0,0,0.07)" }}
       >
-        {/* Hamburger */}
         <button
           onClick={() => setMenuOpen(true)}
-          className="flex flex-col gap-[5px]"
+          className="flex flex-col gap-[5px] p-1"
           aria-label="Open menu"
         >
           <span className="w-5 h-px bg-charcoal block" />
@@ -407,13 +475,15 @@ function Hero() {
           <span className="w-3 h-px bg-charcoal block" />
         </button>
 
-        {/* Centered wordmark — text only, no image */}
-        <span className="absolute left-1/2 -translate-x-1/2 font-cormorant text-charcoal font-light tracking-[0.22em] uppercase text-base">
+        <span className="absolute left-1/2 -translate-x-1/2 font-cormorant text-charcoal font-light tracking-[0.22em] uppercase text-base whitespace-nowrap">
           Lustro Homes
         </span>
 
-        {/* Search */}
-        <button aria-label="Search" className="text-charcoal">
+        <button
+          onClick={() => setSearchOpen(true)}
+          aria-label="Search"
+          className="text-charcoal p-1"
+        >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
             <circle cx="11" cy="11" r="7" />
             <path strokeLinecap="round" d="M16.5 16.5l3.5 3.5" />
@@ -421,14 +491,97 @@ function Hero() {
         </button>
       </nav>
 
+      {/* ── Search Overlay ── */}
+      <div className={`search-overlay fixed inset-0 z-[95] bg-cream-dark flex flex-col px-6 pt-6 pb-10 ${searchOpen ? "open" : ""}`}>
+        <div className="flex items-center justify-between mb-8">
+          <span className="font-cormorant text-charcoal text-lg tracking-[0.2em] uppercase font-light">
+            Search
+          </span>
+          <button onClick={() => setSearchOpen(false)} className="text-charcoal/50 hover:text-charcoal transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Search input */}
+        <div className="border-b border-charcoal/20 flex items-center gap-3 pb-3 mb-8">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4 text-charcoal/40 flex-shrink-0">
+            <circle cx="11" cy="11" r="7" />
+            <path strokeLinecap="round" d="M16.5 16.5l3.5 3.5" />
+          </svg>
+          <input
+            ref={searchInputRef}
+            type="text"
+            placeholder="Search rooms, dining, investment..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="flex-1 bg-transparent font-dm-sans text-sm text-charcoal placeholder-charcoal/30 outline-none"
+          />
+          {searchQuery && (
+            <button onClick={() => setSearchQuery("")} className="text-charcoal/30 hover:text-charcoal transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+              </svg>
+            </button>
+          )}
+        </div>
+
+        {/* Results */}
+        {searchQuery.length > 1 && (
+          <div className="flex flex-col gap-1">
+            {searchResults.length > 0 ? (
+              searchResults.map((result) => (
+                <button
+                  key={result.href}
+                  onClick={() => handleSearchNavigate(result.href)}
+                  className="text-left py-4 border-b border-charcoal/8 flex items-center justify-between group"
+                >
+                  <span className="font-cormorant text-2xl text-charcoal font-light group-hover:text-brown transition-colors">
+                    {result.label}
+                  </span>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4 text-charcoal/30 group-hover:text-brown transition-colors">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 18l6-6-6-6" />
+                  </svg>
+                </button>
+              ))
+            ) : (
+              <p className="font-dm-sans text-sm text-charcoal/35 mt-2">
+                No results for "{searchQuery}"
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* Default suggestions */}
+        {searchQuery.length <= 1 && (
+          <div className="flex flex-col gap-1">
+            <p className="font-dm-sans text-[0.6rem] text-charcoal/35 uppercase tracking-[0.3em] mb-3">
+              Quick Links
+            </p>
+            {NAV_LINKS.map((link) => (
+              <button
+                key={link.href}
+                onClick={() => handleSearchNavigate(link.href)}
+                className="text-left py-3 border-b border-charcoal/8 flex items-center justify-between group"
+              >
+                <span className="font-cormorant text-xl text-charcoal/60 font-light group-hover:text-charcoal transition-colors">
+                  {link.label}
+                </span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4 text-charcoal/20 group-hover:text-charcoal/50 transition-colors">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 18l6-6-6-6" />
+                </svg>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
       {/* ── Mobile Menu Drawer ── */}
-      <div
-        className={`mobile-menu fixed inset-0 z-[90] bg-charcoal flex flex-col px-8 py-10 ${menuOpen ? "open" : ""}`}
-      >
-        {/* Close */}
+      <div className={`mobile-menu fixed inset-0 z-[90] bg-charcoal flex flex-col px-8 py-10 ${menuOpen ? "open" : ""}`}>
         <button
           onClick={() => setMenuOpen(false)}
-          className="self-end mb-12 text-cream/60 hover:text-cream transition-colors"
+          className="self-end mb-10 text-cream/40 hover:text-cream transition-colors"
           aria-label="Close menu"
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-6 h-6">
@@ -436,34 +589,42 @@ function Hero() {
           </svg>
         </button>
 
-        {/* Nav links */}
-        <nav className="flex flex-col gap-8">
-          {[
-            { label: "Rooms & Suites", href: "#rooms" },
-            { label: "Gallery", href: "#gallery" },
-            { label: "Dining", href: "#dining" },
-            { label: "Investment", href: "#invest" },
-            { label: "Yankee by Lustro", href: "#yankee" },
-            { label: "Contact", href: "#contact" },
-          ].map((item) => (
+        <div className="flex flex-col gap-1">
+          {NAV_LINKS.map((item, i) => (
             <a
               key={item.label}
               href={item.href}
-              onClick={() => setMenuOpen(false)}
-              className="font-cormorant text-3xl text-cream font-light tracking-wide hover:text-gold transition-colors"
+              onClick={() => {
+                setMenuOpen(false);
+                const target = document.querySelector(item.href);
+                if (target) {
+                  setTimeout(() => {
+                    const y = target.getBoundingClientRect().top + window.scrollY;
+                    window.scrollTo({ top: y, behavior: "smooth" });
+                  }, 400);
+                }
+              }}
+              className="menu-link py-4 border-b border-cream/8 flex items-center justify-between group"
             >
-              {item.label}
+              <span className="font-cormorant text-3xl text-cream font-light tracking-wide group-hover:text-gold transition-colors duration-300">
+                {item.label}
+              </span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1} className="w-4 h-4 text-cream/20 group-hover:text-gold transition-colors">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 18l6-6-6-6" />
+              </svg>
             </a>
           ))}
-        </nav>
+        </div>
 
-        {/* Bottom CTA */}
-        <div className="mt-auto">
+        <div className="mt-auto pt-8 menu-cta">
+          <p className="font-dm-sans text-[0.58rem] text-cream/25 uppercase tracking-[0.3em] mb-3">
+            Ready to experience Lustro?
+          </p>
           <a
             href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-dm-sans text-sm text-gold uppercase tracking-[0.25em] underline-link"
+            className="font-dm-sans text-sm text-gold tracking-[0.2em] uppercase underline-link hover:text-gold/70 transition-colors"
           >
             Book Your Stay
           </a>
@@ -472,7 +633,7 @@ function Hero() {
 
       {/* ── Hero Video Block ── */}
       <div
-        className="hero-video-block w-full bg-charcoal relative"
+        className="hero-video-block w-full bg-charcoal relative overflow-hidden"
         style={{ opacity: 0, height: "65vh" }}
       >
         <video
@@ -492,18 +653,12 @@ function Hero() {
           onContextMenu={(e) => e.preventDefault()}
         />
 
-        {/* Subtle bottom gradient for controls only */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent pointer-events-none" />
+        {/* Gradient — bottom only for controls */}
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black/50 to-transparent pointer-events-none" />
 
-        {/* Controls — play, progress, mute, fullscreen only */}
+        {/* Controls */}
         <div className="absolute bottom-0 left-0 right-0 px-4 py-3 flex items-center gap-3">
-
-          {/* Play / Pause */}
-          <button
-            onClick={togglePlay}
-            className="text-white/80 hover:text-white transition-colors flex-shrink-0"
-            aria-label={isPlaying ? "Pause" : "Play"}
-          >
+          <button onClick={togglePlay} className="text-white/80 hover:text-white transition-colors flex-shrink-0" aria-label={isPlaying ? "Pause" : "Play"}>
             {isPlaying ? (
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
                 <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
@@ -515,21 +670,11 @@ function Hero() {
             )}
           </button>
 
-          {/* Progress bar */}
-          <div
-            ref={progressRef}
-            className="progress-bar"
-            onClick={handleProgressClick}
-          >
+          <div ref={progressRef} className="progress-bar" onClick={handleProgressClick}>
             <div className="progress-fill" style={{ width: `${progress}%` }} />
           </div>
 
-          {/* Mute */}
-          <button
-            onClick={toggleMute}
-            className="text-white/80 hover:text-white transition-colors flex-shrink-0"
-            aria-label={isMuted ? "Unmute" : "Mute"}
-          >
+          <button onClick={toggleMute} className="text-white/80 hover:text-white transition-colors flex-shrink-0" aria-label={isMuted ? "Unmute" : "Mute"}>
             {isMuted ? (
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
                 <path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0 0 21 12c0-4.28-3-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06A8.99 8.99 0 0 0 17.73 18l1.73 1.73L21 18.46 5.54 3 4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
@@ -541,12 +686,7 @@ function Hero() {
             )}
           </button>
 
-          {/* Fullscreen */}
-          <button
-            onClick={toggleFullscreen}
-            className="text-white/80 hover:text-white transition-colors flex-shrink-0"
-            aria-label="Fullscreen"
-          >
+          <button onClick={toggleFullscreen} className="text-white/80 hover:text-white transition-colors flex-shrink-0" aria-label="Fullscreen">
             {isFullscreen ? (
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
                 <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
@@ -561,22 +701,13 @@ function Hero() {
       </div>
 
       {/* ── Content Below Video ── */}
-      <div
-        className="hero-content-block bg-cream-dark px-6 pt-10 pb-8"
-        style={{ opacity: 0 }}
-      >
-        <p
-          className="font-dm-sans text-charcoal/40 uppercase mb-5"
-          style={{ fontSize: "0.6rem", letterSpacing: "0.38em" }}
-        >
+      <div className="hero-content-block bg-cream-dark px-6 pt-10 pb-8" style={{ opacity: 0 }}>
+        <p className="font-dm-sans text-charcoal/40 uppercase mb-5" style={{ fontSize: "0.6rem", letterSpacing: "0.38em" }}>
           Lustro Homes · Lagos
         </p>
 
         <div className="mb-8">
-          <p
-            className="font-dm-sans text-charcoal/35 uppercase mb-1"
-            style={{ fontSize: "0.7rem", letterSpacing: "0.3em" }}
-          >
+          <p className="font-dm-sans text-charcoal/35 uppercase mb-1" style={{ fontSize: "0.7rem", letterSpacing: "0.3em" }}>
             Crafted for
           </p>
           <div className="phrase-container">
