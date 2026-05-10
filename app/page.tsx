@@ -374,7 +374,7 @@ style={{ fontFamily: "'Playfair Display', serif", fontSize: "0.85rem", letterSpa
   <span
     className={`phrase-word ${transitioning ? "hidden" : "visible"}`}
     style={{
-      fontFamily: "'Montserrat', sans-serif",
+      fontFamily: "'CaliforniaStreet', cursive",
 fontSize: "clamp(36px, 10vw, 52px)",
 fontWeight: "700",
 color: "#C8922A",
