@@ -10,14 +10,14 @@ const WHATSAPP_NUMBER = "2348000000000"; // ← Replace with actual WhatsApp num
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
 
 const NAV_LINKS = [
-     
-  { label: "About", href: "#about" },
-  { label: "Rooms", href: "#rooms" },
-  { label: "Dining", href: "#dining" },
+  { label: "Rooms & Suites", href: "#rooms" },
   { label: "Gallery", href: "#gallery" },
-  { label: "Invest", href: "#invest" },
+  { label: "Dining", href: "#dining" },
+  { label: "Investment", href: "#invest" },
+  { label: "Yankee by Lustro", href: "#yankee" },
   { label: "Contact", href: "#contact" },
 ];
+
 
 // ─────────────────────────────────────────────────
 // NAVBAR
@@ -235,14 +235,6 @@ const HERO_VIDEO_URL =
 
 const HERO_PHRASES = ["Staycation", "Dining", "Investment"];
 
-const NAV_LINKS = [
-  { label: "Rooms & Suites", href: "#rooms" },
-  { label: "Gallery", href: "#gallery" },
-  { label: "Dining", href: "#dining" },
-  { label: "Investment", href: "#invest" },
-  { label: "Yankee by Lustro", href: "#yankee" },
-  { label: "Contact", href: "#contact" },
-];
 
 const SEARCHABLE_SECTIONS = [
   { label: "Rooms & Suites", href: "#rooms", keywords: ["rooms", "suites", "bedroom", "mykonos", "malibu", "seychelles", "beverly hills", "cappadocia", "santorini", "book"] },
