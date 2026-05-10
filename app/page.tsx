@@ -236,7 +236,7 @@ const HERO_VIDEO_URL =
 const HERO_PHRASES = ["Staycation", "Dining", "Investment"];
 
 function Hero() {
-  const [modalOpen, setModalOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [transitioning, setTransitioning] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -285,7 +285,7 @@ function Hero() {
     initAnim();
   }, []);
 
-  // Video progress tracking
+  // Video progress
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -299,19 +299,13 @@ function Hero() {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = modalOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [modalOpen]);
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
 
   const togglePlay = () => {
     if (!videoRef.current) return;
-    if (isPlaying) {
-      videoRef.current.pause();
-    } else {
-      videoRef.current.play();
-    }
+    isPlaying ? videoRef.current.pause() : videoRef.current.play();
     setIsPlaying(!isPlaying);
   };
 
@@ -335,8 +329,7 @@ function Hero() {
   const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!videoRef.current || !progressRef.current) return;
     const rect = progressRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const ratio = x / rect.width;
+    const ratio = (e.clientX - rect.left) / rect.width;
     videoRef.current.currentTime = ratio * videoRef.current.duration;
   };
 
@@ -345,23 +338,14 @@ function Hero() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Tenor+Sans&display=swap');
 
-        .phrase-container {
-          position: relative;
-          padding-bottom: 0px;
-        }
+        .phrase-container { position: relative; padding-bottom: 0px; }
         .phrase-word {
           display: block;
-          transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-                      opacity 0.6s ease;
+          transition: transform 0.85s cubic-bezier(0.16,1,0.3,1), opacity 0.6s ease;
         }
-        .phrase-word.visible {
-          transform: translateY(0px);
-          opacity: 1;
-        }
-        .phrase-word.hidden {
-          transform: translateY(30px);
-          opacity: 0;
-        }
+        .phrase-word.visible { transform: translateY(0px); opacity: 1; }
+        .phrase-word.hidden  { transform: translateY(30px); opacity: 0; }
+
         .underline-link {
           position: relative;
           display: inline-block;
@@ -374,63 +358,61 @@ function Hero() {
           width: 100%;
           height: 1px;
           background: currentColor;
-          opacity: 0.5;
+          opacity: 0.4;
         }
-        .video-progress-bar {
+        .progress-bar {
           cursor: pointer;
           height: 2px;
-          background: rgba(255,255,255,0.3);
+          background: rgba(255,255,255,0.25);
           flex: 1;
-          position: relative;
           border-radius: 1px;
         }
-        .video-progress-fill {
+        .progress-fill {
           height: 100%;
-          background: rgba(255,255,255,0.9);
+          background: rgba(255,255,255,0.85);
           border-radius: 1px;
           transition: width 0.1s linear;
+          pointer-events: none;
         }
         @keyframes modalFadeIn {
-          from { opacity: 0; }
-          to   { opacity: 1; }
+          from { opacity: 0; } to { opacity: 1; }
         }
         @keyframes modalScaleIn {
           from { opacity: 0; transform: scale(0.96); }
           to   { opacity: 1; transform: scale(1); }
         }
+
+        /* Mobile menu */
+        .mobile-menu {
+          transform: translateX(100%);
+          transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+        }
+        .mobile-menu.open {
+          transform: translateX(0%);
+        }
       `}</style>
 
       {/* ── Navbar ── */}
-      <nav className="w-full bg-cream-dark border-b border-charcoal/8 px-6 py-4 flex items-center justify-between sticky top-0 z-50">
+      <nav className="w-full bg-cream-dark px-6 py-4 flex items-center justify-between sticky top-0 z-50"
+        style={{ borderBottom: "1px solid rgba(0,0,0,0.08)" }}
+      >
         {/* Hamburger */}
         <button
-          className="flex flex-col gap-[5px] group"
-          aria-label="Menu"
-          onClick={() => {
-            const nav = document.getElementById("mobile-nav");
-            if (nav) nav.classList.toggle("translate-x-full");
-          }}
+          onClick={() => setMenuOpen(true)}
+          className="flex flex-col gap-[5px]"
+          aria-label="Open menu"
         >
-          <span className="w-5 h-px bg-charcoal block transition-all" />
-          <span className="w-5 h-px bg-charcoal block transition-all" />
-          <span className="w-3 h-px bg-charcoal block transition-all" />
+          <span className="w-5 h-px bg-charcoal block" />
+          <span className="w-5 h-px bg-charcoal block" />
+          <span className="w-3 h-px bg-charcoal block" />
         </button>
 
-        {/* Centered wordmark */}
-        <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2">
-          <Image
-            src="https://res.cloudinary.com/dx3k7hbnc/image/upload/v1777562618/hero-1_jlcvld.png"
-            alt="Lustro Homes"
-            width={28}
-            height={28}
-            className="rounded-full object-cover opacity-90"
-          />
-          <span className="font-cormorant text-charcoal text-lg font-light tracking-[0.18em] uppercase">
-            Lustro Homes
-          </span>
-        </div>
+        {/* Centered wordmark — text only, no image */}
+        <span className="absolute left-1/2 -translate-x-1/2 font-cormorant text-charcoal font-light tracking-[0.22em] uppercase text-base">
+          Lustro Homes
+        </span>
 
-        {/* Search icon */}
+        {/* Search */}
         <button aria-label="Search" className="text-charcoal">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
             <circle cx="11" cy="11" r="7" />
@@ -438,6 +420,55 @@ function Hero() {
           </svg>
         </button>
       </nav>
+
+      {/* ── Mobile Menu Drawer ── */}
+      <div
+        className={`mobile-menu fixed inset-0 z-[90] bg-charcoal flex flex-col px-8 py-10 ${menuOpen ? "open" : ""}`}
+      >
+        {/* Close */}
+        <button
+          onClick={() => setMenuOpen(false)}
+          className="self-end mb-12 text-cream/60 hover:text-cream transition-colors"
+          aria-label="Close menu"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        {/* Nav links */}
+        <nav className="flex flex-col gap-8">
+          {[
+            { label: "Rooms & Suites", href: "#rooms" },
+            { label: "Gallery", href: "#gallery" },
+            { label: "Dining", href: "#dining" },
+            { label: "Investment", href: "#invest" },
+            { label: "Yankee by Lustro", href: "#yankee" },
+            { label: "Contact", href: "#contact" },
+          ].map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              onClick={() => setMenuOpen(false)}
+              className="font-cormorant text-3xl text-cream font-light tracking-wide hover:text-gold transition-colors"
+            >
+              {item.label}
+            </a>
+          ))}
+        </nav>
+
+        {/* Bottom CTA */}
+        <div className="mt-auto">
+          <a
+            href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-dm-sans text-sm text-gold uppercase tracking-[0.25em] underline-link"
+          >
+            Book Your Stay
+          </a>
+        </div>
+      </div>
 
       {/* ── Hero Video Block ── */}
       <div
@@ -461,20 +492,10 @@ function Hero() {
           onContextMenu={(e) => e.preventDefault()}
         />
 
-        {/* Subtle dark gradient — bottom only for controls */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+        {/* Subtle bottom gradient for controls only */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent pointer-events-none" />
 
-        {/* Lustro watermark — centered like Aman */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <span
-            className="font-cormorant text-cream/20 font-light tracking-[0.35em] uppercase"
-            style={{ fontSize: "clamp(18px, 4vw, 28px)" }}
-          >
-            Lustro Homes
-          </span>
-        </div>
-
-        {/* Custom video controls — Aman style */}
+        {/* Controls — play, progress, mute, fullscreen only */}
         <div className="absolute bottom-0 left-0 right-0 px-4 py-3 flex items-center gap-3">
 
           {/* Play / Pause */}
@@ -497,13 +518,10 @@ function Hero() {
           {/* Progress bar */}
           <div
             ref={progressRef}
-            className="video-progress-bar"
+            className="progress-bar"
             onClick={handleProgressClick}
           >
-            <div
-              className="video-progress-fill"
-              style={{ width: `${progress}%` }}
-            />
+            <div className="progress-fill" style={{ width: `${progress}%` }} />
           </div>
 
           {/* Mute */}
@@ -523,17 +541,6 @@ function Hero() {
             )}
           </button>
 
-          {/* Picture in picture */}
-          <button
-            onClick={() => videoRef.current?.requestPictureInPicture?.()}
-            className="text-white/80 hover:text-white transition-colors flex-shrink-0"
-            aria-label="Picture in picture"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-              <path d="M19 7H9c-1.1 0-2 .9-2 2v6H5V9c0-2.2 1.8-4 4-4h10v2zm0 4h-8c-.6 0-1 .4-1 1v5c0 .6.4 1 1 1h8c.6 0 1-.4 1-1v-5c0-.6-.4-1-1-1z" />
-            </svg>
-          </button>
-
           {/* Fullscreen */}
           <button
             onClick={toggleFullscreen}
@@ -550,34 +557,21 @@ function Hero() {
               </svg>
             )}
           </button>
-
-          {/* Forward arrow */}
-          <button
-            onClick={() => setModalOpen(true)}
-            className="text-white/80 hover:text-white transition-colors flex-shrink-0"
-            aria-label="Watch full video"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-              <path d="M6 18l8.5-6L6 6v12zm2-8.14L11.03 12 8 14.14V9.86zM16 6h2v12h-2z" />
-            </svg>
-          </button>
         </div>
       </div>
 
-      {/* ── Content Below Video — Aman style ── */}
+      {/* ── Content Below Video ── */}
       <div
         className="hero-content-block bg-cream-dark px-6 pt-10 pb-8"
         style={{ opacity: 0 }}
       >
-        {/* Eyebrow */}
         <p
-          className="font-dm-sans text-charcoal/40 uppercase mb-4"
+          className="font-dm-sans text-charcoal/40 uppercase mb-5"
           style={{ fontSize: "0.6rem", letterSpacing: "0.38em" }}
         >
           Lustro Homes · Lagos
         </p>
 
-        {/* Crafted for + cycling script word */}
         <div className="mb-8">
           <p
             className="font-dm-sans text-charcoal/35 uppercase mb-1"
@@ -601,7 +595,6 @@ function Hero() {
           </div>
         </div>
 
-        {/* Underlined text link — Aman style, no pill button */}
         <div className="flex items-center gap-8">
           <a
             href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
@@ -628,7 +621,7 @@ function Hero() {
         </div>
       </div>
 
-      {/* ── Full Screen Reserve Bar — Aman style ── */}
+      {/* ── Reserve Bar ── */}
       <div className="w-full bg-charcoal">
         <a
           href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
@@ -639,37 +632,6 @@ function Hero() {
           Reserve
         </a>
       </div>
-
-      {/* Full Screen Modal */}
-      {modalOpen && (
-        <div
-          className="fixed inset-0 z-[100] bg-black flex items-center justify-center"
-          style={{ animation: "modalFadeIn 0.35s ease forwards" }}
-        >
-          <button
-            onClick={() => setModalOpen(false)}
-            className="absolute top-5 right-5 z-10 w-11 h-11 rounded-full bg-white/10 flex items-center justify-center hover:bg-brown transition-colors"
-            aria-label="Close video"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-5 h-5 text-cream">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-          <video
-            src={HERO_VIDEO_URL}
-            controls
-            autoPlay
-            playsInline
-            className="w-full h-full object-contain"
-            style={{ animation: "modalScaleIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards" }}
-            onLoadedMetadata={(e) => {
-              Array.from(e.currentTarget.textTracks).forEach(
-                (t) => (t.mode = "hidden")
-              );
-            }}
-          />
-        </div>
-      )}
     </>
   );
 }
