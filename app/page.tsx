@@ -295,8 +295,7 @@ useEffect(() => {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Tenor+Sans&display=swap');
-
+   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Montserrat:wght@700&family=Tenor+Sans&display=swap');
         .phrase-container {
   position: relative;
   padding-bottom: 0px;
@@ -362,8 +361,8 @@ useEffect(() => {
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-6 h-px bg-gold/60" />
                 <p
-                  className="font-dm-sans text-cream/50 uppercase"
-                  style={{ fontSize: "0.85rem", letterSpacing: "0.35em" }}
+                  className="text-cream/50 uppercase italic"
+style={{ fontFamily: "'Playfair Display', serif", fontSize: "0.85rem", letterSpacing: "0.25em" }}
                 >
                   Crafted for
                 </p>
@@ -375,9 +374,10 @@ useEffect(() => {
   <span
     className={`phrase-word ${transitioning ? "hidden" : "visible"}`}
     style={{
-      fontFamily: "'Great Vibes', cursive",
-      fontSize: "clamp(42px, 11vw, 58px)",
-      color: "#C8922A",
+      fontFamily: "'Montserrat', sans-serif",
+fontSize: "clamp(36px, 10vw, 52px)",
+fontWeight: "700",
+color: "#C8922A",
       lineHeight: 1.05,
       whiteSpace: "nowrap",
     }}
