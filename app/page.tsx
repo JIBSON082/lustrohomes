@@ -694,14 +694,11 @@ function Hero() {
 
       {/* ── Content Below Video ── */}
     <div className="hero-content-block bg-cream-dark px-6 pt-10 pb-8 text-center" style={{ opacity: 0 }}>
-        <p className="font-dm-sans text-charcoal/40 uppercase mb-5" style={{ fontSize: "0.6rem", letterSpacing: "0.38em" }}>
-          Lustro Homes · Lagos
-        </p>
-
+ 
         <div className="mb-8">
-          <p className="font-dm-sans text-charcoal/35 uppercase mb-1" style={{ fontSize: "0.7rem", letterSpacing: "0.3em" }}>
-            Crafted for
-          </p>
+   <p className="font-cormorant text-charcoal/50 italic mb-1" style={{ fontSize: "1.1rem", letterSpacing: "0.15em" }}>
+  Crafted for
+</p>
           <div className="phrase-container">
             <span
               className={`phrase-word ${transitioning ? "hidden" : "visible"}`}
