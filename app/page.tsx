@@ -693,7 +693,7 @@ function Hero() {
       </div>
 
       {/* ── Content Below Video ── */}
-      <div className="hero-content-block bg-cream-dark px-6 pt-10 pb-8" style={{ opacity: 0 }}>
+    <div className="hero-content-block bg-cream-dark px-6 pt-10 pb-8 text-center" style={{ opacity: 0 }}>
         <p className="font-dm-sans text-charcoal/40 uppercase mb-5" style={{ fontSize: "0.6rem", letterSpacing: "0.38em" }}>
           Lustro Homes · Lagos
         </p>
@@ -718,7 +718,7 @@ function Hero() {
           </div>
         </div>
 
-        <div className="flex items-center gap-8">
+      <div className="flex items-center justify-between w-full mt-6">
           <a
             href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
             target="_blank"
