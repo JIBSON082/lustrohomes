@@ -740,7 +740,7 @@ function Hero() {
             href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
             target="_blank"
             rel="noopener noreferrer"
-            className="underline-link font-dm-sans text-charcoal text-sm tracking-wide hover:text-brown transition-colors"
+            className="underline-link font-dm-sans text-charcoal font-medium text-sm tracking-wide hover:text-brown transition-colors"
           >
             Book Your Stay
           </a>
