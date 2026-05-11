@@ -705,14 +705,16 @@ function Hero() {
     <div className="hero-content-block bg-cream-dark px-6 pt-10 pb-8 text-center" style={{ opacity: 0 }}>
  
         <div className="mb-8">
-   <p
+ <p
   style={{
-    fontFamily: "'Tenor Sans', sans-serif",
-    fontSize: "0.75rem",
-    letterSpacing: "0.55em",
-    color: "rgba(0,0,0,0.35)",
+    fontFamily: "'Cormorant Garamond', serif",
+    fontSize: "1.05rem",
+    fontWeight: "600",
+    letterSpacing: "0.45em",
+    color: "rgba(0,0,0,0.55)",
     textTransform: "uppercase",
-    marginBottom: "4px",
+    marginBottom: "2px",
+    fontStyle: "normal",
   }}
 >
   Crafted for
