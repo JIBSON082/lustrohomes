@@ -270,7 +270,6 @@ function Hero() {
     s.keywords.some((k) => k.includes(searchQuery.toLowerCase()))
   );
 
-  // Cycling phrases
   useEffect(() => {
     const interval = setInterval(() => {
       setTransitioning(true);
@@ -282,7 +281,6 @@ function Hero() {
     return () => clearInterval(interval);
   }, []);
 
-  // GSAP entrance
   useEffect(() => {
     const initAnim = async () => {
       try {
@@ -308,7 +306,6 @@ function Hero() {
     initAnim();
   }, []);
 
-  // Animate menu links when opened
   useEffect(() => {
     if (!menuOpen) return;
     const animateMenu = async () => {
@@ -316,14 +313,7 @@ function Hero() {
         const { gsap } = await import("gsap");
         gsap.fromTo(".menu-link",
           { opacity: 0, x: -30 },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.6,
-            ease: "power3.out",
-            stagger: 0.08,
-            delay: 0.15,
-          }
+          { opacity: 1, x: 0, duration: 0.6, ease: "power3.out", stagger: 0.08, delay: 0.15 }
         );
         gsap.fromTo(".menu-cta",
           { opacity: 0, y: 16 },
@@ -334,7 +324,6 @@ function Hero() {
     animateMenu();
   }, [menuOpen]);
 
-  // Focus search input when opened
   useEffect(() => {
     if (searchOpen) {
       setTimeout(() => searchInputRef.current?.focus(), 100);
@@ -441,7 +430,6 @@ function Hero() {
             <span className="w-5 h-px bg-charcoal block" />
             <span className="w-3 h-px bg-charcoal block" />
           </button>
-
           <Image
             src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777567002/lustrologo_wfervy.png"
             alt="Lustro"
@@ -627,7 +615,6 @@ function Hero() {
 
         {/* Controls */}
         <div className="absolute bottom-0 left-0 right-0 px-4 py-3 flex items-center justify-between">
-
           {/* Left — Play/Pause */}
           <button onClick={togglePlay} className="text-white/80 hover:text-white transition-colors" aria-label={isPlaying ? "Pause" : "Play"}>
             {isPlaying ? (
@@ -672,6 +659,8 @@ function Hero() {
 
       {/* ── Content Below Video ── */}
       <div className="hero-content-block bg-cream-dark px-4 pt-12 pb-10 text-center" style={{ opacity: 0 }}>
+
+        {/* Crafted for + cycling phrase */}
         <div className="mb-10">
           <p
             style={{
@@ -698,8 +687,13 @@ function Hero() {
                 whiteSpace: "nowrap",
               }}
             >
-{/* CTAs */}
-        <div className="flex items-center justify-between px-2 mt-10">
+              {HERO_PHRASES[currentIdx]}
+            </span>
+          </div>
+        </div>
+
+        {/* CTAs */}
+        <div className="flex items-center justify-between px-2">
           <a
             href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
             target="_blank"
@@ -719,10 +713,7 @@ function Hero() {
             Explore Rooms
           </a>
         </div>
-              {HERO_PHRASES[currentIdx]}
-            </span>
-          </div>
-        </div>
+
       </div>
     </>
   );
