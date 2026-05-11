@@ -637,7 +637,7 @@ function Hero() {
   className="hero-video-block w-full bg-charcoal relative overflow-hidden"
   style={{ opacity: 0, height: "48vh", marginTop: "12px" }}
 >
-      >
+      
         <video
           ref={videoRef}
           src={HERO_VIDEO_URL}
