@@ -754,7 +754,7 @@ function Hero() {
                 window.scrollTo({ top: y, behavior: "smooth" });
               }
             }}
-            className="underline-link font-dm-sans text-charcoal/50 text-sm tracking-wide hover:text-charcoal transition-colors"
+            className="underline-link font-dm-sans text-charcoal font-medium text-sm tracking-wide hover:text-brown transition-colors"
           >
             Explore Rooms
           </a>
