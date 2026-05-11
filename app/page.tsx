@@ -635,7 +635,7 @@ function Hero() {
       {/* ── Hero Video Block ── */}
   <div
   className="hero-video-block w-full bg-charcoal relative overflow-hidden"
-  style={{ opacity: 0, height: "56vh" }}
+  style={{ opacity: 0, height: "58vh" }}
 >
 
         <video
@@ -671,10 +671,6 @@ function Hero() {
               </svg>
             )}
           </button>
-
-          <div ref={progressRef} className="progress-bar" onClick={handleProgressClick}>
-            <div className="progress-fill" style={{ width: `${progress}%` }} />
-          </div>
 
           <button onClick={toggleMute} className="text-white/80 hover:text-white transition-colors flex-shrink-0" aria-label={isMuted ? "Unmute" : "Mute"}>
             {isMuted ? (
