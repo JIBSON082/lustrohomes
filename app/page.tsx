@@ -450,7 +450,7 @@ function Hero() {
         .search-overlay.open { transform: translateY(0); }
         .menu-link { opacity: 0; }
         .menu-cta { opacity: 0; }
-      `}</style>
+      }`</style>
 
       {/* ── Navbar ── */}
     <nav
