@@ -635,7 +635,7 @@ function Hero() {
       {/* ── Hero Video Block ── */}
   <div
   className="hero-video-block w-full bg-charcoal relative overflow-hidden"
-  style={{ opacity: 0, height: "60vh" }}
+  style={{ opacity: 0, height: "66vh" }}
 >
 
         <video
@@ -709,9 +709,9 @@ function Hero() {
  <p
   style={{
     fontFamily: "'Cormorant Garamond', serif",
-    fontSize: "1.05rem",
+    fontSize: "1.0rem",
     fontWeight: "600",
-    letterSpacing: "0.45em",
+    letterSpacing: "0.35em",
     color: "rgba(0,0,0,0.55)",
     textTransform: "uppercase",
     marginBottom: "2px",
