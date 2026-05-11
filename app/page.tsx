@@ -467,9 +467,9 @@ function Hero() {
           <span className="w-3 h-px bg-charcoal block" />
         </button>
 
-        <span className="absolute left-1/2 -translate-x-1/2 font-cormorant text-charcoal font-light tracking-[0.22em] uppercase text-base whitespace-nowrap">
-          Lustro Homes
-        </span>
+        <span className="absolute left-1/2 -translate-x-1/2 font-cormorant text-charcoal font-semibold tracking-[0.22em] uppercase text-base whitespace-nowrap">
+  Lustro Homes
+</span>
 
         <button
           onClick={() => setSearchOpen(true)}
@@ -626,7 +626,7 @@ function Hero() {
       {/* ── Hero Video Block ── */}
       <div
         className="hero-video-block w-full bg-charcoal relative overflow-hidden"
-        style={{ opacity: 0, height: "65vh" }}
+        style={{ opacity: 0, height: "48vh" }}
       >
         <video
           ref={videoRef}
