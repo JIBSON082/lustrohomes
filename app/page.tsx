@@ -698,6 +698,27 @@ function Hero() {
                 whiteSpace: "nowrap",
               }}
             >
+{/* CTAs */}
+        <div className="flex items-center justify-between px-2 mt-10">
+          <a
+            href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline-link font-cormorant text-charcoal text-lg font-light tracking-wide hover:text-brown transition-colors"
+          >
+            Book Your Stay
+          </a>
+          <a
+            href="#rooms"
+            onClick={(e) => {
+              e.preventDefault();
+              document.querySelector("#rooms")?.scrollIntoView({ behavior: "smooth" });
+            }}
+            className="underline-link font-cormorant text-charcoal text-lg font-light tracking-wide hover:text-brown transition-colors"
+          >
+            Explore Rooms
+          </a>
+        </div>
               {HERO_PHRASES[currentIdx]}
             </span>
           </div>
