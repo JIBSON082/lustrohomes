@@ -638,7 +638,6 @@ function Hero() {
   style={{ opacity: 0, height: "40vh" }}
 >
 
-      
         <video
           ref={videoRef}
           src={HERO_VIDEO_URL}
@@ -647,7 +646,7 @@ function Hero() {
           loop
           playsInline
           disablePictureInPicture
-          className="w-full h-full object-cover"
+          className="w-full h-full object-contain"
           onLoadedMetadata={(e) => {
             Array.from(e.currentTarget.textTracks).forEach(
               (t) => (t.mode = "hidden")
