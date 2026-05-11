@@ -235,6 +235,14 @@ const HERO_VIDEO_URL =
 
 const HERO_PHRASES = ["Staycation", "Dining", "Investment"];
 
+const HERO_NAV_LINKS = [
+  { label: "Rooms & Suites", href: "#rooms" },
+  { label: "Gallery", href: "#gallery" },
+  { label: "Dining", href: "#dining" },
+  { label: "Investment", href: "#invest" },
+  { label: "Yankee by Lustro", href: "#yankee" },
+  { label: "Contact", href: "#contact" },
+];
 
 const SEARCHABLE_SECTIONS = [
   { label: "Rooms & Suites", href: "#rooms", keywords: ["rooms", "suites", "bedroom", "mykonos", "malibu", "seychelles", "beverly hills", "cappadocia", "santorini", "book"] },
@@ -253,10 +261,8 @@ function Hero() {
   const [transitioning, setTransitioning] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
-  const [progress, setProgress] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const progressRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const searchResults = SEARCHABLE_SECTIONS.filter((s) =>
@@ -337,17 +343,6 @@ function Hero() {
     }
   }, [searchOpen]);
 
-  // Video progress
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    const update = () => {
-      if (video.duration) setProgress((video.currentTime / video.duration) * 100);
-    };
-    video.addEventListener("timeupdate", update);
-    return () => video.removeEventListener("timeupdate", update);
-  }, []);
-
   useEffect(() => {
     document.body.style.overflow = (menuOpen || searchOpen) ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
@@ -374,13 +369,6 @@ function Hero() {
       document.exitFullscreen();
       setIsFullscreen(false);
     }
-  };
-
-  const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!videoRef.current || !progressRef.current) return;
-    const rect = progressRef.current.getBoundingClientRect();
-    const ratio = (e.clientX - rect.left) / rect.width;
-    videoRef.current.currentTime = ratio * videoRef.current.duration;
   };
 
   const handleSearchNavigate = (href: string) => {
@@ -424,20 +412,6 @@ function Hero() {
           background: currentColor;
           opacity: 0.4;
         }
-        .progress-bar {
-          cursor: pointer;
-          height: 2px;
-          background: rgba(255,255,255,0.25);
-          flex: 1;
-          border-radius: 1px;
-        }
-        .progress-fill {
-          height: 100%;
-          background: rgba(255,255,255,0.85);
-          border-radius: 1px;
-          transition: width 0.1s linear;
-          pointer-events: none;
-        }
         .mobile-menu {
           transform: translateX(100%);
           transition: transform 0.45s cubic-bezier(0.16,1,0.3,1);
@@ -450,47 +424,44 @@ function Hero() {
         .search-overlay.open { transform: translateY(0); }
         .menu-link { opacity: 0; }
         .menu-cta { opacity: 0; }
-      }</style>
+      `}</style>
 
       {/* ── Navbar ── */}
-    <nav
-  className="w-full bg-cream-dark px-6 py-5 flex items-center justify-between sticky top-0 z-50"
-  style={{ borderBottom: "1px solid rgba(0,0,0,0.07)" }}
->
-  {/* Hamburger + Logo side by side on the left */}
-  <div className="flex items-center gap-4">
-    <button
-      onClick={() => setMenuOpen(true)}
-      className="flex flex-col gap-[5px]"
-      aria-label="Open menu"
-    >
-      <span className="w-5 h-px bg-charcoal block" />
-      <span className="w-5 h-px bg-charcoal block" />
-      <span className="w-3 h-px bg-charcoal block" />
-    </button>
+      <nav
+        className="w-full bg-cream-dark px-6 py-5 flex items-center justify-between sticky top-0 z-50"
+        style={{ borderBottom: "1px solid rgba(0,0,0,0.07)" }}
+      >
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => setMenuOpen(true)}
+            className="flex flex-col gap-[5px]"
+            aria-label="Open menu"
+          >
+            <span className="w-5 h-px bg-charcoal block" />
+            <span className="w-5 h-px bg-charcoal block" />
+            <span className="w-3 h-px bg-charcoal block" />
+          </button>
 
-    <Image
-      src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777567002/lustrologo_wfervy.png"
-      alt="Lustro"
-      width={60}
-      height={60}
-      className="object-contain rounded-full"
-    />
-  </div>
+          <Image
+            src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777567002/lustrologo_wfervy.png"
+            alt="Lustro"
+            width={44}
+            height={44}
+            className="object-contain rounded-full"
+          />
+        </div>
 
-  {/* Centered wordmark */}
-  <span className="absolute left-1/2 -translate-x-1/2 font-cormorant text-charcoal font-bold tracking-[0.25em] uppercase text-[1.05rem] whitespace-nowrap">
-    Lustro Lagos
-  </span>
+        <span className="absolute left-1/2 -translate-x-1/2 font-cormorant text-charcoal font-bold tracking-[0.25em] uppercase text-[1.05rem] whitespace-nowrap">
+          Lustro Homes
+        </span>
 
-  {/* Search */}
-  <button aria-label="Search" className="text-charcoal" onClick={() => setSearchOpen(true)}>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
-      <circle cx="11" cy="11" r="7" />
-      <path strokeLinecap="round" d="M16.5 16.5l3.5 3.5" />
-    </svg>
-  </button>
-</nav>
+        <button aria-label="Search" className="text-charcoal" onClick={() => setSearchOpen(true)}>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
+            <circle cx="11" cy="11" r="7" />
+            <path strokeLinecap="round" d="M16.5 16.5l3.5 3.5" />
+          </svg>
+        </button>
+      </nav>
 
       {/* ── Search Overlay ── */}
       <div className={`search-overlay fixed inset-0 z-[95] bg-cream-dark flex flex-col px-6 pt-6 pb-10 ${searchOpen ? "open" : ""}`}>
@@ -505,7 +476,6 @@ function Hero() {
           </button>
         </div>
 
-        {/* Search input */}
         <div className="border-b border-charcoal/20 flex items-center gap-3 pb-3 mb-8">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4 text-charcoal/40 flex-shrink-0">
             <circle cx="11" cy="11" r="7" />
@@ -528,7 +498,6 @@ function Hero() {
           )}
         </div>
 
-        {/* Results */}
         {searchQuery.length > 1 && (
           <div className="flex flex-col gap-1">
             {searchResults.length > 0 ? (
@@ -548,19 +517,18 @@ function Hero() {
               ))
             ) : (
               <p className="font-dm-sans text-sm text-charcoal/35 mt-2">
-                No results for "{searchQuery}"
+                No results for &quot;{searchQuery}&quot;
               </p>
             )}
           </div>
         )}
 
-        {/* Default suggestions */}
         {searchQuery.length <= 1 && (
           <div className="flex flex-col gap-1">
             <p className="font-dm-sans text-[0.6rem] text-charcoal/35 uppercase tracking-[0.3em] mb-3">
               Quick Links
             </p>
-            {NAV_LINKS.map((link) => (
+            {HERO_NAV_LINKS.map((link) => (
               <button
                 key={link.href}
                 onClick={() => handleSearchNavigate(link.href)}
@@ -591,7 +559,7 @@ function Hero() {
         </button>
 
         <div className="flex flex-col gap-1">
-          {NAV_LINKS.map((item, i) => (
+          {HERO_NAV_LINKS.map((item) => (
             <a
               key={item.label}
               href={item.href}
@@ -633,11 +601,10 @@ function Hero() {
       </div>
 
       {/* ── Hero Video Block ── */}
-  <div
-  className="hero-video-block w-full bg-charcoal relative overflow-hidden"
-  style={{ opacity: 0, height: "58vh" }}
->
-
+      <div
+        className="hero-video-block w-full bg-charcoal relative overflow-hidden"
+        style={{ opacity: 0, height: "56vh" }}
+      >
         <video
           ref={videoRef}
           src={HERO_VIDEO_URL}
@@ -655,69 +622,71 @@ function Hero() {
           onContextMenu={(e) => e.preventDefault()}
         />
 
-        {/* Gradient — bottom only for controls */}
-   <div className="absolute bottom-0 left-0 right-0 px-4 py-3 flex items-center justify-between">
-  
-  {/* Left — Play/Pause */}
-  <button onClick={togglePlay} className="text-white/80 hover:text-white transition-colors" aria-label={isPlaying ? "Pause" : "Play"}>
-    {isPlaying ? (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
-      </svg>
-    ) : (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-        <path d="M8 5.14v14l11-7-11-7z" />
-      </svg>
-    )}
-  </button>
+        {/* Gradient */}
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black/50 to-transparent pointer-events-none" />
 
-  {/* Right — Mute + Fullscreen */}
-  <div className="flex items-center gap-3">
-    <button onClick={toggleMute} className="text-white/80 hover:text-white transition-colors" aria-label={isMuted ? "Unmute" : "Mute"}>
-      {isMuted ? (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-          <path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0 0 21 12c0-4.28-3-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06A8.99 8.99 0 0 0 17.73 18l1.73 1.73L21 18.46 5.54 3 4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
-        </svg>
-      ) : (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-          <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z" />
-        </svg>
-      )}
-    </button>
+        {/* Controls */}
+        <div className="absolute bottom-0 left-0 right-0 px-4 py-3 flex items-center justify-between">
 
-    <button onClick={toggleFullscreen} className="text-white/80 hover:text-white transition-colors" aria-label="Fullscreen">
-      {isFullscreen ? (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-          <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
-        </svg>
-      ) : (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-          <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" />
-        </svg>
-      )}
-    </button>
-  </div>
+          {/* Left — Play/Pause */}
+          <button onClick={togglePlay} className="text-white/80 hover:text-white transition-colors" aria-label={isPlaying ? "Pause" : "Play"}>
+            {isPlaying ? (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                <path d="M8 5.14v14l11-7-11-7z" />
+              </svg>
+            )}
+          </button>
 
-</div>
+          {/* Right — Mute + Fullscreen */}
+          <div className="flex items-center gap-3">
+            <button onClick={toggleMute} className="text-white/80 hover:text-white transition-colors" aria-label={isMuted ? "Unmute" : "Mute"}>
+              {isMuted ? (
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                  <path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0 0 21 12c0-4.28-3-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06A8.99 8.99 0 0 0 17.73 18l1.73 1.73L21 18.46 5.54 3 4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                  <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z" />
+                </svg>
+              )}
+            </button>
+
+            <button onClick={toggleFullscreen} className="text-white/80 hover:text-white transition-colors" aria-label="Fullscreen">
+              {isFullscreen ? (
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                  <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                  <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" />
+                </svg>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
 
       {/* ── Content Below Video ── */}
-   <div className="hero-content-block bg-cream-dark px-4 pt-12 pb-10 text-center" style={{ opacity: 0 }}>
- 
+      <div className="hero-content-block bg-cream-dark px-4 pt-12 pb-10 text-center" style={{ opacity: 0 }}>
         <div className="mb-10">
- <p
-  style={{
-    fontFamily: "'Cormorant Garamond', serif",
-    fontSize: "1.0rem",
-    fontWeight: "600",
-    letterSpacing: "0.35em",
-    color: "rgba(0,0,0,0.55)",
-    textTransform: "uppercase",
-    marginBottom: "2px",
-    fontStyle: "normal",
-  }}
->
-  Crafted for
-</p>
+          <p
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: "1.0rem",
+              fontWeight: "600",
+              letterSpacing: "0.35em",
+              color: "rgba(0,0,0,0.55)",
+              textTransform: "uppercase",
+              marginBottom: "2px",
+              fontStyle: "normal",
+            }}
+          >
+            Crafted for
+          </p>
           <div className="phrase-container">
             <span
               className={`phrase-word ${transitioning ? "hidden" : "visible"}`}
@@ -733,43 +702,6 @@ function Hero() {
             </span>
           </div>
         </div>
-
-      <div className="flex items-center justify-between w-full mt-6">
-          <a
-            href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline-link font-dm-sans text-charcoal font-medium text-sm tracking-wide hover:text-brown transition-colors"
-          >
-            Book Your Stay
-          </a>
-          <a
-            href="#rooms"
-            onClick={(e) => {
-              e.preventDefault();
-              const target = document.querySelector("#rooms");
-              if (target) {
-                const y = target.getBoundingClientRect().top + window.scrollY;
-                window.scrollTo({ top: y, behavior: "smooth" });
-              }
-            }}
-            className="underline-link font-dm-sans text-charcoal font-medium text-sm tracking-wide hover:text-brown transition-colors"
-          >
-            Explore Rooms
-          </a>
-        </div>
-      </div>
-
-      {/* ── Reserve Bar ── */}
-      <div className="w-full bg-charcoal">
-        <a
-          href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block w-full text-center font-dm-sans text-cream text-sm tracking-[0.25em] uppercase py-4 hover:bg-brown transition-colors"
-        >
-          Reserve
-        </a>
       </div>
     </>
   );
