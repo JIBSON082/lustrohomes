@@ -472,15 +472,15 @@ function Hero() {
     <Image
       src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777567002/lustrologo_wfervy.png"
       alt="Lustro"
-      width={44}
-      height={44}
+      width={60}
+      height={60}
       className="object-contain rounded-full"
     />
   </div>
 
   {/* Centered wordmark */}
   <span className="absolute left-1/2 -translate-x-1/2 font-cormorant text-charcoal font-bold tracking-[0.25em] uppercase text-[1.05rem] whitespace-nowrap">
-    Lustro Homes
+    Lustro Lagos
   </span>
 
   {/* Search */}
