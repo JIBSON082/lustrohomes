@@ -646,7 +646,7 @@ function Hero() {
           loop
           playsInline
           disablePictureInPicture
-          className="w-full h-full object-contain"
+          className="w-full h-full object-cover"
           onLoadedMetadata={(e) => {
             Array.from(e.currentTarget.textTracks).forEach(
               (t) => (t.mode = "hidden")
