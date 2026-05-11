@@ -635,7 +635,7 @@ function Hero() {
       {/* ── Hero Video Block ── */}
   <div
   className="hero-video-block w-full bg-charcoal relative overflow-hidden"
-  style={{ opacity: 0, height: "66vh" }}
+  style={{ opacity: 0, height: "56vh" }}
 >
 
         <video
@@ -703,7 +703,7 @@ function Hero() {
       </div>
 
       {/* ── Content Below Video ── */}
-   <div className="hero-content-block bg-cream-dark px-6 pt-12 pb-10 text-center" style={{ opacity: 0 }}>
+   <div className="hero-content-block bg-cream-dark px-4 pt-12 pb-10 text-center" style={{ opacity: 0 }}>
  
         <div className="mb-10">
  <p
