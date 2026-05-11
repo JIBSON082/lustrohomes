@@ -696,7 +696,16 @@ function Hero() {
     <div className="hero-content-block bg-cream-dark px-6 pt-10 pb-8 text-center" style={{ opacity: 0 }}>
  
         <div className="mb-8">
-   <p className="font-cormorant text-charcoal/50 italic mb-1" style={{ fontSize: "1.1rem", letterSpacing: "0.15em" }}>
+   <p
+  style={{
+    fontFamily: "'Tenor Sans', sans-serif",
+    fontSize: "0.75rem",
+    letterSpacing: "0.55em",
+    color: "rgba(0,0,0,0.35)",
+    textTransform: "uppercase",
+    marginBottom: "4px",
+  }}
+>
   Crafted for
 </p>
           <div className="phrase-container">
