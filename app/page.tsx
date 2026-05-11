@@ -467,9 +467,18 @@ function Hero() {
           <span className="w-3 h-px bg-charcoal block" />
         </button>
 
-        <span className="absolute left-1/2 -translate-x-1/2 font-cormorant text-charcoal font-semibold tracking-[0.22em] uppercase text-base whitespace-nowrap">
-  Lustro Homes
-</span>
+   <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2.5">
+  <Image
+    src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777567002/lustrologo_wfervy.png"
+    alt="Lustro"
+    width={32}
+    height={32}
+    className="object-contain rounded-full"
+  />
+  <span className="font-cormorant text-charcoal font-bold tracking-[0.22em] uppercase text-[1.05rem] whitespace-nowrap">
+    Lustro Homes
+  </span>
+</div>
 
         <button
           onClick={() => setSearchOpen(true)}
