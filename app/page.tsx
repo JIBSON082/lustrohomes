@@ -453,44 +453,44 @@ function Hero() {
       `}</style>
 
       {/* ── Navbar ── */}
-      <nav
-        className="w-full bg-cream-dark px-6 py-4 flex items-center justify-between sticky top-0 z-50"
-        style={{ borderBottom: "1px solid rgba(0,0,0,0.07)" }}
-      >
-        <button
-          onClick={() => setMenuOpen(true)}
-          className="flex flex-col gap-[5px] p-1"
-          aria-label="Open menu"
-        >
-          <span className="w-5 h-px bg-charcoal block" />
-          <span className="w-5 h-px bg-charcoal block" />
-          <span className="w-3 h-px bg-charcoal block" />
-        </button>
+    <nav
+  className="w-full bg-cream-dark px-6 py-5 flex items-center justify-between sticky top-0 z-50"
+  style={{ borderBottom: "1px solid rgba(0,0,0,0.07)" }}
+>
+  {/* Hamburger + Logo side by side on the left */}
+  <div className="flex items-center gap-4">
+    <button
+      onClick={() => setMenuOpen(true)}
+      className="flex flex-col gap-[5px]"
+      aria-label="Open menu"
+    >
+      <span className="w-5 h-px bg-charcoal block" />
+      <span className="w-5 h-px bg-charcoal block" />
+      <span className="w-3 h-px bg-charcoal block" />
+    </button>
 
-   <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2.5">
-  <Image
-    src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777567002/lustrologo_wfervy.png"
-    alt="Lustro"
-    width={32}
-    height={32}
-    className="object-contain rounded-full"
-  />
-  <span className="font-cormorant text-charcoal font-bold tracking-[0.22em] uppercase text-[1.05rem] whitespace-nowrap">
+    <Image
+      src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777567002/lustrologo_wfervy.png"
+      alt="Lustro"
+      width={44}
+      height={44}
+      className="object-contain rounded-full"
+    />
+  </div>
+
+  {/* Centered wordmark */}
+  <span className="absolute left-1/2 -translate-x-1/2 font-cormorant text-charcoal font-bold tracking-[0.25em] uppercase text-[1.05rem] whitespace-nowrap">
     Lustro Homes
   </span>
-</div>
 
-        <button
-          onClick={() => setSearchOpen(true)}
-          aria-label="Search"
-          className="text-charcoal p-1"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
-            <circle cx="11" cy="11" r="7" />
-            <path strokeLinecap="round" d="M16.5 16.5l3.5 3.5" />
-          </svg>
-        </button>
-      </nav>
+  {/* Search */}
+  <button aria-label="Search" className="text-charcoal" onClick={() => setSearchOpen(true)}>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
+      <circle cx="11" cy="11" r="7" />
+      <path strokeLinecap="round" d="M16.5 16.5l3.5 3.5" />
+    </svg>
+  </button>
+</nav>
 
       {/* ── Search Overlay ── */}
       <div className={`search-overlay fixed inset-0 z-[95] bg-cream-dark flex flex-col px-6 pt-6 pb-10 ${searchOpen ? "open" : ""}`}>
@@ -633,9 +633,10 @@ function Hero() {
       </div>
 
       {/* ── Hero Video Block ── */}
-      <div
-        className="hero-video-block w-full bg-charcoal relative overflow-hidden"
-        style={{ opacity: 0, height: "58vh" }}
+    <div
+  className="hero-video-block w-full bg-charcoal relative overflow-hidden"
+  style={{ opacity: 0, height: "48vh", marginTop: "12px" }}
+>
       >
         <video
           ref={videoRef}
@@ -702,9 +703,9 @@ function Hero() {
       </div>
 
       {/* ── Content Below Video ── */}
-    <div className="hero-content-block bg-cream-dark px-6 pt-10 pb-8 text-center" style={{ opacity: 0 }}>
+   <div className="hero-content-block bg-cream-dark px-6 pt-12 pb-10 text-center" style={{ opacity: 0 }}>
  
-        <div className="mb-8">
+        <div className="mb-10">
  <p
   style={{
     fontFamily: "'Cormorant Garamond', serif",
