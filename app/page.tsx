@@ -276,7 +276,7 @@ function Hero() {
       setTimeout(() => {
         setCurrentIdx((prev) => (prev + 1) % HERO_PHRASES.length);
         setTransitioning(false);
-      }, 200);
+      }, 500); // slightly longer fade-out for elegance
     }, 3800);
     return () => clearInterval(interval);
   }, []);
@@ -288,15 +288,30 @@ function Hero() {
         gsap.timeline({ delay: 0.3 })
           .fromTo(".hero-video-block",
             { opacity: 0 },
-            { opacity: 1, duration: 1.2, ease: "expo.out" }
+            { opacity: 1, duration: 1.6, ease: "expo.out" }
           )
-          .fromTo(".hero-content-block",
+          .fromTo(".hero-eyebrow",
+            { opacity: 0, y: 16 },
+            { opacity: 1, y: 0, duration: 1.0, ease: "expo.out" },
+            "-=0.8"
+          )
+          .fromTo(".hero-phrase",
             { opacity: 0, y: 24 },
-            { opacity: 1, y: 0, duration: 1.2, ease: "expo.out" },
+            { opacity: 1, y: 0, duration: 1.1, ease: "expo.out" },
+            "-=0.7"
+          )
+          .fromTo(".hero-cta-group",
+            { opacity: 0, y: 16 },
+            { opacity: 1, y: 0, duration: 0.9, ease: "expo.out" },
             "-=0.6"
+          )
+          .fromTo(".hero-scroll-hint",
+            { opacity: 0 },
+            { opacity: 1, duration: 0.8, ease: "expo.out" },
+            "-=0.3"
           );
       } catch {
-        [".hero-video-block", ".hero-content-block"].forEach((sel) => {
+        [".hero-video-block", ".hero-eyebrow", ".hero-phrase", ".hero-cta-group", ".hero-scroll-hint"].forEach((sel) => {
           document.querySelectorAll(sel).forEach((el) => {
             (el as HTMLElement).style.opacity = "1";
           });
@@ -379,71 +394,151 @@ function Hero() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Tenor+Sans&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Great+Vibes&family=Jost:wght@200;300;400&display=swap');
 
-        .phrase-container { position: relative; padding-bottom: 0; }
+        /* ── Phrase animation ── */
+        .phrase-container { position: relative; }
         .phrase-word {
           display: block;
-          transition: transform 0.85s cubic-bezier(0.16,1,0.3,1), opacity 0.6s ease;
+          transition: transform 1.0s cubic-bezier(0.16,1,0.3,1), opacity 0.5s ease;
         }
         .phrase-word.visible { transform: translateY(0); opacity: 1; }
-        .phrase-word.hidden  { transform: translateY(28px); opacity: 0; }
+        .phrase-word.hidden  { transform: translateY(32px); opacity: 0; }
 
-        .underline-link {
+        /* ── Gold rule ornament ── */
+        .gold-rule {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          justify-content: center;
+        }
+        .gold-rule::before,
+        .gold-rule::after {
+          content: '';
+          height: 1px;
+          width: 36px;
+          background: #C8922A;
+          opacity: 0.6;
+        }
+
+        /* ── CTA ghost buttons ── */
+        .cta-ghost {
           position: relative;
           display: inline-block;
+          border: 1px solid rgba(255,255,255,0.45);
+          padding: 13px 28px;
+          font-family: 'Jost', sans-serif;
+          font-size: 0.65rem;
+          font-weight: 300;
+          letter-spacing: 0.28em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.92);
+          transition: background 0.35s ease, border-color 0.35s ease, color 0.35s ease;
+          white-space: nowrap;
         }
-        .underline-link::after {
-          content: '';
+        .cta-ghost:hover {
+          background: rgba(200,146,42,0.18);
+          border-color: #C8922A;
+          color: #fff;
+        }
+        .cta-ghost-gold {
+          background: rgba(200,146,42,0.12);
+          border: 1px solid rgba(200,146,42,0.6);
+          color: #E8C46A;
+        }
+        .cta-ghost-gold:hover {
+          background: rgba(200,146,42,0.28);
+          border-color: #C8922A;
+          color: #fff;
+        }
+
+        /* ── Scroll hint animation ── */
+        @keyframes scrollBounce {
+          0%, 100% { transform: translateY(0); opacity: 0.5; }
+          50%       { transform: translateY(6px); opacity: 1; }
+        }
+        .scroll-chevron { animation: scrollBounce 2.2s ease-in-out infinite; }
+
+        /* ── Grain texture overlay ── */
+        .grain-overlay {
           position: absolute;
-          bottom: -2px; left: 0;
-          width: 100%; height: 1px;
-          background: currentColor;
-          opacity: 0.4;
+          inset: 0;
+          pointer-events: none;
+          z-index: 2;
+          opacity: 0.035;
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+          background-size: 180px 180px;
         }
+
+        /* ── Slide drawer ── */
         .mobile-menu {
           transform: translateX(100%);
           transition: transform 0.45s cubic-bezier(0.16,1,0.3,1);
         }
         .mobile-menu.open { transform: translateX(0); }
+
+        /* ── Search overlay ── */
         .search-overlay {
           transform: translateY(-100%);
           transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
         }
         .search-overlay.open { transform: translateY(0); }
+
         .menu-link { opacity: 0; }
-        .menu-cta { opacity: 0; }
+        .menu-cta  { opacity: 0; }
+
+        .hero-eyebrow  { opacity: 0; }
+        .hero-phrase   { opacity: 0; }
+        .hero-cta-group { opacity: 0; }
+        .hero-scroll-hint { opacity: 0; }
       `}</style>
 
-      {/* ── Navbar ── */}
+      {/* ══════════════════════════════════════════
+          NAVBAR  — now absolute & transparent over video
+      ══════════════════════════════════════════ */}
       <nav
-        className="w-full bg-cream-dark px-6 py-5 flex items-center justify-between sticky top-0 z-50"
-        style={{ borderBottom: "1px solid rgba(0,0,0,0.07)" }}
+        className="w-full px-6 py-5 flex items-center justify-between absolute top-0 left-0 right-0 z-50"
+        style={{
+          background: "linear-gradient(to bottom, rgba(0,0,0,0.52) 0%, transparent 100%)",
+        }}
       >
+        {/* Left: hamburger + logo */}
         <div className="flex items-center gap-4">
           <button
             onClick={() => setMenuOpen(true)}
             className="flex flex-col gap-[5px]"
             aria-label="Open menu"
           >
-            <span className="w-5 h-px bg-charcoal block" />
-            <span className="w-5 h-px bg-charcoal block" />
-            <span className="w-3 h-px bg-charcoal block" />
+            <span className="w-5 h-px bg-white/80 block" />
+            <span className="w-5 h-px bg-white/80 block" />
+            <span className="w-3 h-px bg-white/80 block" />
           </button>
           <Image
             src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777567002/lustrologo_wfervy.png"
             alt="Lustro"
-            width={44}
-            height={44}
-            className="object-contain rounded-full"
+            width={40}
+            height={40}
+            className="object-contain rounded-full opacity-90"
           />
         </div>
 
-        <span className="absolute left-1/2 -translate-x-1/2 font-cormorant text-charcoal font-bold tracking-[0.25em] uppercase text-[1.05rem] whitespace-nowrap">
+        {/* Centre: wordmark */}
+        <span
+          className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap"
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: "0.85rem",
+            fontWeight: 400,
+            letterSpacing: "0.32em",
+            textTransform: "uppercase",
+            color: "rgba(255,255,255,0.92)",
+          }}
+        >
           Lustro Homes
         </span>
 
-        <button aria-label="Search" className="text-charcoal" onClick={() => setSearchOpen(true)}>
+        {/* Right: search */}
+        <button aria-label="Search" className="text-white/80 hover:text-white transition-colors" onClick={() => setSearchOpen(true)}>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
             <circle cx="11" cy="11" r="7" />
             <path strokeLinecap="round" d="M16.5 16.5l3.5 3.5" />
@@ -451,7 +546,9 @@ function Hero() {
         </button>
       </nav>
 
-      {/* ── Search Overlay ── */}
+      {/* ══════════════════════════════════════════
+          SEARCH OVERLAY  — unchanged
+      ══════════════════════════════════════════ */}
       <div className={`search-overlay fixed inset-0 z-[95] bg-cream-dark flex flex-col px-6 pt-6 pb-10 ${searchOpen ? "open" : ""}`}>
         <div className="flex items-center justify-between mb-8">
           <span className="font-cormorant text-charcoal text-lg tracking-[0.2em] uppercase font-light">
@@ -534,7 +631,9 @@ function Hero() {
         )}
       </div>
 
-      {/* ── Mobile Menu Drawer ── */}
+      {/* ══════════════════════════════════════════
+          MOBILE MENU DRAWER  — unchanged
+      ══════════════════════════════════════════ */}
       <div className={`mobile-menu fixed inset-0 z-[90] bg-charcoal flex flex-col px-8 py-10 ${menuOpen ? "open" : ""}`}>
         <button
           onClick={() => setMenuOpen(false)}
@@ -581,18 +680,22 @@ function Hero() {
             href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-dm-sans text-sm text-gold tracking-[0.2em] uppercase underline-link hover:text-gold/70 transition-colors"
+            className="font-dm-sans text-sm text-gold tracking-[0.2em] uppercase hover:text-gold/70 transition-colors"
+            style={{ textDecoration: "underline", textUnderlineOffset: "4px", textDecorationColor: "rgba(200,146,42,0.4)" }}
           >
             Book Your Stay
           </a>
         </div>
       </div>
 
-      {/* ── Hero Video Block ── */}
+      {/* ══════════════════════════════════════════
+          HERO  — full-viewport, text ON video
+      ══════════════════════════════════════════ */}
       <div
         className="hero-video-block w-full bg-charcoal relative overflow-hidden"
-        style={{ opacity: 0, height: "56vh" }}
+        style={{ opacity: 0, height: "100svh" }}
       >
+        {/* Video */}
         <video
           ref={videoRef}
           src={HERO_VIDEO_URL}
@@ -610,45 +713,153 @@ function Hero() {
           onContextMenu={(e) => e.preventDefault()}
         />
 
-        {/* Gradient */}
-        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black/50 to-transparent pointer-events-none" />
+        {/* Grain texture for cinematic depth */}
+        <div className="grain-overlay" />
 
-        {/* Controls */}
-        <div className="absolute bottom-0 left-0 right-0 px-4 py-3 flex items-center justify-between">
-          {/* Left — Play/Pause */}
-          <button onClick={togglePlay} className="text-white/80 hover:text-white transition-colors" aria-label={isPlaying ? "Pause" : "Play"}>
+        {/* Multi-layer cinematic gradient — dark top for nav, dark bottom for text */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ zIndex: 3 }}
+        >
+          {/* Top vignette (nav legibility) */}
+          <div style={{
+            position: "absolute", top: 0, left: 0, right: 0,
+            height: "40%",
+            background: "linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, transparent 100%)",
+          }} />
+          {/* Bottom vignette (text legibility) */}
+          <div style={{
+            position: "absolute", bottom: 0, left: 0, right: 0,
+            height: "75%",
+            background: "linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.45) 50%, transparent 100%)",
+          }} />
+        </div>
+
+        {/* ── Hero text content — centered over video ── */}
+        <div
+          className="absolute inset-0 flex flex-col items-center justify-end pb-20 px-6 text-center"
+          style={{ zIndex: 4 }}
+        >
+          {/* Eyebrow label */}
+          <p
+            className="hero-eyebrow gold-rule mb-1"
+            style={{
+              fontFamily: "'Jost', sans-serif",
+              fontSize: "0.6rem",
+              fontWeight: 300,
+              letterSpacing: "0.42em",
+              color: "rgba(232,196,106,0.85)",
+              textTransform: "uppercase",
+            }}
+          >
+            Crafted for
+          </p>
+
+          {/* Cycling script phrase — large & dominant */}
+          <div className="phrase-container hero-phrase mb-7" style={{ minHeight: "clamp(72px, 18vw, 100px)" }}>
+            <span
+              className={`phrase-word ${transitioning ? "hidden" : "visible"}`}
+              style={{
+                fontFamily: "'Great Vibes', cursive",
+                fontSize: "clamp(68px, 18vw, 96px)",
+                color: "#E8C46A",
+                lineHeight: 1.0,
+                whiteSpace: "nowrap",
+                textShadow: "0 2px 32px rgba(0,0,0,0.5)",
+              }}
+            >
+              {HERO_PHRASES[currentIdx]}
+            </span>
+          </div>
+
+          {/* CTAs — centered ghost buttons side by side */}
+          <div className="hero-cta-group flex items-center gap-4 mb-8">
+            <a
+              href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cta-ghost cta-ghost-gold"
+            >
+              Book Your Stay
+            </a>
+            <a
+              href="#rooms"
+              onClick={(e) => {
+                e.preventDefault();
+                document.querySelector("#rooms")?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="cta-ghost"
+            >
+              Explore Rooms
+            </a>
+          </div>
+
+          {/* Scroll hint */}
+          <div className="hero-scroll-hint flex flex-col items-center gap-2">
+            <span
+              style={{
+                fontFamily: "'Jost', sans-serif",
+                fontSize: "0.5rem",
+                fontWeight: 300,
+                letterSpacing: "0.4em",
+                textTransform: "uppercase",
+                color: "rgba(255,255,255,0.35)",
+              }}
+            >
+              Scroll
+            </span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="rgba(255,255,255,0.35)"
+              strokeWidth={1.5}
+              className="scroll-chevron w-4 h-4"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </div>
+
+        {/* ── Video controls — bottom left/right, above gradient ── */}
+        <div className="absolute bottom-0 left-0 right-0 px-5 py-4 flex items-center justify-between" style={{ zIndex: 5 }}>
+          {/* Play/Pause */}
+          <button
+            onClick={togglePlay}
+            className="text-white/50 hover:text-white/90 transition-colors"
+            aria-label={isPlaying ? "Pause" : "Play"}
+          >
             {isPlaying ? (
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
                 <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
               </svg>
             ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
                 <path d="M8 5.14v14l11-7-11-7z" />
               </svg>
             )}
           </button>
 
-          {/* Right — Mute + Fullscreen */}
+          {/* Mute + Fullscreen */}
           <div className="flex items-center gap-3">
-            <button onClick={toggleMute} className="text-white/80 hover:text-white transition-colors" aria-label={isMuted ? "Unmute" : "Mute"}>
+            <button onClick={toggleMute} className="text-white/50 hover:text-white/90 transition-colors" aria-label={isMuted ? "Unmute" : "Mute"}>
               {isMuted ? (
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
                   <path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0 0 21 12c0-4.28-3-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06A8.99 8.99 0 0 0 17.73 18l1.73 1.73L21 18.46 5.54 3 4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
                 </svg>
               ) : (
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
                   <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z" />
                 </svg>
               )}
             </button>
-
-            <button onClick={toggleFullscreen} className="text-white/80 hover:text-white transition-colors" aria-label="Fullscreen">
+            <button onClick={toggleFullscreen} className="text-white/50 hover:text-white/90 transition-colors" aria-label="Fullscreen">
               {isFullscreen ? (
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
                   <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
                 </svg>
               ) : (
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
                   <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" />
                 </svg>
               )}
@@ -657,64 +868,7 @@ function Hero() {
         </div>
       </div>
 
-      {/* ── Content Below Video ── */}
-      <div className="hero-content-block bg-cream-dark px-4 pt-12 pb-10 text-center" style={{ opacity: 0 }}>
-
-        {/* Crafted for + cycling phrase */}
-        <div className="mb-10">
-          <p
-            style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontSize: "1.0rem",
-              fontWeight: "600",
-              letterSpacing: "0.35em",
-              color: "rgba(0,0,0,0.55)",
-              textTransform: "uppercase",
-              marginBottom: "2px",
-              fontStyle: "normal",
-            }}
-          >
-            Crafted for
-          </p>
-          <div className="phrase-container">
-            <span
-              className={`phrase-word ${transitioning ? "hidden" : "visible"}`}
-              style={{
-                fontFamily: "'Great Vibes', cursive",
-                fontSize: "clamp(44px, 12vw, 62px)",
-                color: "#C8922A",
-                lineHeight: 1.05,
-                whiteSpace: "nowrap",
-              }}
-            >
-              {HERO_PHRASES[currentIdx]}
-            </span>
-          </div>
-        </div>
-
-        {/* CTAs */}
-        <div className="flex items-center justify-between px-2">
-          <a
-            href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline-link font-cormorant text-charcoal text-lg font-light tracking-wide hover:text-brown transition-colors"
-          >
-            Book Your Stay
-          </a>
-          <a
-            href="#rooms"
-            onClick={(e) => {
-              e.preventDefault();
-              document.querySelector("#rooms")?.scrollIntoView({ behavior: "smooth" });
-            }}
-            className="underline-link font-cormorant text-charcoal text-lg font-light tracking-wide hover:text-brown transition-colors"
-          >
-            Explore Rooms
-          </a>
-        </div>
-
-      </div>
+      {/* ── NO separate content block below video — everything is ON the hero now ── */}
     </>
   );
 }
