@@ -742,7 +742,7 @@ function Hero() {
         >
           {/* Eyebrow label */}
           <p
-            className="hero-eyebrow gold-rule mb-1"
+            className="hero-eyebrow gold-rule mb-3"
             style={{
               fontFamily: "'Jost', sans-serif",
               fontSize: "0.6rem",
