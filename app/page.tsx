@@ -350,15 +350,17 @@ function Hero() {
   }, [menuOpen, searchOpen]);
 
   const togglePlay = () => {
-    if (!videoRef.current) return;
-    isPlaying ? videoRef.current.pause() : videoRef.current.play();
-    setIsPlaying((p) => !p);
-  };
-  const toggleMute = () => {
-    if (!videoRef.current) return;
-    videoRef.current.muted = !isMuted;
-    setIsMuted((m) => !m);
-  };
+  const video = videoRef.current;
+  if (!video) return;
+  isPlaying ? video.pause() : video.play();
+  setIsPlaying((p) => !p);
+};
+const toggleMute = () => {
+  const video = videoRef.current;
+  if (!video) return;
+  video.muted = !isMuted;
+  setIsMuted((m) => !m);
+};
 
   // FIX 2 — typed parameter
   const handleSearchNavigate = (href: string) => {
