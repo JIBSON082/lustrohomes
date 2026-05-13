@@ -271,7 +271,7 @@ function Hero() {
   const [isMuted,      setIsMuted]      = useState(true);
   const [scrolled,     setScrolled]     = useState(false);
   const videoRef      = useRef(null);
-  const searchInputRef= useRef(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const searchResults = SEARCHABLE_SECTIONS.filter((s) =>
     searchQuery.length > 1 &&
