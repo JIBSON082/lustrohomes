@@ -270,7 +270,9 @@ function Hero() {
   const [isPlaying,    setIsPlaying]    = useState(true);
   const [isMuted,      setIsMuted]      = useState(true);
   const [scrolled,     setScrolled]     = useState(false);
-  const videoRef      = useRef(null);
+
+  // FIX 1 — typed refs
+  const videoRef       = useRef<HTMLVideoElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const searchResults = SEARCHABLE_SECTIONS.filter((s) =>
@@ -358,7 +360,8 @@ function Hero() {
     setIsMuted((m) => !m);
   };
 
-  const handleSearchNavigate = (href) => {
+  // FIX 2 — typed parameter
+  const handleSearchNavigate = (href: string) => {
     setSearchOpen(false);
     setSearchQuery("");
     if (href.startsWith("#")) {
@@ -574,9 +577,10 @@ function Hero() {
                   className="text-left py-5 border-b flex items-center justify-between group"
                   style={{ borderColor:"rgba(255,255,255,.05)" }}
                 >
+                  {/* FIX 3 — cast e.target for search results hover */}
                   <span style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.8rem", fontWeight:300, color:"rgba(255,255,255,.68)", transition:"color .3s" }}
-                    onMouseEnter={e => e.target.style.color="rgba(255,255,255,.95)"}
-                    onMouseLeave={e => e.target.style.color="rgba(255,255,255,.68)"}
+                    onMouseEnter={e => (e.target as HTMLElement).style.color="rgba(255,255,255,.95)"}
+                    onMouseLeave={e => (e.target as HTMLElement).style.color="rgba(255,255,255,.68)"}
                   >{r.label}</span>
                   <span style={{ color:"rgba(200,146,42,.5)" }}><IconChevron /></span>
                 </button>
@@ -596,9 +600,10 @@ function Hero() {
                   className="text-left py-4 border-b flex items-center justify-between"
                   style={{ borderColor:"rgba(255,255,255,.05)" }}
                 >
+                  {/* FIX 4 — cast e.target for default nav links hover */}
                   <span style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.35rem", fontWeight:300, color:"rgba(255,255,255,.42)", transition:"color .3s" }}
-                    onMouseEnter={e => e.target.style.color="rgba(255,255,255,.82)"}
-                    onMouseLeave={e => e.target.style.color="rgba(255,255,255,.42)"}
+                    onMouseEnter={e => (e.target as HTMLElement).style.color="rgba(255,255,255,.82)"}
+                    onMouseLeave={e => (e.target as HTMLElement).style.color="rgba(255,255,255,.42)"}
                   >{link.label}</span>
                 </button>
               ))}
@@ -634,8 +639,8 @@ function Hero() {
               style={{ borderColor:"rgba(255,255,255,.05)" }}
             >
               <span style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"clamp(1.6rem,7vw,2.5rem)", fontWeight:300, color:"rgba(255,255,255,.72)", lineHeight:1, transition:"color .35s ease" }}
-                onMouseEnter={e => e.currentTarget.style.color="rgba(228,192,110,.95)"}
-                onMouseLeave={e => e.currentTarget.style.color="rgba(255,255,255,.72)"}
+                onMouseEnter={e => (e.currentTarget as HTMLElement).style.color="rgba(228,192,110,.95)"}
+                onMouseLeave={e => (e.currentTarget as HTMLElement).style.color="rgba(255,255,255,.72)"}
               >{item.label}</span>
               <span style={{ fontFamily:"'Jost',sans-serif", fontSize:".48rem", letterSpacing:".22em", color:"rgba(255,255,255,.15)", fontWeight:200, paddingBottom:"4px" }}>
                 0{i + 1}
@@ -902,6 +907,7 @@ function Hero() {
     </>
   );
 }
+
 // ─────────────────────────────────────────────────
 // ABOUT SECTION
 // ─────────────────────────────────────────────────
