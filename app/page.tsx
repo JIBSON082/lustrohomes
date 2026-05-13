@@ -234,13 +234,7 @@ function Navbar({
 const HERO_VIDEO_URL =
   "https://res.cloudinary.com/dx3k7hbnc/video/upload/v1777632548/Hero-video_egr33p.mp4";
 
-const HERO_PHRASES = [
-  "Staycation",
-  "Dining",
-  "Investment",
-  "Indulgence",
-  "Quiet Luxury",
-];
+const HERO_PHRASES = ["Staycation", "Dining", "Investment"];
 
 const HERO_NAV_LINKS = [
   { label: "Rooms & Suites", href: "#rooms" },
@@ -277,50 +271,33 @@ function Hero() {
     s.keywords.some((k) => k.includes(searchQuery.toLowerCase()))
   );
 
-  // Cycling phrases
   useEffect(() => {
     const interval = setInterval(() => {
       setTransitioning(true);
       setTimeout(() => {
         setCurrentIdx((prev) => (prev + 1) % HERO_PHRASES.length);
         setTransitioning(false);
-      }, 400);
-    }, 4200);
+      }, 200);
+    }, 3800);
     return () => clearInterval(interval);
   }, []);
 
-  // GSAP entrance
   useEffect(() => {
     const initAnim = async () => {
       try {
         const { gsap } = await import("gsap");
-        gsap.timeline({ delay: 0.2 })
+        gsap.timeline({ delay: 0.3 })
           .fromTo(".hero-video-block",
             { opacity: 0 },
-            { opacity: 1, duration: 1.6, ease: "expo.out" }
+            { opacity: 1, duration: 1.2, ease: "expo.out" }
           )
-          .fromTo(".hero-eyebrow",
-            { opacity: 0, y: 10 },
+          .fromTo(".hero-content-block",
+            { opacity: 0, y: 24 },
             { opacity: 1, y: 0, duration: 1.2, ease: "expo.out" },
-            "-=0.8"
-          )
-          .fromTo(".hero-phrase-block",
-            { opacity: 0, y: 16 },
-            { opacity: 1, y: 0, duration: 1.2, ease: "expo.out" },
-            "-=0.9"
-          )
-          .fromTo(".hero-divider",
-            { scaleX: 0 },
-            { scaleX: 1, duration: 1.0, ease: "expo.out" },
-            "-=0.7"
-          )
-          .fromTo(".hero-ctas",
-            { opacity: 0, y: 12 },
-            { opacity: 1, y: 0, duration: 1.0, ease: "expo.out" },
             "-=0.6"
           );
       } catch {
-        [".hero-video-block", ".hero-eyebrow", ".hero-phrase-block", ".hero-divider", ".hero-ctas"].forEach((sel) => {
+        [".hero-video-block", ".hero-content-block"].forEach((sel) => {
           document.querySelectorAll(sel).forEach((el) => {
             (el as HTMLElement).style.opacity = "1";
           });
@@ -330,26 +307,24 @@ function Hero() {
     initAnim();
   }, []);
 
-  // Animate menu links when opened
   useEffect(() => {
     if (!menuOpen) return;
     const animateMenu = async () => {
       try {
         const { gsap } = await import("gsap");
         gsap.fromTo(".menu-link",
-          { opacity: 0, x: -24 },
-          { opacity: 1, x: 0, duration: 0.7, ease: "power3.out", stagger: 0.07, delay: 0.1 }
+          { opacity: 0, x: -30 },
+          { opacity: 1, x: 0, duration: 0.6, ease: "power3.out", stagger: 0.08, delay: 0.15 }
         );
         gsap.fromTo(".menu-cta",
-          { opacity: 0, y: 14 },
-          { opacity: 1, y: 0, duration: 0.5, ease: "power3.out", delay: 0.6 }
+          { opacity: 0, y: 16 },
+          { opacity: 1, y: 0, duration: 0.5, ease: "power3.out", delay: 0.65 }
         );
       } catch {}
     };
     animateMenu();
   }, [menuOpen]);
 
-  // Focus search input
   useEffect(() => {
     if (searchOpen) {
       setTimeout(() => searchInputRef.current?.focus(), 100);
@@ -358,7 +333,6 @@ function Hero() {
     }
   }, [searchOpen]);
 
-  // Body scroll lock
   useEffect(() => {
     document.body.style.overflow = (menuOpen || searchOpen) ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
@@ -408,72 +382,44 @@ function Hero() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Tenor+Sans&display=swap');
 
+        .phrase-container { position: relative; padding-bottom: 0; }
         .phrase-word {
           display: block;
-          transition: transform 1s cubic-bezier(0.16,1,0.3,1), opacity 0.7s ease;
+          transition: transform 0.85s cubic-bezier(0.16,1,0.3,1), opacity 0.6s ease;
         }
         .phrase-word.visible { transform: translateY(0); opacity: 1; }
-        .phrase-word.hidden  { transform: translateY(22px); opacity: 0; }
+        .phrase-word.hidden  { transform: translateY(28px); opacity: 0; }
 
-        .hero-divider {
-          transform-origin: left center;
-        }
-
-        .cta-link {
+        .underline-link {
           position: relative;
           display: inline-block;
-          letter-spacing: 0.2em;
         }
-        .cta-link::after {
+        .underline-link::after {
           content: '';
           position: absolute;
-          bottom: -3px;
-          left: 0;
-          width: 100%;
-          height: 1px;
+          bottom: -2px; left: 0;
+          width: 100%; height: 1px;
           background: currentColor;
-          opacity: 0.35;
-          transition: opacity 0.3s ease;
+          opacity: 0.4;
         }
-        .cta-link:hover::after {
-          opacity: 0.7;
-        }
-
         .mobile-menu {
           transform: translateX(100%);
-          transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
-        }
-        .mobile-menu.open {
-          transform: translateX(0);
-        }
-
-        .search-overlay {
-          transform: translateY(-100%);
           transition: transform 0.45s cubic-bezier(0.16,1,0.3,1);
         }
-        .search-overlay.open {
-          transform: translateY(0);
+        .mobile-menu.open { transform: translateX(0); }
+        .search-overlay {
+          transform: translateY(-100%);
+          transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
         }
-
+        .search-overlay.open { transform: translateY(0); }
         .menu-link { opacity: 0; }
-        .menu-cta  { opacity: 0; }
-
-        .video-vignette {
-          background: linear-gradient(
-            to bottom,
-            transparent 0%,
-            transparent 50%,
-            rgba(0,0,0,0.18) 78%,
-            rgba(245,240,232,0.55) 92%,
-            rgba(245,240,232,1) 100%
-          );
-        }
+        .menu-cta { opacity: 0; }
       `}</style>
 
       {/* ── Navbar ── */}
       <nav
         className="w-full bg-cream-dark px-6 py-5 flex items-center justify-between sticky top-0 z-50"
-        style={{ borderBottom: "1px solid rgba(0,0,0,0.06)" }}
+        style={{ borderBottom: "1px solid rgba(0,0,0,0.07)" }}
       >
         <div className="flex items-center gap-4">
           <button
@@ -494,15 +440,11 @@ function Hero() {
           />
         </div>
 
-        <span className="absolute left-1/2 -translate-x-1/2 font-cormorant text-charcoal font-bold tracking-[0.28em] uppercase text-[1.02rem] whitespace-nowrap">
+        <span className="absolute left-1/2 -translate-x-1/2 font-cormorant text-charcoal font-bold tracking-[0.25em] uppercase text-[1.05rem] whitespace-nowrap">
           Lustro Homes
         </span>
 
-        <button
-          aria-label="Search"
-          className="text-charcoal"
-          onClick={() => setSearchOpen(true)}
-        >
+        <button aria-label="Search" className="text-charcoal" onClick={() => setSearchOpen(true)}>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
             <circle cx="11" cy="11" r="7" />
             <path strokeLinecap="round" d="M16.5 16.5l3.5 3.5" />
@@ -513,18 +455,18 @@ function Hero() {
       {/* ── Search Overlay ── */}
       <div className={`search-overlay fixed inset-0 z-[95] bg-cream-dark flex flex-col px-6 pt-6 pb-10 ${searchOpen ? "open" : ""}`}>
         <div className="flex items-center justify-between mb-8">
-          <span className="font-cormorant text-charcoal text-lg tracking-[0.22em] uppercase font-light">
+          <span className="font-cormorant text-charcoal text-lg tracking-[0.2em] uppercase font-light">
             Search
           </span>
-          <button onClick={() => setSearchOpen(false)} className="text-charcoal/40 hover:text-charcoal transition-colors">
+          <button onClick={() => setSearchOpen(false)} className="text-charcoal/50 hover:text-charcoal transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        <div className="border-b border-charcoal/15 flex items-center gap-3 pb-3 mb-8">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4 text-charcoal/35 flex-shrink-0">
+        <div className="border-b border-charcoal/20 flex items-center gap-3 pb-3 mb-8">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4 text-charcoal/40 flex-shrink-0">
             <circle cx="11" cy="11" r="7" />
             <path strokeLinecap="round" d="M16.5 16.5l3.5 3.5" />
           </svg>
@@ -534,10 +476,10 @@ function Hero() {
             placeholder="Search rooms, dining, investment..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="flex-1 bg-transparent font-dm-sans text-sm text-charcoal placeholder-charcoal/25 outline-none"
+            className="flex-1 bg-transparent font-dm-sans text-sm text-charcoal placeholder-charcoal/30 outline-none"
           />
           {searchQuery && (
-            <button onClick={() => setSearchQuery("")} className="text-charcoal/25 hover:text-charcoal transition-colors">
+            <button onClick={() => setSearchQuery("")} className="text-charcoal/30 hover:text-charcoal transition-colors">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
                 <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
               </svg>
@@ -557,13 +499,13 @@ function Hero() {
                   <span className="font-cormorant text-2xl text-charcoal font-light group-hover:text-brown transition-colors">
                     {result.label}
                   </span>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4 text-charcoal/25 group-hover:text-brown transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4 text-charcoal/30 group-hover:text-brown transition-colors">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 18l6-6-6-6" />
                   </svg>
                 </button>
               ))
             ) : (
-              <p className="font-dm-sans text-sm text-charcoal/30 mt-2">
+              <p className="font-dm-sans text-sm text-charcoal/35 mt-2">
                 No results for &quot;{searchQuery}&quot;
               </p>
             )}
@@ -572,7 +514,7 @@ function Hero() {
 
         {searchQuery.length <= 1 && (
           <div className="flex flex-col gap-1">
-            <p className="font-dm-sans text-[0.58rem] text-charcoal/30 uppercase tracking-[0.32em] mb-4">
+            <p className="font-dm-sans text-[0.6rem] text-charcoal/35 uppercase tracking-[0.3em] mb-3">
               Quick Links
             </p>
             {HERO_NAV_LINKS.map((link) => (
@@ -581,10 +523,10 @@ function Hero() {
                 onClick={() => handleSearchNavigate(link.href)}
                 className="text-left py-3 border-b border-charcoal/8 flex items-center justify-between group"
               >
-                <span className="font-cormorant text-xl text-charcoal/55 font-light group-hover:text-charcoal transition-colors">
+                <span className="font-cormorant text-xl text-charcoal/60 font-light group-hover:text-charcoal transition-colors">
                   {link.label}
                 </span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4 text-charcoal/18 group-hover:text-charcoal/45 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4 text-charcoal/20 group-hover:text-charcoal/50 transition-colors">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 18l6-6-6-6" />
                 </svg>
               </button>
@@ -597,15 +539,15 @@ function Hero() {
       <div className={`mobile-menu fixed inset-0 z-[90] bg-charcoal flex flex-col px-8 py-10 ${menuOpen ? "open" : ""}`}>
         <button
           onClick={() => setMenuOpen(false)}
-          className="self-end mb-12 text-cream/35 hover:text-cream transition-colors"
+          className="self-end mb-10 text-cream/40 hover:text-cream transition-colors"
           aria-label="Close menu"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-6 h-6">
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
 
-        <div className="flex flex-col gap-0">
+        <div className="flex flex-col gap-1">
           {HERO_NAV_LINKS.map((item) => (
             <a
               key={item.label}
@@ -617,15 +559,15 @@ function Hero() {
                   setTimeout(() => {
                     const y = target.getBoundingClientRect().top + window.scrollY;
                     window.scrollTo({ top: y, behavior: "smooth" });
-                  }, 450);
+                  }, 400);
                 }
               }}
-              className="menu-link py-4 border-b border-cream/6 flex items-center justify-between group"
+              className="menu-link py-4 border-b border-cream/8 flex items-center justify-between group"
             >
-              <span className="font-cormorant text-[1.9rem] text-cream font-light tracking-wide group-hover:text-gold transition-colors duration-400">
+              <span className="font-cormorant text-3xl text-cream font-light tracking-wide group-hover:text-gold transition-colors duration-300">
                 {item.label}
               </span>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1} className="w-3.5 h-3.5 text-cream/18 group-hover:text-gold/60 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1} className="w-4 h-4 text-cream/20 group-hover:text-gold transition-colors">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 18l6-6-6-6" />
               </svg>
             </a>
@@ -633,14 +575,14 @@ function Hero() {
         </div>
 
         <div className="mt-auto pt-8 menu-cta">
-          <p className="font-dm-sans text-[0.56rem] text-cream/22 uppercase tracking-[0.35em] mb-3">
+          <p className="font-dm-sans text-[0.58rem] text-cream/25 uppercase tracking-[0.3em] mb-3">
             Ready to experience Lustro?
           </p>
           <a
             href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-dm-sans text-xs text-gold tracking-[0.22em] uppercase cta-link hover:text-gold/65 transition-colors"
+            className="font-dm-sans text-sm text-gold tracking-[0.2em] uppercase underline-link hover:text-gold/70 transition-colors"
           >
             Book Your Stay
           </a>
@@ -650,7 +592,7 @@ function Hero() {
       {/* ── Hero Video Block ── */}
       <div
         className="hero-video-block w-full bg-charcoal relative overflow-hidden"
-        style={{ opacity: 0, height: "62vh" }}
+        style={{ opacity: 0, height: "56vh" }}
       >
         <video
           ref={videoRef}
@@ -669,16 +611,13 @@ function Hero() {
           onContextMenu={(e) => e.preventDefault()}
         />
 
-        {/* Cinematic vignette — bleeds into cream below */}
-        <div className="video-vignette absolute inset-0 pointer-events-none" />
+        {/* Gradient */}
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black/50 to-transparent pointer-events-none" />
 
-        {/* Video controls */}
-        <div className="absolute bottom-0 left-0 right-0 px-5 py-4 flex items-center justify-between">
-          <button
-            onClick={togglePlay}
-            className="text-white/60 hover:text-white transition-colors"
-            aria-label={isPlaying ? "Pause" : "Play"}
-          >
+        {/* Controls */}
+        <div className="absolute bottom-0 left-0 right-0 px-4 py-3 flex items-center justify-between">
+          {/* Left — Play/Pause */}
+          <button onClick={togglePlay} className="text-white/80 hover:text-white transition-colors" aria-label={isPlaying ? "Pause" : "Play"}>
             {isPlaying ? (
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
                 <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
@@ -690,12 +629,9 @@ function Hero() {
             )}
           </button>
 
-          <div className="flex items-center gap-4">
-            <button
-              onClick={toggleMute}
-              className="text-white/60 hover:text-white transition-colors"
-              aria-label={isMuted ? "Unmute" : "Mute"}
-            >
+          {/* Right — Mute + Fullscreen */}
+          <div className="flex items-center gap-3">
+            <button onClick={toggleMute} className="text-white/80 hover:text-white transition-colors" aria-label={isMuted ? "Unmute" : "Mute"}>
               {isMuted ? (
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
                   <path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0 0 21 12c0-4.28-3-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06A8.99 8.99 0 0 0 17.73 18l1.73 1.73L21 18.46 5.54 3 4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
@@ -707,11 +643,7 @@ function Hero() {
               )}
             </button>
 
-            <button
-              onClick={toggleFullscreen}
-              className="text-white/60 hover:text-white transition-colors"
-              aria-label="Fullscreen"
-            >
+            <button onClick={toggleFullscreen} className="text-white/80 hover:text-white transition-colors" aria-label="Fullscreen">
               {isFullscreen ? (
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
                   <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
@@ -727,53 +659,47 @@ function Hero() {
       </div>
 
       {/* ── Content Below Video ── */}
-      <div
-        className="bg-cream-dark px-6 pt-10 pb-12 text-center"
-        style={{ opacity: 0 }}
-      >
-        {/* Eyebrow */}
-        <p
-          className="hero-eyebrow font-cormorant uppercase tracking-[0.38em] text-charcoal/45 text-[0.72rem] mb-3"
-          style={{ opacity: 0 }}
-        >
-          Crafted for
-        </p>
+      <div className="hero-content-block bg-cream-dark px-4 pt-12 pb-10 text-center" style={{ opacity: 0 }}>
 
-        {/* Cycling phrase */}
-        <div className="hero-phrase-block overflow-hidden mb-8" style={{ opacity: 0 }}>
-          <span
-            className={`phrase-word ${transitioning ? "hidden" : "visible"}`}
+        {/* Crafted for + cycling phrase */}
+        <div className="mb-10">
+          <p
             style={{
-              fontFamily: "'Great Vibes', cursive",
-              fontSize: "clamp(46px, 13vw, 66px)",
-              color: "#C8922A",
-              lineHeight: 1.08,
-              display: "block",
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: "1.0rem",
+              fontWeight: "600",
+              letterSpacing: "0.35em",
+              color: "rgba(0,0,0,0.55)",
+              textTransform: "uppercase",
+              marginBottom: "2px",
+              fontStyle: "normal",
             }}
           >
-            {HERO_PHRASES[currentIdx]}
-          </span>
+            Crafted for
+          </p>
+          <div className="phrase-container">
+            <span
+              className={`phrase-word ${transitioning ? "hidden" : "visible"}`}
+              style={{
+                fontFamily: "'Great Vibes', cursive",
+                fontSize: "clamp(44px, 12vw, 62px)",
+                color: "#C8922A",
+                lineHeight: 1.05,
+                whiteSpace: "nowrap",
+              }}
+            >
+              {HERO_PHRASES[currentIdx]}
+            </span>
+          </div>
         </div>
 
-        {/* Gold divider */}
-        <div
-          className="hero-divider mx-auto mb-9"
-          style={{
-            width: "36px",
-            height: "1px",
-            background: "#C8922A",
-            opacity: 0.55,
-            opacity: 0,
-          }}
-        />
-
         {/* CTAs */}
-        <div className="hero-ctas flex items-center justify-between px-1" style={{ opacity: 0 }}>
+        <div className="flex items-center justify-between px-2">
           <a
             href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
             target="_blank"
             rel="noopener noreferrer"
-            className="cta-link font-cormorant text-charcoal/80 text-[1.05rem] font-light hover:text-charcoal transition-colors"
+            className="underline-link font-cormorant text-charcoal text-lg font-light tracking-wide hover:text-brown transition-colors"
           >
             Book Your Stay
           </a>
@@ -783,16 +709,16 @@ function Hero() {
               e.preventDefault();
               document.querySelector("#rooms")?.scrollIntoView({ behavior: "smooth" });
             }}
-            className="cta-link font-cormorant text-charcoal/80 text-[1.05rem] font-light hover:text-charcoal transition-colors"
+            className="underline-link font-cormorant text-charcoal text-lg font-light tracking-wide hover:text-brown transition-colors"
           >
             Explore Rooms
           </a>
         </div>
+
       </div>
     </>
   );
 }
-
 // ─────────────────────────────────────────────────
 // ABOUT SECTION
 // ─────────────────────────────────────────────────
