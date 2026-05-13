@@ -319,7 +319,7 @@ function Hero() {
         [".hero-bg-layer",".hero-nav-inner",".hero-loc-badge",".hero-eyebrow",
          ".hero-line1",".hero-line2",".hero-descriptor",".hero-divider",
          ".hero-cta-group",".hero-side-label",".hero-scroll-hint"]
-          .forEach((s) => document.querySelectorAll(s).forEach((el) => (el.style.opacity = "1")));
+          .forEach((s) => document.querySelectorAll(s).forEach((el) => ((el as HTMLElement).style.opacity = "1")));
       }
     };
     init();
