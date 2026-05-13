@@ -719,6 +719,40 @@ function Hero() {
     </>
   );
 }
+
+// ─────────────────────────────────────────────────
+// STATS BAR
+// ─────────────────────────────────────────────────
+function StatsBar() {
+  const stats = [
+    { number: "15,000+", label: "Guests Hosted" },
+    { number: "3", label: "Iconic Properties" },
+    { number: "₦2M+", label: "Monthly Revenue" },
+    { number: "100%", label: "Delivery Rate" },
+  ];
+
+  return (
+    <section className="bg-charcoal py-16">
+      <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10">
+        {stats.map((stat) => (
+          <div
+            key={stat.label}
+            className="reveal-element text-center md:border-r md:border-white/5 last:border-0"
+          >
+            <p className="font-cormorant text-4xl md:text-5xl text-gold font-light leading-none mb-2">
+              {stat.number}
+            </p>
+            <p className="font-dm-sans text-[0.65rem] text-white/45 uppercase tracking-[0.2em]">
+              {stat.label}
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+
 // ─────────────────────────────────────────────────
 // ABOUT SECTION
 // ─────────────────────────────────────────────────
