@@ -234,45 +234,42 @@ function Navbar({
 const HERO_VIDEO_URL =
   "https://res.cloudinary.com/dx3k7hbnc/video/upload/v1777632548/Hero-video_egr33p.mp4";
 
-// Extended cinematic storytelling sequence
 const HERO_PHRASES = [
-  { line1: "Crafted for",   line2: "Staycation"         },
-  { line1: "Designed for",  line2: "Indulgence"          },
-  { line1: "Built for",     line2: "Quiet Luxury"        },
-  { line1: "Curated for",   line2: "Exceptional Living"  },
-  { line1: "Lagos Luxury,", line2: "Redefined"           },
+  "Staycation",
+  "Dining",
+  "Investment",
+  "Indulgence",
+  "Quiet Luxury",
 ];
 
 const HERO_NAV_LINKS = [
-  { label: "Rooms & Suites",    href: "#rooms"   },
-  { label: "Gallery",           href: "#gallery" },
-  { label: "Dining",            href: "#dining"  },
-  { label: "Investment",        href: "#invest"  },
-  { label: "Yankee by Lustro",  href: "#yankee"  },
-  { label: "Contact",           href: "#contact" },
+  { label: "Rooms & Suites", href: "#rooms" },
+  { label: "Gallery", href: "#gallery" },
+  { label: "Dining", href: "#dining" },
+  { label: "Investment", href: "#invest" },
+  { label: "Yankee by Lustro", href: "#yankee" },
+  { label: "Contact", href: "#contact" },
 ];
 
 const SEARCHABLE_SECTIONS = [
-  { label: "Rooms & Suites",    href: "#rooms",   keywords: ["rooms","suites","bedroom","mykonos","malibu","seychelles","beverly hills","cappadocia","santorini","book"] },
-  { label: "Gallery",           href: "#gallery", keywords: ["gallery","photos","images","videos","life at lustro"] },
-  { label: "Investment",        href: "#invest",  keywords: ["invest","investment","returns","roi","profit","investor"] },
-  { label: "Yankee by Lustro",  href: "#yankee",  keywords: ["yankee","sister property"] },
-  { label: "Book Your Stay",    href: `${WHATSAPP_URL}?text=I'd like to book`, keywords: ["book","reservation","reserve","stay","check in"] },
-  { label: "Dining Experience", href: "#dining",  keywords: ["dining","restaurant","food","eat","menu"] },
+  { label: "Rooms & Suites", href: "#rooms", keywords: ["rooms", "suites", "bedroom", "mykonos", "malibu", "seychelles", "beverly hills", "cappadocia", "santorini", "book"] },
+  { label: "Gallery", href: "#gallery", keywords: ["gallery", "photos", "images", "videos", "life at lustro"] },
+  { label: "Investment", href: "#invest", keywords: ["invest", "investment", "returns", "roi", "profit", "investor"] },
+  { label: "Yankee by Lustro", href: "#yankee", keywords: ["yankee", "sister property"] },
+  { label: "Book Your Stay", href: `${WHATSAPP_URL}?text=I'd like to book`, keywords: ["book", "reservation", "reserve", "stay", "check in"] },
+  { label: "Dining Experience", href: "#dining", keywords: ["dining", "restaurant", "food", "eat", "menu"] },
 ];
 
 function Hero() {
-  const [menuOpen,     setMenuOpen]     = useState(false);
-  const [searchOpen,   setSearchOpen]   = useState(false);
-  const [searchQuery,  setSearchQuery]  = useState("");
-  const [currentIdx,   setCurrentIdx]   = useState(0);
-  const [phraseVisible,setPhraseVisible]= useState(true);
-  const [isPlaying,    setIsPlaying]    = useState(true);
-  const [isMuted,      setIsMuted]      = useState(true);
-  const [scrolled,     setScrolled]     = useState(false);
-
-  // FIX 1 — typed refs
-  const videoRef       = useRef<HTMLVideoElement>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [transitioning, setTransitioning] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isMuted, setIsMuted] = useState(true);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const searchResults = SEARCHABLE_SECTIONS.filter((s) =>
@@ -280,632 +277,518 @@ function Hero() {
     s.keywords.some((k) => k.includes(searchQuery.toLowerCase()))
   );
 
-  // Slow cinematic phrase cycling — 5.2 s per phrase, 0.9 s fade
+  // Cycling phrases
   useEffect(() => {
-    const id = setInterval(() => {
-      setPhraseVisible(false);
+    const interval = setInterval(() => {
+      setTransitioning(true);
       setTimeout(() => {
-        setCurrentIdx((p) => (p + 1) % HERO_PHRASES.length);
-        setPhraseVisible(true);
-      }, 900);
-    }, 5200);
-    return () => clearInterval(id);
+        setCurrentIdx((prev) => (prev + 1) % HERO_PHRASES.length);
+        setTransitioning(false);
+      }, 400);
+    }, 4200);
+    return () => clearInterval(interval);
   }, []);
 
-  // Scroll-aware nav background
+  // GSAP entrance
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // GSAP entrance — slow, staggered, cinematic
-  useEffect(() => {
-    const init = async () => {
+    const initAnim = async () => {
       try {
         const { gsap } = await import("gsap");
         gsap.timeline({ delay: 0.2 })
-          .fromTo(".hero-bg-layer",   { opacity: 0 }, { opacity: 1, duration: 2.4, ease: "power2.out" })
-          .fromTo(".hero-nav-inner",  { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 1.2, ease: "power3.out" }, "-=1.6")
-          .fromTo(".hero-loc-badge",  { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: 1.0, ease: "expo.out"  }, "-=0.9")
-          .fromTo(".hero-eyebrow",    { opacity: 0, y: 20  }, { opacity: 1, y: 0, duration: 1.2, ease: "expo.out"  }, "-=0.8")
-          .fromTo(".hero-line1",      { opacity: 0, y: 30  }, { opacity: 1, y: 0, duration: 1.3, ease: "expo.out"  }, "-=0.7")
-          .fromTo(".hero-line2",      { opacity: 0, y: 40  }, { opacity: 1, y: 0, duration: 1.3, ease: "expo.out"  }, "-=1.1")
-          .fromTo(".hero-descriptor", { opacity: 0, y: 12  }, { opacity: 1, y: 0, duration: 1.0, ease: "expo.out"  }, "-=0.7")
-          .fromTo(".hero-divider",    { opacity: 0, scaleX: 0 }, { opacity: 1, scaleX: 1, duration: 1.1, ease: "expo.out", transformOrigin: "left center" }, "-=0.8")
-          .fromTo(".hero-cta-group",  { opacity: 0, y: 16  }, { opacity: 1, y: 0, duration: 1.0, ease: "expo.out"  }, "-=0.7")
-          .fromTo(".hero-side-label", { opacity: 0 }, { opacity: 1, duration: 1.0, ease: "power2.out" }, "-=0.6")
-          .fromTo(".hero-scroll-hint",{ opacity: 0 }, { opacity: 1, duration: 0.8, ease: "power2.out" }, "-=0.4");
+          .fromTo(".hero-video-block",
+            { opacity: 0 },
+            { opacity: 1, duration: 1.6, ease: "expo.out" }
+          )
+          .fromTo(".hero-eyebrow",
+            { opacity: 0, y: 10 },
+            { opacity: 1, y: 0, duration: 1.2, ease: "expo.out" },
+            "-=0.8"
+          )
+          .fromTo(".hero-phrase-block",
+            { opacity: 0, y: 16 },
+            { opacity: 1, y: 0, duration: 1.2, ease: "expo.out" },
+            "-=0.9"
+          )
+          .fromTo(".hero-divider",
+            { scaleX: 0 },
+            { scaleX: 1, duration: 1.0, ease: "expo.out" },
+            "-=0.7"
+          )
+          .fromTo(".hero-ctas",
+            { opacity: 0, y: 12 },
+            { opacity: 1, y: 0, duration: 1.0, ease: "expo.out" },
+            "-=0.6"
+          );
       } catch {
-        // Graceful fallback — no GSAP
-        [".hero-bg-layer",".hero-nav-inner",".hero-loc-badge",".hero-eyebrow",
-         ".hero-line1",".hero-line2",".hero-descriptor",".hero-divider",
-         ".hero-cta-group",".hero-side-label",".hero-scroll-hint"]
-          .forEach((s) => document.querySelectorAll(s).forEach((el) => ((el as HTMLElement).style.opacity = "1")));
+        [".hero-video-block", ".hero-eyebrow", ".hero-phrase-block", ".hero-divider", ".hero-ctas"].forEach((sel) => {
+          document.querySelectorAll(sel).forEach((el) => {
+            (el as HTMLElement).style.opacity = "1";
+          });
+        });
       }
     };
-    init();
+    initAnim();
   }, []);
 
-  // Menu animation
+  // Animate menu links when opened
   useEffect(() => {
     if (!menuOpen) return;
-    (async () => {
+    const animateMenu = async () => {
       try {
         const { gsap } = await import("gsap");
-        gsap.fromTo(".menu-link",   { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.7, ease: "expo.out", stagger: 0.09, delay: 0.2 });
-        gsap.fromTo(".menu-footer", { opacity: 0, y: 20  }, { opacity: 1, y: 0, duration: 0.6, ease: "expo.out", delay: 0.82 });
+        gsap.fromTo(".menu-link",
+          { opacity: 0, x: -24 },
+          { opacity: 1, x: 0, duration: 0.7, ease: "power3.out", stagger: 0.07, delay: 0.1 }
+        );
+        gsap.fromTo(".menu-cta",
+          { opacity: 0, y: 14 },
+          { opacity: 1, y: 0, duration: 0.5, ease: "power3.out", delay: 0.6 }
+        );
       } catch {}
-    })();
+    };
+    animateMenu();
   }, [menuOpen]);
 
+  // Focus search input
   useEffect(() => {
-    if (searchOpen) setTimeout(() => searchInputRef.current?.focus(), 100);
-    else setSearchQuery("");
+    if (searchOpen) {
+      setTimeout(() => searchInputRef.current?.focus(), 100);
+    } else {
+      setSearchQuery("");
+    }
   }, [searchOpen]);
 
+  // Body scroll lock
   useEffect(() => {
     document.body.style.overflow = (menuOpen || searchOpen) ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [menuOpen, searchOpen]);
 
   const togglePlay = () => {
-  const video = videoRef.current;
-  if (!video) return;
-  isPlaying ? video.pause() : video.play();
-  setIsPlaying((p) => !p);
-};
-const toggleMute = () => {
-  const video = videoRef.current;
-  if (!video) return;
-  video.muted = !isMuted;
-  setIsMuted((m) => !m);
-};
+    if (!videoRef.current) return;
+    isPlaying ? videoRef.current.pause() : videoRef.current.play();
+    setIsPlaying(!isPlaying);
+  };
 
-  // FIX 2 — typed parameter
+  const toggleMute = () => {
+    if (!videoRef.current) return;
+    videoRef.current.muted = !isMuted;
+    setIsMuted(!isMuted);
+  };
+
+  const toggleFullscreen = () => {
+    if (!videoRef.current) return;
+    if (!document.fullscreenElement) {
+      videoRef.current.requestFullscreen();
+      setIsFullscreen(true);
+    } else {
+      document.exitFullscreen();
+      setIsFullscreen(false);
+    }
+  };
+
   const handleSearchNavigate = (href: string) => {
     setSearchOpen(false);
     setSearchQuery("");
     if (href.startsWith("#")) {
       const target = document.querySelector(href);
-      if (target) setTimeout(() => window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY, behavior: "smooth" }), 200);
+      if (target) {
+        setTimeout(() => {
+          const y = target.getBoundingClientRect().top + window.scrollY;
+          window.scrollTo({ top: y, behavior: "smooth" });
+        }, 200);
+      }
     } else {
       window.open(href, "_blank");
     }
   };
 
-  const currentPhrase = HERO_PHRASES[currentIdx];
-
-  // ─── Shared icon helpers ─────────────────────────────────────
-  const IconArrow = ({ cls = "w-3 h-3" }) => (
-    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1} className={cls}>
-      <path strokeLinecap="round" d="M4 10h12M12 5l5 5-5 5" />
-    </svg>
-  );
-  const IconClose = ({ cls = "w-5 h-5" }) => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1} className={cls}>
-      <path strokeLinecap="round" d="M6 18L18 6M6 6l12 12" />
-    </svg>
-  );
-  const IconSearch = ({ cls = "w-4 h-4" }) => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.25} className={cls}>
-      <circle cx="11" cy="11" r="7" /><path strokeLinecap="round" d="M16.5 16.5l3.5 3.5" />
-    </svg>
-  );
-  const IconChevron = ({ cls = "w-4 h-4" }) => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1} className={cls}>
-      <path strokeLinecap="round" d="M9 18l6-6-6-6" />
-    </svg>
-  );
-
   return (
     <>
-      {/* ═══════════════════ STYLES ═══════════════════ */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,200;0,300;0,400;1,200;1,300;1,400&family=Jost:wght@100;200;300;400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Tenor+Sans&display=swap');
 
-        /* ── Phrase transition ── */
-        .phrase-block {
-          transition: opacity .9s cubic-bezier(.4,0,.2,1),
-                      transform .9s cubic-bezier(.16,1,.3,1),
-                      filter .9s ease;
-          will-change: opacity, transform, filter;
+        .phrase-word {
+          display: block;
+          transition: transform 1s cubic-bezier(0.16,1,0.3,1), opacity 0.7s ease;
         }
-        .phrase-block.ph-visible { opacity:1; transform:translateY(0);    filter:blur(0px); }
-        .phrase-block.ph-hidden  { opacity:0; transform:translateY(18px); filter:blur(3px); }
+        .phrase-word.visible { transform: translateY(0); opacity: 1; }
+        .phrase-word.hidden  { transform: translateY(22px); opacity: 0; }
 
-        /* ── Film grain ── */
-        .grain-overlay {
-          position:absolute; inset:0; pointer-events:none; z-index:2;
-          opacity:.038;
-          background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-          background-size:200px 200px;
+        .hero-divider {
+          transform-origin: left center;
         }
 
-        /* ── Edge vignette ── */
-        .vignette-edge {
-          position:absolute; inset:0; pointer-events:none;
-          box-shadow:inset 0 0 160px 48px rgba(0,0,0,.52);
-          z-index:4;
+        .cta-link {
+          position: relative;
+          display: inline-block;
+          letter-spacing: 0.2em;
+        }
+        .cta-link::after {
+          content: '';
+          position: absolute;
+          bottom: -3px;
+          left: 0;
+          width: 100%;
+          height: 1px;
+          background: currentColor;
+          opacity: 0.35;
+          transition: opacity 0.3s ease;
+        }
+        .cta-link:hover::after {
+          opacity: 0.7;
         }
 
-        /* ── CTA — gold outline ── */
-        .cta-gold {
-          display:inline-flex; align-items:center; gap:10px;
-          padding:13px 30px;
-          border:1px solid rgba(200,146,42,.55);
-          background:rgba(200,146,42,.07);
-          font-family:'Jost',sans-serif; font-size:.58rem; font-weight:300;
-          letter-spacing:.32em; text-transform:uppercase;
-          color:rgba(228,192,110,.92);
-          position:relative; overflow:hidden; cursor:pointer; text-decoration:none;
-          transition:background .5s ease, border-color .5s ease, color .4s ease;
-          white-space:nowrap;
-        }
-        .cta-gold::before {
-          content:''; position:absolute; inset:0;
-          background:linear-gradient(135deg,rgba(200,146,42,.15) 0%,transparent 60%);
-          opacity:0; transition:opacity .4s ease;
-        }
-        .cta-gold:hover::before { opacity:1; }
-        .cta-gold:hover { background:rgba(200,146,42,.18); border-color:rgba(200,146,42,.8); color:#fff; }
-
-        /* ── CTA — ghost ── */
-        .cta-ghost-lux {
-          display:inline-flex; align-items:center; gap:10px;
-          padding:13px 30px;
-          border:1px solid rgba(255,255,255,.18);
-          background:transparent;
-          font-family:'Jost',sans-serif; font-size:.58rem; font-weight:200;
-          letter-spacing:.32em; text-transform:uppercase;
-          color:rgba(255,255,255,.58);
-          transition:background .4s ease, border-color .4s ease, color .4s ease;
-          white-space:nowrap; cursor:pointer; text-decoration:none;
-        }
-        .cta-ghost-lux:hover {
-          background:rgba(255,255,255,.06);
-          border-color:rgba(255,255,255,.42);
-          color:rgba(255,255,255,.9);
-        }
-
-        /* ── Desktop nav links ── */
-        .nav-lux {
-          font-family:'Jost',sans-serif; font-size:.54rem; font-weight:200;
-          letter-spacing:.26em; text-transform:uppercase;
-          color:rgba(255,255,255,.5); text-decoration:none; position:relative;
-          transition:color .35s ease;
-        }
-        .nav-lux::after {
-          content:''; position:absolute; bottom:-2px; left:0;
-          width:0; height:1px; background:#C8922A;
-          transition:width .4s cubic-bezier(.16,1,.3,1);
-        }
-        .nav-lux:hover { color:rgba(255,255,255,.88); }
-        .nav-lux:hover::after { width:100%; }
-
-        /* ── Scroll line ── */
-        @keyframes scrollDrift {
-          0%,100% { transform:translateY(0); opacity:.55; }
-          50%      { transform:translateY(7px); opacity:1; }
-        }
-        .scroll-line {
-          width:1px; height:48px;
-          background:linear-gradient(to bottom, transparent, rgba(200,146,42,.7));
-          animation:scrollDrift 2.8s ease-in-out infinite;
-        }
-
-        /* ── Side rotated label ── */
-        .side-label {
-          writing-mode:vertical-rl; text-orientation:mixed;
-          font-family:'Jost',sans-serif; font-size:.44rem; font-weight:200;
-          letter-spacing:.3em; text-transform:uppercase;
-          color:rgba(255,255,255,.25);
-        }
-
-        /* ── Video slow Ken Burns ── */
-        @keyframes kenBurns {
-          0%   { transform:scale(1.045); }
-          100% { transform:scale(1.0); }
-        }
-        .video-kb { animation:kenBurns 20s ease-out forwards; will-change:transform; }
-
-        /* ── Menu / search slide ── */
         .mobile-menu {
-          transform:translateX(100%);
-          transition:transform .5s cubic-bezier(.16,1,.3,1);
-          will-change:transform;
+          transform: translateX(100%);
+          transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
         }
-        .mobile-menu.open { transform:translateX(0); }
+        .mobile-menu.open {
+          transform: translateX(0);
+        }
+
         .search-overlay {
-          transform:translateY(-100%);
-          transition:transform .45s cubic-bezier(.16,1,.3,1);
-          will-change:transform;
+          transform: translateY(-100%);
+          transition: transform 0.45s cubic-bezier(0.16,1,0.3,1);
         }
-        .search-overlay.open { transform:translateY(0); }
-
-        /* ── GSAP initial states ── */
-        .hero-bg-layer,.hero-nav-inner,.hero-loc-badge,.hero-eyebrow,
-        .hero-line1,.hero-line2,.hero-descriptor,.hero-divider,
-        .hero-cta-group,.hero-side-label,.hero-scroll-hint { opacity:0; }
-        .hero-divider { transform-origin:left center; transform:scaleX(0); }
-        .menu-link,.menu-footer { opacity:0; }
-
-        /* ── Hide desktop elements on mobile ── */
-        @media (max-width:1023px) {
-          .desktop-only { display:none !important; }
+        .search-overlay.open {
+          transform: translateY(0);
         }
 
-        /* ── Responsive headline ── */
-        .hl { font-family:'Cormorant Garamond',serif; font-weight:300; line-height:.92; letter-spacing:-.01em; color:rgba(255,255,255,.97); }
-        .hl-i { font-family:'Cormorant Garamond',serif; font-weight:300; font-style:italic; line-height:.92; letter-spacing:.01em; color:rgba(228,192,110,.95); }
+        .menu-link { opacity: 0; }
+        .menu-cta  { opacity: 0; }
+
+        .video-vignette {
+          background: linear-gradient(
+            to bottom,
+            transparent 0%,
+            transparent 50%,
+            rgba(0,0,0,0.18) 78%,
+            rgba(245,240,232,0.55) 92%,
+            rgba(245,240,232,1) 100%
+          );
+        }
       `}</style>
 
-      {/* ═══════════════════ SEARCH OVERLAY ═══════════════════ */}
-      <div className={`search-overlay fixed inset-0 z-[95] flex flex-col px-8 pt-8 pb-12 ${searchOpen ? "open" : ""}`}
-        style={{ background: "#0f0e0c" }}
+      {/* ── Navbar ── */}
+      <nav
+        className="w-full bg-cream-dark px-6 py-5 flex items-center justify-between sticky top-0 z-50"
+        style={{ borderBottom: "1px solid rgba(0,0,0,0.06)" }}
       >
-        <div className="flex items-center justify-between mb-10">
-          <span style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:".68rem", letterSpacing:".38em", textTransform:"uppercase", color:"rgba(255,255,255,.4)", fontWeight:300 }}>
-            Search Lustro
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => setMenuOpen(true)}
+            className="flex flex-col gap-[5px]"
+            aria-label="Open menu"
+          >
+            <span className="w-5 h-px bg-charcoal block" />
+            <span className="w-5 h-px bg-charcoal block" />
+            <span className="w-3 h-px bg-charcoal block" />
+          </button>
+          <Image
+            src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777567002/lustrologo_wfervy.png"
+            alt="Lustro"
+            width={44}
+            height={44}
+            className="object-contain rounded-full"
+          />
+        </div>
+
+        <span className="absolute left-1/2 -translate-x-1/2 font-cormorant text-charcoal font-bold tracking-[0.28em] uppercase text-[1.02rem] whitespace-nowrap">
+          Lustro Homes
+        </span>
+
+        <button
+          aria-label="Search"
+          className="text-charcoal"
+          onClick={() => setSearchOpen(true)}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
+            <circle cx="11" cy="11" r="7" />
+            <path strokeLinecap="round" d="M16.5 16.5l3.5 3.5" />
+          </svg>
+        </button>
+      </nav>
+
+      {/* ── Search Overlay ── */}
+      <div className={`search-overlay fixed inset-0 z-[95] bg-cream-dark flex flex-col px-6 pt-6 pb-10 ${searchOpen ? "open" : ""}`}>
+        <div className="flex items-center justify-between mb-8">
+          <span className="font-cormorant text-charcoal text-lg tracking-[0.22em] uppercase font-light">
+            Search
           </span>
-          <button onClick={() => setSearchOpen(false)} style={{ color:"rgba(255,255,255,.35)" }} className="hover:opacity-75 transition-opacity">
-            <IconClose />
+          <button onClick={() => setSearchOpen(false)} className="text-charcoal/40 hover:text-charcoal transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </button>
         </div>
 
-        <div className="flex items-center gap-3 pb-4 mb-10 border-b" style={{ borderColor:"rgba(200,146,42,.22)" }}>
-          <IconSearch cls="w-4 h-4 flex-shrink-0" style={{ color:"rgba(200,146,42,.5)" }} />
+        <div className="border-b border-charcoal/15 flex items-center gap-3 pb-3 mb-8">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4 text-charcoal/35 flex-shrink-0">
+            <circle cx="11" cy="11" r="7" />
+            <path strokeLinecap="round" d="M16.5 16.5l3.5 3.5" />
+          </svg>
           <input
             ref={searchInputRef}
             type="text"
-            placeholder="Rooms, dining, investment…"
+            placeholder="Search rooms, dining, investment..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="flex-1 bg-transparent outline-none"
-            style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.4rem", fontWeight:300, color:"rgba(255,255,255,.85)" }}
+            className="flex-1 bg-transparent font-dm-sans text-sm text-charcoal placeholder-charcoal/25 outline-none"
           />
           {searchQuery && (
-            <button onClick={() => setSearchQuery("")} style={{ color:"rgba(255,255,255,.25)" }} className="hover:opacity-70 transition-opacity">
-              <IconClose cls="w-4 h-4" />
+            <button onClick={() => setSearchQuery("")} className="text-charcoal/25 hover:text-charcoal transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+              </svg>
             </button>
           )}
         </div>
 
-        <div className="flex flex-col">
-          {searchQuery.length > 1 ? (
-            searchResults.length > 0 ? (
-              searchResults.map((r) => (
-                <button key={r.href} onClick={() => handleSearchNavigate(r.href)}
-                  className="text-left py-5 border-b flex items-center justify-between group"
-                  style={{ borderColor:"rgba(255,255,255,.05)" }}
+        {searchQuery.length > 1 && (
+          <div className="flex flex-col gap-1">
+            {searchResults.length > 0 ? (
+              searchResults.map((result) => (
+                <button
+                  key={result.href}
+                  onClick={() => handleSearchNavigate(result.href)}
+                  className="text-left py-4 border-b border-charcoal/8 flex items-center justify-between group"
                 >
-                  {/* FIX 3 — cast e.target for search results hover */}
-                  <span style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.8rem", fontWeight:300, color:"rgba(255,255,255,.68)", transition:"color .3s" }}
-                    onMouseEnter={e => (e.target as HTMLElement).style.color="rgba(255,255,255,.95)"}
-                    onMouseLeave={e => (e.target as HTMLElement).style.color="rgba(255,255,255,.68)"}
-                  >{r.label}</span>
-                  <span style={{ color:"rgba(200,146,42,.5)" }}><IconChevron /></span>
+                  <span className="font-cormorant text-2xl text-charcoal font-light group-hover:text-brown transition-colors">
+                    {result.label}
+                  </span>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4 text-charcoal/25 group-hover:text-brown transition-colors">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 18l6-6-6-6" />
+                  </svg>
                 </button>
               ))
             ) : (
-              <p style={{ fontFamily:"'Jost',sans-serif", fontSize:".62rem", color:"rgba(255,255,255,.25)", letterSpacing:".2em" }}>
-                No results for "{searchQuery}"
+              <p className="font-dm-sans text-sm text-charcoal/30 mt-2">
+                No results for &quot;{searchQuery}&quot;
               </p>
-            )
-          ) : (
-            <>
-              <p style={{ fontFamily:"'Jost',sans-serif", fontSize:".48rem", letterSpacing:".34em", textTransform:"uppercase", color:"rgba(200,146,42,.5)", marginBottom:"16px" }}>
-                Explore
-              </p>
-              {HERO_NAV_LINKS.map((link) => (
-                <button key={link.href} onClick={() => handleSearchNavigate(link.href)}
-                  className="text-left py-4 border-b flex items-center justify-between"
-                  style={{ borderColor:"rgba(255,255,255,.05)" }}
-                >
-                  {/* FIX 4 — cast e.target for default nav links hover */}
-                  <span style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.35rem", fontWeight:300, color:"rgba(255,255,255,.42)", transition:"color .3s" }}
-                    onMouseEnter={e => (e.target as HTMLElement).style.color="rgba(255,255,255,.82)"}
-                    onMouseLeave={e => (e.target as HTMLElement).style.color="rgba(255,255,255,.42)"}
-                  >{link.label}</span>
-                </button>
-              ))}
-            </>
-          )}
-        </div>
+            )}
+          </div>
+        )}
+
+        {searchQuery.length <= 1 && (
+          <div className="flex flex-col gap-1">
+            <p className="font-dm-sans text-[0.58rem] text-charcoal/30 uppercase tracking-[0.32em] mb-4">
+              Quick Links
+            </p>
+            {HERO_NAV_LINKS.map((link) => (
+              <button
+                key={link.href}
+                onClick={() => handleSearchNavigate(link.href)}
+                className="text-left py-3 border-b border-charcoal/8 flex items-center justify-between group"
+              >
+                <span className="font-cormorant text-xl text-charcoal/55 font-light group-hover:text-charcoal transition-colors">
+                  {link.label}
+                </span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4 text-charcoal/18 group-hover:text-charcoal/45 transition-colors">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 18l6-6-6-6" />
+                </svg>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* ═══════════════════ MOBILE MENU DRAWER ═══════════════════ */}
-      <div className={`mobile-menu fixed inset-0 z-[90] flex flex-col px-8 py-10 ${menuOpen ? "open" : ""}`}
-        style={{ background: "#0a0908" }}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between mb-14">
-          <span style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:".72rem", letterSpacing:".38em", textTransform:"uppercase", color:"rgba(200,146,42,.65)", fontWeight:300 }}>
-            Lustro Homes
-          </span>
-          <button onClick={() => setMenuOpen(false)} style={{ color:"rgba(255,255,255,.28)" }} className="hover:opacity-70 transition-opacity">
-            <IconClose cls="w-6 h-6" />
-          </button>
-        </div>
+      {/* ── Mobile Menu Drawer ── */}
+      <div className={`mobile-menu fixed inset-0 z-[90] bg-charcoal flex flex-col px-8 py-10 ${menuOpen ? "open" : ""}`}>
+        <button
+          onClick={() => setMenuOpen(false)}
+          className="self-end mb-12 text-cream/35 hover:text-cream transition-colors"
+          aria-label="Close menu"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
 
-        {/* Links */}
-        <div className="flex flex-col flex-1">
-          {HERO_NAV_LINKS.map((item, i) => (
-            <a key={item.label} href={item.href}
+        <div className="flex flex-col gap-0">
+          {HERO_NAV_LINKS.map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
               onClick={() => {
                 setMenuOpen(false);
                 const target = document.querySelector(item.href);
-                if (target) setTimeout(() => window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY, behavior:"smooth" }), 450);
+                if (target) {
+                  setTimeout(() => {
+                    const y = target.getBoundingClientRect().top + window.scrollY;
+                    window.scrollTo({ top: y, behavior: "smooth" });
+                  }, 450);
+                }
               }}
-              className="menu-link py-5 border-b flex items-end justify-between"
-              style={{ borderColor:"rgba(255,255,255,.05)" }}
+              className="menu-link py-4 border-b border-cream/6 flex items-center justify-between group"
             >
-              <span style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"clamp(1.6rem,7vw,2.5rem)", fontWeight:300, color:"rgba(255,255,255,.72)", lineHeight:1, transition:"color .35s ease" }}
-                onMouseEnter={e => (e.currentTarget as HTMLElement).style.color="rgba(228,192,110,.95)"}
-                onMouseLeave={e => (e.currentTarget as HTMLElement).style.color="rgba(255,255,255,.72)"}
-              >{item.label}</span>
-              <span style={{ fontFamily:"'Jost',sans-serif", fontSize:".48rem", letterSpacing:".22em", color:"rgba(255,255,255,.15)", fontWeight:200, paddingBottom:"4px" }}>
-                0{i + 1}
+              <span className="font-cormorant text-[1.9rem] text-cream font-light tracking-wide group-hover:text-gold transition-colors duration-400">
+                {item.label}
               </span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1} className="w-3.5 h-3.5 text-cream/18 group-hover:text-gold/60 transition-colors">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 18l6-6-6-6" />
+              </svg>
             </a>
           ))}
         </div>
 
-        {/* Footer CTA */}
-        <div className="menu-footer mt-auto pt-10">
-          <div style={{ width:"40px", height:"1px", background:"linear-gradient(to right,rgba(200,146,42,.65),transparent)", marginBottom:"20px" }} />
-          <p style={{ fontFamily:"'Jost',sans-serif", fontSize:".48rem", letterSpacing:".3em", textTransform:"uppercase", color:"rgba(255,255,255,.2)", marginBottom:"14px" }}>
-            Begin your experience
+        <div className="mt-auto pt-8 menu-cta">
+          <p className="font-dm-sans text-[0.56rem] text-cream/22 uppercase tracking-[0.35em] mb-3">
+            Ready to experience Lustro?
           </p>
           <a
             href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
-            target="_blank" rel="noopener noreferrer"
-            className="cta-gold"
-            style={{ width:"fit-content" }}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-dm-sans text-xs text-gold tracking-[0.22em] uppercase cta-link hover:text-gold/65 transition-colors"
           >
-            Book a Stay <IconArrow />
+            Book Your Stay
           </a>
         </div>
       </div>
 
-      {/* ═══════════════════ HERO ═══════════════════ */}
-      <section
-        className="hero-bg-layer relative overflow-hidden"
-        style={{ width:"100%", height:"100svh", background:"#080706" }}
+      {/* ── Hero Video Block ── */}
+      <div
+        className="hero-video-block w-full bg-charcoal relative overflow-hidden"
+        style={{ opacity: 0, height: "62vh" }}
       >
-
-        {/* Video */}
-        <div className="absolute inset-0 z-0 overflow-hidden">
-          <video
-            ref={videoRef}
-            src={HERO_VIDEO_URL}
-            autoPlay muted loop playsInline disablePictureInPicture
-            className="video-kb w-full h-full object-cover"
-            style={{ transformOrigin:"center center" }}
-            onContextMenu={(e) => e.preventDefault()}
-          />
-        </div>
-
-        {/* Film grain */}
-        <div className="grain-overlay" />
-
-        {/* Edge vignette */}
-        <div className="vignette-edge" />
-
-        {/* Cinematic gradient layers */}
-        <div className="absolute inset-0 pointer-events-none" style={{ zIndex:3 }}>
-          {/* Top — nav legibility */}
-          <div style={{ position:"absolute", top:0, left:0, right:0, height:"45%", background:"linear-gradient(to bottom,rgba(4,3,2,.72) 0%,rgba(4,3,2,.22) 60%,transparent 100%)" }} />
-          {/* Bottom — text legibility */}
-          <div style={{ position:"absolute", bottom:0, left:0, right:0, height:"82%", background:"linear-gradient(to top,rgba(4,3,2,.96) 0%,rgba(4,3,2,.62) 30%,rgba(4,3,2,.18) 65%,transparent 100%)" }} />
-          {/* Left edge — depth */}
-          <div style={{ position:"absolute", top:0, left:0, bottom:0, width:"28%", background:"linear-gradient(to right,rgba(4,3,2,.32) 0%,transparent 100%)" }} />
-        </div>
-
-        {/* ─── NAVIGATION ─────────────────────── */}
-        <nav
-          className="hero-nav-inner absolute top-0 left-0 right-0 z-50 flex items-center justify-between"
-          style={{
-            padding:"clamp(20px,3vh,36px) clamp(24px,4vw,56px)",
-            background: scrolled ? "rgba(4,3,2,.78)" : "transparent",
-            backdropFilter: scrolled ? "blur(14px)" : "none",
-            transition: "background .5s ease, backdrop-filter .5s ease",
+        <video
+          ref={videoRef}
+          src={HERO_VIDEO_URL}
+          autoPlay
+          muted
+          loop
+          playsInline
+          disablePictureInPicture
+          className="w-full h-full object-cover"
+          onLoadedMetadata={(e) => {
+            Array.from(e.currentTarget.textTracks).forEach(
+              (t) => (t.mode = "hidden")
+            );
           }}
-        >
-          {/* Hamburger */}
-          <button onClick={() => setMenuOpen(true)} className="flex flex-col gap-[5px] z-10" aria-label="Open menu">
-            <span style={{ width:"22px", height:"1px", background:"rgba(255,255,255,.75)", display:"block" }} />
-            <span style={{ width:"22px", height:"1px", background:"rgba(255,255,255,.75)", display:"block" }} />
-            <span style={{ width:"13px", height:"1px", background:"rgba(255,255,255,.38)", display:"block" }} />
+          onContextMenu={(e) => e.preventDefault()}
+        />
+
+        {/* Cinematic vignette — bleeds into cream below */}
+        <div className="video-vignette absolute inset-0 pointer-events-none" />
+
+        {/* Video controls */}
+        <div className="absolute bottom-0 left-0 right-0 px-5 py-4 flex items-center justify-between">
+          <button
+            onClick={togglePlay}
+            className="text-white/60 hover:text-white transition-colors"
+            aria-label={isPlaying ? "Pause" : "Play"}
+          >
+            {isPlaying ? (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                <path d="M8 5.14v14l11-7-11-7z" />
+              </svg>
+            )}
           </button>
 
-          {/* Wordmark — centred */}
-          <div className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center gap-[4px]">
-            <img
-              src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777567002/lustrologo_wfervy.png"
-              alt="Lustro"
-              style={{ width:"30px", height:"30px", objectFit:"contain", borderRadius:"50%", opacity:.86 }}
-            />
-            <span style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:".6rem", fontWeight:400, letterSpacing:".44em", textTransform:"uppercase", color:"rgba(255,255,255,.8)" }}>
-              Lustro Homes
-            </span>
-          </div>
-
-          {/* Right — desktop links + search */}
-          <div className="flex items-center gap-7">
-            <div className="desktop-only flex items-center gap-7">
-              {HERO_NAV_LINKS.slice(0, 4).map((link) => (
-                <a key={link.href} href={link.href} className="nav-lux">{link.label}</a>
-              ))}
-              <span style={{ width:"1px", height:"14px", background:"rgba(255,255,255,.1)" }} />
-            </div>
-            <button aria-label="Search" onClick={() => setSearchOpen(true)}
-              style={{ color:"rgba(255,255,255,.55)" }}
-              className="hover:opacity-90 transition-opacity"
-            >
-              <IconSearch cls="w-[18px] h-[18px]" />
-            </button>
-          </div>
-        </nav>
-
-        {/* ─── LOCATION BADGE ─────────────────── */}
-        <div
-          className="hero-loc-badge absolute flex items-center gap-[10px]"
-          style={{ top:"clamp(90px,14vh,138px)", left:"clamp(24px,6vw,80px)", zIndex:10 }}
-        >
-          <div style={{ width:"20px", height:"1px", background:"rgba(200,146,42,.6)" }} />
-          <span style={{ fontFamily:"'Jost',sans-serif", fontSize:".46rem", fontWeight:200, letterSpacing:".38em", textTransform:"uppercase", color:"rgba(200,146,42,.72)" }}>
-            Lekki, Lagos — Nigeria
-          </span>
-        </div>
-
-        {/* ─── MAIN CONTENT ───────────────────── */}
-        <div
-          className="absolute inset-0 flex flex-col justify-end"
-          style={{
-            zIndex:10,
-            padding:"clamp(40px,6vw,80px) clamp(24px,6vw,80px)",
-            paddingBottom:"clamp(88px,11vh,128px)",
-          }}
-        >
-          <div style={{ maxWidth:"min(780px,88vw)" }}>
-
-            {/* Eyebrow */}
-            <div className="hero-eyebrow flex items-center gap-3 mb-6">
-              <div style={{ width:"26px", height:"1px", background:"rgba(200,146,42,.5)" }} />
-              <span style={{ fontFamily:"'Jost',sans-serif", fontSize:".48rem", fontWeight:200, letterSpacing:".38em", textTransform:"uppercase", color:"rgba(255,255,255,.42)" }}>
-                A New Language of Hospitality
-              </span>
-            </div>
-
-            {/* Headline */}
-            <div style={{ marginBottom:"clamp(18px,2.6vh,28px)", overflow:"hidden" }}>
-              {/* Static top word */}
-              <div className="hero-line1">
-                <span className="hl" style={{ fontSize:"clamp(3rem,8.5vw,7.2rem)", display:"block" }}>
-                  Lustro
-                </span>
-              </div>
-
-              {/* Rotating phrase */}
-              <div className="hero-line2" style={{ position:"relative" }}>
-                <div className={`phrase-block ${phraseVisible ? "ph-visible" : "ph-hidden"}`}>
-                  <span className="hl"  style={{ fontSize:"clamp(3rem,8.5vw,7.2rem)",   display:"block" }}>
-                    {currentPhrase.line1}
-                  </span>
-                  <span className="hl-i" style={{ fontSize:"clamp(3.2rem,9vw,7.8rem)", display:"block" }}>
-                    {currentPhrase.line2}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Descriptor */}
-            <p className="hero-descriptor" style={{
-              fontFamily:"'Cormorant Garamond',serif", fontStyle:"italic",
-              fontSize:"clamp(.85rem,1.5vw,1.02rem)", fontWeight:300,
-              color:"rgba(255,255,255,.4)", letterSpacing:".04em", lineHeight:1.75,
-              maxWidth:"420px", marginBottom:"clamp(26px,3.6vh,42px)",
-            }}>
-              Curated residences where every detail speaks the language of refined living.
-            </p>
-
-            {/* Ornament divider */}
-            <div className="hero-divider flex items-center gap-4" style={{ marginBottom:"clamp(26px,3.8vh,44px)" }}>
-              <div style={{ height:"1px", width:"46px", background:"linear-gradient(to right,rgba(200,146,42,.7),transparent)" }} />
-              <div style={{ width:"3px", height:"3px", borderRadius:"50%", background:"rgba(200,146,42,.6)" }} />
-              <div style={{ height:"1px", width:"22px", background:"linear-gradient(to right,rgba(200,146,42,.28),transparent)" }} />
-            </div>
-
-            {/* CTAs */}
-            <div className="hero-cta-group flex flex-wrap items-center gap-4">
-              <a
-                href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
-                target="_blank" rel="noopener noreferrer"
-                className="cta-gold"
-              >
-                Book a Stay <IconArrow />
-              </a>
-              <a href="#rooms" className="cta-ghost-lux">
-                Explore Suites
-              </a>
-            </div>
-          </div>
-        </div>
-
-        {/* ─── SIDE VERTICAL LABEL (desktop) ─── */}
-        <div
-          className="hero-side-label desktop-only absolute flex flex-col items-center gap-3"
-          style={{ right:"clamp(20px,2.8vw,40px)", bottom:"clamp(88px,12vh,140px)", zIndex:15 }}
-        >
-          <span className="side-label">Lagos · Nigeria · 2024</span>
-          <div style={{ width:"1px", height:"30px", background:"linear-gradient(to bottom,rgba(200,146,42,.4),transparent)" }} />
-        </div>
-
-        {/* ─── SCROLL INDICATOR ───────────────── */}
-        <div
-          className="hero-scroll-hint absolute flex flex-col items-center gap-[10px]"
-          style={{ bottom:"clamp(28px,5vh,48px)", left:"50%", transform:"translateX(-50%)", zIndex:15 }}
-        >
-          <span style={{ fontFamily:"'Jost',sans-serif", fontSize:".42rem", fontWeight:200, letterSpacing:".38em", textTransform:"uppercase", color:"rgba(255,255,255,.26)" }}>
-            Scroll
-          </span>
-          <div className="scroll-line" />
-        </div>
-
-        {/* ─── VIDEO CONTROLS (bottom-right) ─── */}
-        <div
-          className="absolute flex items-center gap-3"
-          style={{ bottom:"clamp(28px,5vh,48px)", right:"clamp(20px,3vw,40px)", zIndex:15 }}
-        >
-          {[
-            {
-              label: isMuted ? "Unmute" : "Mute",
-              action: toggleMute,
-              icon: isMuted ? (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-3 h-3">
-                  <path d="M11 5L6 9H2v6h4l5 4V5z"/><path strokeLinecap="round" d="M23 9l-6 6M17 9l6 6"/>
-                </svg>
-              ) : (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-3 h-3">
-                  <path d="M11 5L6 9H2v6h4l5 4V5z"/><path strokeLinecap="round" d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/>
-                </svg>
-              ),
-            },
-            {
-              label: isPlaying ? "Pause" : "Play",
-              action: togglePlay,
-              icon: isPlaying ? (
-                <svg viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-              ) : (
-                <svg viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3"><path d="M8 5v14l11-7z"/></svg>
-              ),
-            },
-          ].map(({ label, action, icon }) => (
+          <div className="flex items-center gap-4">
             <button
-              key={label}
-              onClick={action}
-              aria-label={label}
-              style={{
-                width:"32px", height:"32px",
-                border:"1px solid rgba(255,255,255,.14)",
-                background:"rgba(0,0,0,.22)",
-                backdropFilter:"blur(8px)",
-                borderRadius:"50%",
-                display:"flex", alignItems:"center", justifyContent:"center",
-                color:"rgba(255,255,255,.5)",
-                cursor:"pointer",
-                transition:"all .3s ease",
-              }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor="rgba(200,146,42,.6)"; e.currentTarget.style.color="rgba(200,146,42,.9)"; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor="rgba(255,255,255,.14)"; e.currentTarget.style.color="rgba(255,255,255,.5)"; }}
+              onClick={toggleMute}
+              className="text-white/60 hover:text-white transition-colors"
+              aria-label={isMuted ? "Unmute" : "Mute"}
             >
-              {icon}
+              {isMuted ? (
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                  <path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0 0 21 12c0-4.28-3-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06A8.99 8.99 0 0 0 17.73 18l1.73 1.73L21 18.46 5.54 3 4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                  <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z" />
+                </svg>
+              )}
             </button>
-          ))}
+
+            <button
+              onClick={toggleFullscreen}
+              className="text-white/60 hover:text-white transition-colors"
+              aria-label="Fullscreen"
+            >
+              {isFullscreen ? (
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                  <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                  <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" />
+                </svg>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Content Below Video ── */}
+      <div
+        className="bg-cream-dark px-6 pt-10 pb-12 text-center"
+        style={{ opacity: 0 }}
+      >
+        {/* Eyebrow */}
+        <p
+          className="hero-eyebrow font-cormorant uppercase tracking-[0.38em] text-charcoal/45 text-[0.72rem] mb-3"
+          style={{ opacity: 0 }}
+        >
+          Crafted for
+        </p>
+
+        {/* Cycling phrase */}
+        <div className="hero-phrase-block overflow-hidden mb-8" style={{ opacity: 0 }}>
+          <span
+            className={`phrase-word ${transitioning ? "hidden" : "visible"}`}
+            style={{
+              fontFamily: "'Great Vibes', cursive",
+              fontSize: "clamp(46px, 13vw, 66px)",
+              color: "#C8922A",
+              lineHeight: 1.08,
+              display: "block",
+            }}
+          >
+            {HERO_PHRASES[currentIdx]}
+          </span>
         </div>
 
-      </section>
+        {/* Gold divider */}
+        <div
+          className="hero-divider mx-auto mb-9"
+          style={{
+            width: "36px",
+            height: "1px",
+            background: "#C8922A",
+            opacity: 0.55,
+            opacity: 0,
+          }}
+        />
+
+        {/* CTAs */}
+        <div className="hero-ctas flex items-center justify-between px-1" style={{ opacity: 0 }}>
+          <a
+            href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="cta-link font-cormorant text-charcoal/80 text-[1.05rem] font-light hover:text-charcoal transition-colors"
+          >
+            Book Your Stay
+          </a>
+          <a
+            href="#rooms"
+            onClick={(e) => {
+              e.preventDefault();
+              document.querySelector("#rooms")?.scrollIntoView({ behavior: "smooth" });
+            }}
+            className="cta-link font-cormorant text-charcoal/80 text-[1.05rem] font-light hover:text-charcoal transition-colors"
+          >
+            Explore Rooms
+          </a>
+        </div>
+      </div>
     </>
   );
 }
