@@ -230,7 +230,6 @@ function Navbar({
 // HERO SECTION — Cinematic Video Background
 // ─────────────────────────────────────────────────
 
-
 const HERO_VIDEO_URL =
   "https://res.cloudinary.com/dx3k7hbnc/video/upload/v1777632548/Hero-video_egr33p.mp4";
 
@@ -590,9 +589,11 @@ function Hero() {
       </div>
 
       {/* ── Hero Video Block ── */}
+     
+      <div className="flex flex-col" style={{ height: "calc(100dvh - 74px)" }}>
       <div
-        className="hero-video-block w-full bg-charcoal relative overflow-hidden"
-        style={{ opacity: 0, height: "60vh" }}
+        className="hero-video-block w-full bg-charcoal relative overflow-hidden flex-shrink-0"
+        style={{ opacity: 0, height: "60%" }}
       >
         <video
           ref={videoRef}
@@ -659,10 +660,10 @@ function Hero() {
       </div>
 
             {/* ── Content Below Video — Unified Luxury Block ── */}
-      <div className="hero-content-block bg-cream-dark px-6 pt-10 pb-12 text-center" style={{ opacity: 0 }}>
+     <div className="hero-content-block bg-cream-dark px-6 pt-5 pb-4 text-center flex flex-col justify-between flex-1" style={{ opacity: 0 }}>
 
         {/* Crafted for + cycling phrase */}
-        <div className="mb-10">
+        <div className="mb-3">
           <p
             style={{
               fontFamily: "'Cormorant Garamond', serif",
@@ -693,14 +694,14 @@ function Hero() {
         </div>
 
         {/* ── Thin gold divider ── */}
-        <div className="flex items-center gap-4 mb-10 px-2">
+        <div className="flex items-center gap-4 mb-3 px-2">
           <div className="flex-1 h-px bg-gradient-to-r from-transparent to-gold/30" />
           <div className="w-1 h-1 rounded-full bg-gold/40" />
           <div className="flex-1 h-px bg-gradient-to-l from-transparent to-gold/30" />
         </div>
 
         {/* ── Stats — editorial layout ── */}
-        <div className="grid grid-cols-2 gap-y-8 gap-x-4 mb-10 px-2">
+        <div className="grid grid-cols-2 gap-y-8 gap-x-4 mb-3 px-2">
           {[
             { number: "15,000+", label: "Guests Hosted" },
             { number: "3",       label: "Iconic Properties" },
@@ -738,7 +739,7 @@ function Hero() {
         </div>
 
         {/* ── Thin gold divider ── */}
-        <div className="flex items-center gap-4 mb-10 px-2">
+        <div className="flex items-center gap-4 mb-3 px-2">
           <div className="flex-1 h-px bg-gradient-to-r from-transparent to-gold/30" />
           <div className="w-1 h-1 rounded-full bg-gold/40" />
           <div className="flex-1 h-px bg-gradient-to-l from-transparent to-gold/30" />
@@ -766,7 +767,8 @@ function Hero() {
           </a>
         </div>
 
-    </div>
+      </div>
+      </div>
     </>
   );
 }
