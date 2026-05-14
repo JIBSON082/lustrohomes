@@ -694,7 +694,7 @@ function Hero() {
         </div>
 
         {/* CTAs */}
-        <div className="flex items-center justify-between px-4">
+        <div className="flex items-center justify-between px-2">
           <a
             href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
             target="_blank"
