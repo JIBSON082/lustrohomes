@@ -660,7 +660,7 @@ function Hero() {
       </div>
 
             {/* ── Content Below Video — Unified Luxury Block ── */}
-     <div className="hero-content-block bg-cream-dark px-6 pt-5 pb-4 text-center flex flex-col justify-between flex-1" style={{ opacity: 0 }}>
+     <div className="hero-content-block bg-cream-dark px-0 pt-4 pb-3 text-center flex flex-col justify-between flex-1" style={{ opacity: 0 }}>
 
         {/* Crafted for + cycling phrase */}
         <div className="mb-3">
@@ -682,7 +682,7 @@ function Hero() {
               className={`phrase-word ${transitioning ? "hidden" : "visible"}`}
               style={{
                 fontFamily: "'Great Vibes', cursive",
-                fontSize: "clamp(44px, 12vw, 62px)",
+                fontSize: "clamp(32px, 8vw, 44px)",
                 color: "#C8922A",
                 lineHeight: 1.05,
                 whiteSpace: "nowrap",
@@ -701,7 +701,7 @@ function Hero() {
         </div>
 
         {/* ── Stats — editorial layout ── */}
-        <div className="grid grid-cols-2 gap-y-8 gap-x-4 mb-3 px-2">
+       <div className="grid grid-cols-2 gap-y-3 gap-x-0 mb-3 px-0">
           {[
             { number: "15,000+", label: "Guests Hosted" },
             { number: "3",       label: "Iconic Properties" },
@@ -712,7 +712,7 @@ function Hero() {
               <p
                 style={{
                   fontFamily: "'Cormorant Garamond', serif",
-                  fontSize: "clamp(2rem, 8vw, 2.8rem)",
+                  fontSize: "clamp(1.4rem, 5vw, 1.8rem)",
                   fontWeight: "300",
                   color: "#C8922A",
                   lineHeight: 1,
