@@ -658,21 +658,20 @@ function Hero() {
         </div>
       </div>
 
-      {/* ── Content Below Video ── */}
-      <div className="hero-content-block bg-cream-dark px-4 pt-12 pb-10 text-center" style={{ opacity: 0 }}>
+            {/* ── Content Below Video — Unified Luxury Block ── */}
+      <div className="hero-content-block bg-cream-dark px-6 pt-10 pb-12 text-center" style={{ opacity: 0 }}>
 
         {/* Crafted for + cycling phrase */}
         <div className="mb-10">
           <p
             style={{
               fontFamily: "'Cormorant Garamond', serif",
-              fontSize: "1.0rem",
-              fontWeight: "600",
-              letterSpacing: "0.35em",
-              color: "rgba(0,0,0,0.55)",
+              fontSize: "0.72rem",
+              fontWeight: "500",
+              letterSpacing: "0.45em",
+              color: "rgba(0,0,0,0.38)",
               textTransform: "uppercase",
-              marginBottom: "2px",
-              fontStyle: "normal",
+              marginBottom: "4px",
             }}
           >
             Crafted for
@@ -693,7 +692,59 @@ function Hero() {
           </div>
         </div>
 
-        {/* CTAs */}
+        {/* ── Thin gold divider ── */}
+        <div className="flex items-center gap-4 mb-10 px-2">
+          <div className="flex-1 h-px bg-gradient-to-r from-transparent to-gold/30" />
+          <div className="w-1 h-1 rounded-full bg-gold/40" />
+          <div className="flex-1 h-px bg-gradient-to-l from-transparent to-gold/30" />
+        </div>
+
+        {/* ── Stats — editorial layout ── */}
+        <div className="grid grid-cols-2 gap-y-8 gap-x-4 mb-10 px-2">
+          {[
+            { number: "15,000+", label: "Guests Hosted" },
+            { number: "3",       label: "Iconic Properties" },
+            { number: "₦2M+",   label: "Monthly Revenue" },
+            { number: "100%",    label: "Delivery Rate" },
+          ].map((stat, i) => (
+            <div key={stat.label} className="text-center">
+              <p
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontSize: "clamp(2rem, 8vw, 2.8rem)",
+                  fontWeight: "300",
+                  color: "#C8922A",
+                  lineHeight: 1,
+                  marginBottom: "6px",
+                  letterSpacing: "-0.01em",
+                }}
+              >
+                {stat.number}
+              </p>
+              <p
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: "0.58rem",
+                  fontWeight: "400",
+                  letterSpacing: "0.22em",
+                  color: "rgba(0,0,0,0.35)",
+                  textTransform: "uppercase",
+                }}
+              >
+                {stat.label}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* ── Thin gold divider ── */}
+        <div className="flex items-center gap-4 mb-10 px-2">
+          <div className="flex-1 h-px bg-gradient-to-r from-transparent to-gold/30" />
+          <div className="w-1 h-1 rounded-full bg-gold/40" />
+          <div className="flex-1 h-px bg-gradient-to-l from-transparent to-gold/30" />
+        </div>
+
+        {/* ── CTAs ── */}
         <div className="flex items-center justify-between px-2">
           <a
             href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
@@ -716,41 +767,6 @@ function Hero() {
         </div>
 
       </div>
-    </>
-  );
-}
-
-// ─────────────────────────────────────────────────
-// STATS BAR
-// ─────────────────────────────────────────────────
-function StatsBar() {
-  const stats = [
-    { number: "15,000+", label: "Guests Hosted" },
-    { number: "3", label: "Iconic Properties" },
-    { number: "₦2M+", label: "Monthly Revenue" },
-    { number: "100%", label: "Delivery Rate" },
-  ];
-
-  return (
-    <section className="bg-charcoal py-16">
-      <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10">
-        {stats.map((stat) => (
-          <div
-            key={stat.label}
-            className="reveal-element text-center md:border-r md:border-white/5 last:border-0"
-          >
-            <p className="font-cormorant text-4xl md:text-5xl text-gold font-light leading-none mb-2">
-              {stat.number}
-            </p>
-            <p className="font-dm-sans text-[0.65rem] text-white/45 uppercase tracking-[0.2em]">
-              {stat.label}
-            </p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
 
 
 // ─────────────────────────────────────────────────
@@ -2719,7 +2735,6 @@ export default function Home() {
   return (
     <main className="overflow-x-hidden">
       <Hero />
-      <StatsBar />
       <About />
       <Rooms />
       <Dining />
