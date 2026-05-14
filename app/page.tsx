@@ -286,31 +286,16 @@ function Hero() {
     const initAnim = async () => {
       try {
         const { gsap } = await import("gsap");
-        const { ScrollTrigger } = await import("gsap/ScrollTrigger");
-        gsap.registerPlugin(ScrollTrigger);
-
         gsap.timeline({ delay: 0.3 })
           .fromTo(".hero-video-block",
-            { opacity: 0, scale: 1.04 },
-            { opacity: 1, scale: 1, duration: 1.6, ease: "expo.out" }
+            { opacity: 0 },
+            { opacity: 1, duration: 1.2, ease: "expo.out" }
           )
           .fromTo(".hero-content-block",
             { opacity: 0, y: 24 },
             { opacity: 1, y: 0, duration: 1.2, ease: "expo.out" },
             "-=0.6"
           );
-
-        // Parallax — video scales subtly as you scroll
-        gsap.to(".hero-video-block video", {
-          scale: 1.08,
-          ease: "none",
-          scrollTrigger: {
-            trigger: ".hero-video-block",
-            start: "top top",
-            end: "bottom top",
-            scrub: 1.5,
-          },
-        });
       } catch {
         [".hero-video-block", ".hero-content-block"].forEach((sel) => {
           document.querySelectorAll(sel).forEach((el) => {
@@ -397,31 +382,14 @@ function Hero() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Tenor+Sans&display=swap');
 
-        .phrase-container {
-  position: relative;
-  overflow: hidden;
-  height: clamp(52px, 14vw, 72px);
-}
-.phrase-word {
-  display: block;
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%;
-}
-.phrase-word.visible {
-  animation: slotIn 0.75s cubic-bezier(0.16,1,0.3,1) forwards;
-}
-.phrase-word.hidden {
-  animation: slotOut 0.55s cubic-bezier(0.76,0,0.24,1) forwards;
-}
-@keyframes slotIn {
-  from { transform: translateY(100%); opacity: 0; filter: blur(4px); }
-  to   { transform: translateY(0);    opacity: 1; filter: blur(0); }
-}
-@keyframes slotOut {
-  from { transform: translateY(0);     opacity: 1; filter: blur(0); }
-  to   { transform: translateY(-100%); opacity: 0; filter: blur(3px); }
-}
+        .phrase-container { position: relative; padding-bottom: 0; }
+        .phrase-word {
+          display: block;
+          transition: transform 0.85s cubic-bezier(0.16,1,0.3,1), opacity 0.6s ease;
+        }
+        .phrase-word.visible { transform: translateY(0); opacity: 1; }
+        .phrase-word.hidden  { transform: translateY(28px); opacity: 0; }
+
         .underline-link {
           position: relative;
           display: inline-block;
@@ -644,44 +612,7 @@ function Hero() {
         />
 
         {/* Gradient */}
-       {/* Vignette — corners darken for cinematic depth */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: "radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.55) 100%)",
-            zIndex: 1,
-          }}
-        />
-
-        {/* Atmospheric grain overlay */}
-        <div
-          className="absolute inset-0 pointer-events-none opacity-[0.04]"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-            backgroundSize: "128px 128px",
-            zIndex: 2,
-          }}
-        />
-
-        {/* Bottom gradient fade into content */}
-        <div
-          className="absolute bottom-0 left-0 right-0 pointer-events-none"
-          style={{
-            height: "45%",
-            background: "linear-gradient(to top, rgba(244,240,232,1) 0%, rgba(244,240,232,0.5) 40%, transparent 100%)",
-            zIndex: 3,
-          }}
-        />
-
-        {/* Top gradient — subtle navbar bleed */}
-        <div
-          className="absolute top-0 left-0 right-0 pointer-events-none"
-          style={{
-            height: "20%",
-            background: "linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, transparent 100%)",
-            zIndex: 3,
-          }}
-        />
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black/50 to-transparent pointer-events-none" />
 
         {/* Controls */}
         <div className="absolute bottom-0 left-0 right-0 px-4 py-3 flex items-center justify-between">
