@@ -255,39 +255,29 @@ const SEARCHABLE_SECTIONS = [
   { label: "Dining", href: "#dining", keywords: ["dining", "restaurant", "food", "eat"] },
 ];
 
-const NAV_HEIGHT = 72;
-
 function Hero() {
-  const heroRef = useRef<HTMLDivElement>(null);
-  const video1Ref = useRef<HTMLVideoElement>(null);
-  const video2Ref = useRef<HTMLVideoElement>(null);
-  const searchInputRef = useRef<HTMLInputElement>(null);
-
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [isMuted, setIsMuted] = useState(true);
-  const [video2Active, setVideo2Active] = useState(false);
-
-  const [phraseIdx, setPhraseIdx] = useState(0);
-  const [transitioning, setTransitioning] = useState(false);
-
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isMuted, setIsMuted] = useState(true);
+  const [video2Active, setVideo2Active] = useState(false);
+  const [phraseIdx, setPhraseIdx] = useState(0);
+  const [transitioning, setTransitioning] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
 
-  // ── Scroll tracking ──
+  const video1Ref = useRef<HTMLVideoElement>(null);
+  const video2Ref = useRef<HTMLVideoElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const textBlockRef = useRef<HTMLDivElement>(null);
+
+  // Track scroll
   useEffect(() => {
-    const onScroll = () => {
-      if (!heroRef.current) return;
-      const { top, height } = heroRef.current.getBoundingClientRect();
-      const totalScrollable = height - window.innerHeight;
-      const scrolled = Math.max(0, -top);
-      setScrollProgress(Math.min(1, scrolled / totalScrollable));
-    };
+    const onScroll = () => setScrollY(window.scrollY);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // ── Phrase cycling ──
+  // Phrase cycling
   useEffect(() => {
     const iv = setInterval(() => {
       setTransitioning(true);
@@ -299,15 +289,15 @@ function Hero() {
     return () => clearInterval(iv);
   }, []);
 
-  // ── Entrance animation ──
+  // Entrance animation
   useEffect(() => {
     const init = async () => {
       try {
         const { gsap } = await import("gsap");
         gsap.fromTo(
           ".hero-welcome-line",
-          { opacity: 0, y: 45 },
-          { opacity: 1, y: 0, duration: 1.5, ease: "expo.out", delay: 0.5, stagger: 0.18 }
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 1.4, ease: "expo.out", delay: 0.4, stagger: 0.15 }
         );
       } catch {
         document.querySelectorAll(".hero-welcome-line").forEach((el) => {
@@ -318,7 +308,7 @@ function Hero() {
     init();
   }, []);
 
-  // ── Menu animation ──
+  // Menu animation
   useEffect(() => {
     if (!menuOpen) return;
     const init = async () => {
@@ -337,39 +327,23 @@ function Hero() {
     init();
   }, [menuOpen]);
 
-  // ── Search focus ──
+  // Search focus
   useEffect(() => {
     if (searchOpen) setTimeout(() => searchInputRef.current?.focus(), 100);
     else setSearchQuery("");
   }, [searchOpen]);
 
-  // ── Body scroll lock ──
+  // Body scroll lock
   useEffect(() => {
     document.body.style.overflow = menuOpen || searchOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [menuOpen, searchOpen]);
 
-  // ── Derived scroll values ──
-  const textMaxHeight = 320; // px - cream text section at full size
-  const textSectionHeight = Math.max(0, textMaxHeight * Math.max(0, 1 - scrollProgress * 4));
-  const welcomeOpacity = Math.max(0, 1 - scrollProgress * 7);
-  const craftedOpacity = Math.max(0, Math.min(1, (scrollProgress - 0.28) * 6));
-  const videoOverlay = 0.08 + scrollProgress * 0.52;
-  const muteOpacity = Math.max(0, Math.min(1, (scrollProgress - 0.25) * 5));
-
-  // ── Handlers ──
-  const toggleMute = () => {
-    const muted = !isMuted;
-    if (video1Ref.current) video1Ref.current.muted = muted;
-    if (video2Ref.current) video2Ref.current.muted = muted;
-    setIsMuted(muted);
-  };
-
+  // Video handlers
   const handleVideo1End = () => {
     setVideo2Active(true);
     video2Ref.current?.play().catch(() => {});
   };
-
   const handleVideo2End = () => {
     setVideo2Active(false);
     if (video1Ref.current) {
@@ -377,23 +351,46 @@ function Hero() {
       video1Ref.current.play().catch(() => {});
     }
   };
+  const toggleMute = () => {
+    const m = !isMuted;
+    if (video1Ref.current) video1Ref.current.muted = m;
+    if (video2Ref.current) video2Ref.current.muted = m;
+    setIsMuted(m);
+  };
 
   const handleSearchNavigate = (href: string) => {
     setSearchOpen(false);
     setSearchQuery("");
     if (href.startsWith("#")) {
-      const target = document.querySelector(href);
-      if (target) setTimeout(() => {
-        window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY, behavior: "smooth" });
-      }, 200);
-    } else {
-      window.open(href, "_blank");
-    }
+      const el = document.querySelector(href);
+      if (el) setTimeout(() => window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY, behavior: "smooth" }), 200);
+    } else window.open(href, "_blank");
   };
 
   const searchResults = SEARCHABLE_SECTIONS.filter((s) =>
     searchQuery.length > 1 && s.keywords.some((k) => k.includes(searchQuery.toLowerCase()))
   );
+
+  // ── Scroll-driven values ──
+  // Text block is ~220px tall. Video starts right below it.
+  // As user scrolls, video translates up to cover the text.
+  const TEXT_BLOCK_H = 220;
+  const NAV_H = 68;
+
+  // How far the video has scrolled up (capped at TEXT_BLOCK_H)
+  const videoTranslateY = Math.max(0, Math.min(TEXT_BLOCK_H, scrollY));
+
+  // Video overlay darkness increases as it covers text
+  const overlayOpacity = Math.min(0.55, (scrollY / TEXT_BLOCK_H) * 0.55);
+
+  // Welcome text fades out as video covers it
+  const welcomeOpacity = Math.max(0, 1 - (scrollY / (TEXT_BLOCK_H * 0.6)));
+
+  // Crafted for fades in after video fully covers text
+  const craftedOpacity = Math.max(0, Math.min(1, (scrollY - TEXT_BLOCK_H * 0.7) / (TEXT_BLOCK_H * 0.4)));
+
+  // Mute button appears when video starts covering
+  const muteOpacity = Math.max(0, Math.min(1, scrollY / 80));
 
   return (
     <>
@@ -524,11 +521,71 @@ function Hero() {
         </div>
       </div>
 
-      {/* ── Hero Scroll Container — 280vh gives scroll room ── */}
-      <div ref={heroRef} style={{ height: "280vh" }}>
-        <div style={{ position: "sticky", top: 0, height: "100dvh", overflow: "hidden" }}>
+      {/* ── Navbar — sticky, always on cream ── */}
+      <nav
+        className="sticky top-0 z-50 bg-cream-dark flex items-center justify-between px-6"
+        style={{ height: `${NAV_H}px`, borderBottom: "1px solid rgba(0,0,0,0.08)" }}
+      >
+        <div className="flex items-center gap-4">
+          <button onClick={() => setMenuOpen(true)} className="flex flex-col gap-[5px]" aria-label="Menu">
+            <span className="w-5 h-px bg-charcoal block" />
+            <span className="w-5 h-px bg-charcoal block" />
+            <span className="w-3 h-px bg-charcoal block" />
+          </button>
+          <Image
+            src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777567002/lustrologo_wfervy.png"
+            alt="Lustro" width={40} height={40} className="object-contain rounded-full"
+          />
+        </div>
 
-          {/* ── Videos — full bleed, stacked ── */}
+        <span className="absolute left-1/2 -translate-x-1/2 font-cormorant text-charcoal font-bold tracking-[0.25em] uppercase text-base whitespace-nowrap">
+          Lustro Lagos
+        </span>
+
+        <a
+          href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-charcoal text-cream font-dm-sans text-[0.62rem] tracking-[0.28em] uppercase px-5 py-2.5 hover:bg-brown transition-colors"
+        >
+          Book
+        </a>
+      </nav>
+
+      {/* ── Hero body — cream text + video ── */}
+      <div className="bg-cream-dark overflow-hidden" style={{ position: "relative" }}>
+
+        {/* Welcome text block — cream background */}
+        <div
+          ref={textBlockRef}
+          className="flex flex-col items-center justify-center text-center px-6"
+          style={{ height: `${TEXT_BLOCK_H}px`, opacity: welcomeOpacity }}
+        >
+          <p
+            className="hero-welcome-line font-dm-sans text-charcoal/35 uppercase mb-3"
+            style={{ fontSize: "0.62rem", letterSpacing: "0.55em" }}
+          >
+            Welcome to
+          </p>
+          <h1
+            className="hero-welcome-line font-cormorant text-charcoal font-light leading-none"
+            style={{ fontSize: "clamp(52px, 14vw, 80px)" }}
+          >
+            Lustro Lagos
+          </h1>
+        </div>
+
+        {/* Video block — rises up over text as user scrolls */}
+        <div
+          className="relative overflow-hidden"
+          style={{
+            height: "100svh",
+            transform: `translateY(-${videoTranslateY}px)`,
+            marginBottom: `-${videoTranslateY}px`,
+            transition: "transform 0.05s linear",
+          }}
+        >
+          {/* Video 1 */}
           <video
             ref={video1Ref}
             src={HERO_VIDEO_1}
@@ -540,8 +597,10 @@ function Hero() {
             onLoadedMetadata={(e) => Array.from(e.currentTarget.textTracks).forEach((t) => (t.mode = "hidden"))}
             onContextMenu={(e) => e.preventDefault()}
             className="absolute inset-0 w-full h-full object-cover"
-            style={{ opacity: video2Active ? 0 : 1, transition: "opacity 0.8s ease", zIndex: 0 }}
+            style={{ opacity: video2Active ? 0 : 1, transition: "opacity 0.8s ease" }}
           />
+
+          {/* Video 2 */}
           <video
             ref={video2Ref}
             src={HERO_VIDEO_2}
@@ -552,73 +611,28 @@ function Hero() {
             onLoadedMetadata={(e) => Array.from(e.currentTarget.textTracks).forEach((t) => (t.mode = "hidden"))}
             onContextMenu={(e) => e.preventDefault()}
             className="absolute inset-0 w-full h-full object-cover"
-            style={{ opacity: video2Active ? 1 : 0, transition: "opacity 0.8s ease", zIndex: 0 }}
+            style={{ opacity: video2Active ? 1 : 0, transition: "opacity 0.8s ease" }}
           />
 
-          {/* ── Dark video overlay ── */}
+          {/* Overlay */}
           <div
-            className="absolute inset-0"
-            style={{ background: `rgba(0,0,0,${videoOverlay})`, zIndex: 1, pointerEvents: "none" }}
+            className="absolute inset-0 pointer-events-none"
+            style={{ background: `rgba(0,0,0,${overlayOpacity})` }}
           />
 
-          {/* ── Cream text panel — shrinks on scroll ── */}
+          {/* Crafted for — centered over video */}
           <div
-            style={{
-              position: "absolute",
-              top: NAV_HEIGHT,
-              left: 0,
-              right: 0,
-              height: `${textSectionHeight}px`,
-              background: "#F5F0EA",
-              overflow: "hidden",
-              zIndex: 10,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "4px",
-            }}
-          >
-            <p
-              className="hero-welcome-line font-dm-sans text-charcoal/35 uppercase"
-              style={{ fontSize: "0.65rem", letterSpacing: "0.55em", opacity: welcomeOpacity }}
-            >
-              Welcome to
-            </p>
-            <h1
-              className="hero-welcome-line font-cormorant text-charcoal font-light leading-none text-center"
-              style={{ fontSize: "clamp(56px, 15vw, 96px)", opacity: welcomeOpacity }}
-            >
-              Lustro
-            </h1>
-            <p
-              className="hero-welcome-line font-dm-sans text-charcoal/25 uppercase"
-              style={{ fontSize: "0.55rem", letterSpacing: "0.65em", marginTop: "4px", opacity: welcomeOpacity }}
-            >
-              Homes · Lagos
-            </p>
-          </div>
-
-          {/* ── Crafted for text — fades in over video ── */}
-          <div
-            className="absolute flex flex-col items-center justify-center pointer-events-none"
-            style={{
-              top: `calc(50% + ${NAV_HEIGHT / 2}px)`,
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              opacity: craftedOpacity,
-              zIndex: 5,
-              textAlign: "center",
-            }}
+            className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
+            style={{ opacity: craftedOpacity }}
           >
             <p
               style={{
                 fontFamily: "'Tenor Sans', sans-serif",
-                fontSize: "0.7rem",
+                fontSize: "0.68rem",
                 letterSpacing: "0.55em",
-                color: "rgba(255,255,255,0.55)",
+                color: "rgba(255,255,255,0.5)",
                 textTransform: "uppercase",
-                marginBottom: "6px",
+                marginBottom: "8px",
               }}
             >
               Crafted for
@@ -627,7 +641,7 @@ function Hero() {
               className={`phrase-word ${transitioning ? "hidden" : "visible"}`}
               style={{
                 fontFamily: "'Great Vibes', cursive",
-                fontSize: "clamp(52px, 14vw, 80px)",
+                fontSize: "clamp(52px, 14vw, 78px)",
                 color: "#C8922A",
                 lineHeight: 1.05,
                 whiteSpace: "nowrap",
@@ -637,58 +651,23 @@ function Hero() {
             </span>
           </div>
 
-          {/* ── Mute button — large, bottom left ── */}
+          {/* Mute button — bottom left */}
           <button
             onClick={toggleMute}
-            className="absolute text-white/65 hover:text-white transition-colors"
-            style={{ bottom: 32, left: 24, opacity: muteOpacity, zIndex: 30 }}
+            className="absolute text-white/60 hover:text-white transition-colors"
+            style={{ bottom: 28, left: 20, opacity: muteOpacity, zIndex: 20 }}
             aria-label={isMuted ? "Unmute" : "Mute"}
           >
             {isMuted ? (
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-10 h-10">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7">
                 <path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0 0 21 12c0-4.28-3-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06A8.99 8.99 0 0 0 17.73 18l1.73 1.73L21 18.46 5.54 3 4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
               </svg>
             ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-10 h-10">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7">
                 <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z" />
               </svg>
             )}
           </button>
-
-          {/* ── Navbar — always on top ── */}
-          <nav
-            className="absolute top-0 left-0 right-0 bg-cream-dark flex items-center justify-between px-6"
-            style={{ height: `${NAV_HEIGHT}px`, borderBottom: "1px solid rgba(0,0,0,0.07)", zIndex: 50 }}
-          >
-            {/* Left: hamburger + logo */}
-            <div className="flex items-center gap-4">
-              <button onClick={() => setMenuOpen(true)} className="flex flex-col gap-[5px]" aria-label="Menu">
-                <span className="w-5 h-px bg-charcoal block" />
-                <span className="w-5 h-px bg-charcoal block" />
-                <span className="w-3 h-px bg-charcoal block" />
-              </button>
-              <Image
-                src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777567002/lustrologo_wfervy.png"
-                alt="Lustro" width={40} height={40} className="object-contain rounded-full"
-              />
-            </div>
-
-            {/* Center: wordmark */}
-            <span className="absolute left-1/2 -translate-x-1/2 font-cormorant text-charcoal font-bold tracking-[0.25em] uppercase text-base whitespace-nowrap">
-              Lustro Homes
-            </span>
-
-            {/* Right: Book button — Maybourne style */}
-            <a
-              href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-charcoal text-cream font-dm-sans text-[0.65rem] tracking-[0.25em] uppercase px-5 py-2.5 hover:bg-brown transition-colors"
-            >
-              Book
-            </a>
-          </nav>
-
         </div>
       </div>
     </>
