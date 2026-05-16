@@ -247,7 +247,7 @@ const HERO_NAV_LINKS = [
 ];
 
 const SEARCHABLE_SECTIONS = [
-  { label: "Rooms & Suites", href: "#rooms", keywords: ["rooms", "suites", "bedroom", "mykonos", "malibu", "seychelles", "beverly hills", "cappadocia", "santorini"] },
+  { label: "Rooms & Suites", href: "#rooms", keywords: ["rooms", "suites", "mykonos", "malibu", "seychelles", "beverly hills", "cappadocia", "santorini"] },
   { label: "Gallery", href: "#gallery", keywords: ["gallery", "photos", "images", "videos"] },
   { label: "Investment", href: "#invest", keywords: ["invest", "investment", "returns", "roi", "profit"] },
   { label: "Yankee by Lustro", href: "#yankee", keywords: ["yankee", "sister"] },
@@ -255,24 +255,33 @@ const SEARCHABLE_SECTIONS = [
   { label: "Dining", href: "#dining", keywords: ["dining", "restaurant", "food", "eat"] },
 ];
 
+const NAV_H = 68;
+const TEXT_H = 170;
+
 function Hero() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const containerRef = useRef<HTMLDivElement>(null);
+  const video1Ref = useRef<HTMLVideoElement>(null);
+  const video2Ref = useRef<HTMLVideoElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  const [progress, setProgress] = useState(0);
   const [isMuted, setIsMuted] = useState(true);
   const [video2Active, setVideo2Active] = useState(false);
   const [phraseIdx, setPhraseIdx] = useState(0);
   const [transitioning, setTransitioning] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const video1Ref = useRef<HTMLVideoElement>(null);
-  const video2Ref = useRef<HTMLVideoElement>(null);
-  const searchInputRef = useRef<HTMLInputElement>(null);
-  const textBlockRef = useRef<HTMLDivElement>(null);
-
-  // Track scroll
+  // Scroll progress 0→1 through the sticky section
   useEffect(() => {
-    const onScroll = () => setScrollY(window.scrollY);
+    const onScroll = () => {
+      if (!containerRef.current) return;
+      const { top, height } = containerRef.current.getBoundingClientRect();
+      const scrollable = height - window.innerHeight;
+      const scrolled = -top;
+      setProgress(Math.max(0, Math.min(1, scrolled / scrollable)));
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -294,10 +303,9 @@ function Hero() {
     const init = async () => {
       try {
         const { gsap } = await import("gsap");
-        gsap.fromTo(
-          ".hero-welcome-line",
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 1.4, ease: "expo.out", delay: 0.4, stagger: 0.15 }
+        gsap.fromTo(".hero-welcome-line",
+          { opacity: 0, y: 28 },
+          { opacity: 1, y: 0, duration: 1.3, ease: "expo.out", delay: 0.3, stagger: 0.14 }
         );
       } catch {
         document.querySelectorAll(".hero-welcome-line").forEach((el) => {
@@ -327,13 +335,11 @@ function Hero() {
     init();
   }, [menuOpen]);
 
-  // Search focus
   useEffect(() => {
     if (searchOpen) setTimeout(() => searchInputRef.current?.focus(), 100);
     else setSearchQuery("");
   }, [searchOpen]);
 
-  // Body scroll lock
   useEffect(() => {
     document.body.style.overflow = menuOpen || searchOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
@@ -371,26 +377,25 @@ function Hero() {
     searchQuery.length > 1 && s.keywords.some((k) => k.includes(searchQuery.toLowerCase()))
   );
 
-  // ── Scroll-driven values ──
-  // Text block is ~220px tall. Video starts right below it.
-  // As user scrolls, video translates up to cover the text.
-  const TEXT_BLOCK_H = 220;
-  const NAV_H = 68;
+  // ── Derived scroll values ──
+  const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-  // How far the video has scrolled up (capped at TEXT_BLOCK_H)
-  const videoTranslateY = Math.max(0, Math.min(TEXT_BLOCK_H, scrollY));
+  // Video grows from contained → full screen
+  const videoTop    = lerp(NAV_H + TEXT_H, 0, progress);
+  const videoLeft   = lerp(20, 0, progress);
+  const videoRight  = lerp(20, 0, progress);
+  const videoBottom = 0;
+  const videoBorderRadius = lerp(14, 0, progress);
+  const videoOverlay = lerp(0, 0.45, progress);
 
-  // Video overlay darkness increases as it covers text
-  const overlayOpacity = Math.min(0.55, (scrollY / TEXT_BLOCK_H) * 0.55);
+  // Welcome text fades out in first 45% of scroll
+  const welcomeOpacity = Math.max(0, 1 - progress / 0.45);
 
-  // Welcome text fades out as video covers it
-  const welcomeOpacity = Math.max(0, 1 - (scrollY / (TEXT_BLOCK_H * 0.6)));
+  // Crafted for fades in after 80% progress
+  const craftedOpacity = Math.max(0, Math.min(1, (progress - 0.8) / 0.2));
 
-  // Crafted for fades in after video fully covers text
-  const craftedOpacity = Math.max(0, Math.min(1, (scrollY - TEXT_BLOCK_H * 0.7) / (TEXT_BLOCK_H * 0.4)));
-
-  // Mute button appears when video starts covering
-  const muteOpacity = Math.max(0, Math.min(1, scrollY / 80));
+  // Mute appears after 35% progress
+  const muteOpacity = Math.max(0, Math.min(1, (progress - 0.35) / 0.25));
 
   return (
     <>
@@ -431,7 +436,7 @@ function Hero() {
       {/* ── Search Overlay ── */}
       <div className={`search-overlay fixed inset-0 z-[95] bg-cream-dark flex flex-col px-6 pt-6 pb-10 ${searchOpen ? "open" : ""}`}>
         <div className="flex items-center justify-between mb-8">
-          <span className="font-cormorant text-charcoal text-lg tracking-[0.2em] uppercase font-light">Search</span>
+          <span className="font-cormorant text-charcoal text-lg tracking-[0.15em] uppercase font-light">Search</span>
           <button onClick={() => setSearchOpen(false)} className="text-charcoal/50 hover:text-charcoal transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -521,159 +526,171 @@ function Hero() {
         </div>
       </div>
 
-      {/* ── Navbar — sticky, always on cream ── */}
-      <nav
-        className="sticky top-0 z-50 bg-cream-dark flex items-center justify-between px-6"
-        style={{ height: `${NAV_H}px`, borderBottom: "1px solid rgba(0,0,0,0.08)" }}
-      >
-        <div className="flex items-center gap-4">
-          <button onClick={() => setMenuOpen(true)} className="flex flex-col gap-[5px]" aria-label="Menu">
-            <span className="w-5 h-px bg-charcoal block" />
-            <span className="w-5 h-px bg-charcoal block" />
-            <span className="w-3 h-px bg-charcoal block" />
-          </button>
-          <Image
-            src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777567002/lustrologo_wfervy.png"
-            alt="Lustro" width={40} height={40} className="object-contain rounded-full"
-          />
-        </div>
+      {/* ── Tall scroll container — sticky magic lives here ── */}
+      <div ref={containerRef} style={{ height: "300vh" }}>
+        <div style={{ position: "sticky", top: 0, height: "100dvh", overflow: "hidden", background: "#F5F0EA" }}>
 
-        <span className="absolute left-1/2 -translate-x-1/2 font-cormorant text-charcoal font-bold tracking-[0.25em] uppercase text-base whitespace-nowrap">
-          Lustro Lagos
-        </span>
-
-        <a
-          href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="bg-charcoal text-cream font-dm-sans text-[0.62rem] tracking-[0.28em] uppercase px-5 py-2.5 hover:bg-brown transition-colors"
-        >
-          Book
-        </a>
-      </nav>
-
-      {/* ── Hero body — cream text + video ── */}
-      <div className="bg-cream-dark overflow-hidden" style={{ position: "relative" }}>
-
-        {/* Welcome text block — cream background */}
-        <div
-          ref={textBlockRef}
-          className="flex flex-col items-center justify-center text-center px-6"
-          style={{ height: `${TEXT_BLOCK_H}px`, opacity: welcomeOpacity }}
-        >
-          <p
-            className="hero-welcome-line font-dm-sans text-charcoal/35 uppercase mb-3"
-            style={{ fontSize: "0.62rem", letterSpacing: "0.55em" }}
-          >
-            Welcome to
-          </p>
-          <h1
-            className="hero-welcome-line font-cormorant text-charcoal font-light leading-none"
-            style={{ fontSize: "clamp(52px, 14vw, 80px)" }}
-          >
-            Lustro Lagos
-          </h1>
-        </div>
-
-        {/* Video block — rises up over text as user scrolls */}
-        <div
-          className="relative overflow-hidden"
-          style={{
-            height: "100svh",
-            transform: `translateY(-${videoTranslateY}px)`,
-            marginBottom: `-${videoTranslateY}px`,
-            transition: "transform 0.05s linear",
-          }}
-        >
-          {/* Video 1 */}
-          <video
-            ref={video1Ref}
-            src={HERO_VIDEO_1}
-            autoPlay
-            muted
-            playsInline
-            disablePictureInPicture
-            onEnded={handleVideo1End}
-            onLoadedMetadata={(e) => Array.from(e.currentTarget.textTracks).forEach((t) => (t.mode = "hidden"))}
-            onContextMenu={(e) => e.preventDefault()}
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ opacity: video2Active ? 0 : 1, transition: "opacity 0.8s ease" }}
-          />
-
-          {/* Video 2 */}
-          <video
-            ref={video2Ref}
-            src={HERO_VIDEO_2}
-            muted
-            playsInline
-            disablePictureInPicture
-            onEnded={handleVideo2End}
-            onLoadedMetadata={(e) => Array.from(e.currentTarget.textTracks).forEach((t) => (t.mode = "hidden"))}
-            onContextMenu={(e) => e.preventDefault()}
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ opacity: video2Active ? 1 : 0, transition: "opacity 0.8s ease" }}
-          />
-
-          {/* Overlay */}
+          {/* ── Navbar ── */}
           <div
-            className="absolute inset-0 pointer-events-none"
-            style={{ background: `rgba(0,0,0,${overlayOpacity})` }}
-          />
-
-          {/* Crafted for — centered over video */}
-          <div
-            className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
-            style={{ opacity: craftedOpacity }}
+            className="absolute left-0 right-0 top-0 bg-cream-dark flex items-center justify-between px-5"
+            style={{ height: `${NAV_H}px`, borderBottom: "1px solid rgba(0,0,0,0.08)", zIndex: 50 }}
           >
-            <p
-              style={{
-                fontFamily: "'Tenor Sans', sans-serif",
-                fontSize: "0.68rem",
-                letterSpacing: "0.55em",
-                color: "rgba(255,255,255,0.5)",
-                textTransform: "uppercase",
-                marginBottom: "8px",
-              }}
-            >
-              Crafted for
-            </p>
-            <span
-              className={`phrase-word ${transitioning ? "hidden" : "visible"}`}
-              style={{
-                fontFamily: "'Great Vibes', cursive",
-                fontSize: "clamp(52px, 14vw, 78px)",
-                color: "#C8922A",
-                lineHeight: 1.05,
-                whiteSpace: "nowrap",
-              }}
-            >
-              {HERO_PHRASES[phraseIdx]}
+            {/* Left: hamburger + logo */}
+            <div className="flex items-center gap-3">
+              <button onClick={() => setMenuOpen(true)} className="flex flex-col gap-[5px]" aria-label="Menu">
+                <span className="w-5 h-px bg-charcoal block" />
+                <span className="w-5 h-px bg-charcoal block" />
+                <span className="w-3 h-px bg-charcoal block" />
+              </button>
+              <Image
+                src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777567002/lustrologo_wfervy.png"
+                alt="Lustro" width={38} height={38} className="object-contain rounded-full"
+              />
+            </div>
+
+            {/* Center: wordmark — tighter spacing */}
+            <span className="absolute left-1/2 -translate-x-1/2 font-cormorant text-charcoal font-bold tracking-[0.1em] uppercase text-[1.05rem] whitespace-nowrap">
+              Lustro Lagos
             </span>
+
+            {/* Right: Book */}
+            <a
+              href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-charcoal text-cream font-dm-sans text-[0.6rem] tracking-[0.22em] uppercase px-4 py-2.5 hover:bg-brown transition-colors"
+            >
+              Book
+            </a>
           </div>
 
-          {/* Mute button — bottom left */}
-          <button
-            onClick={toggleMute}
-            className="absolute text-white/60 hover:text-white transition-colors"
-            style={{ bottom: 28, left: 20, opacity: muteOpacity, zIndex: 20 }}
-            aria-label={isMuted ? "Unmute" : "Mute"}
+          {/* ── Welcome text — cream area above video ── */}
+          <div
+            className="absolute left-0 right-0 flex flex-col items-center justify-center text-center px-6"
+            style={{
+              top: NAV_H,
+              height: TEXT_H,
+              opacity: welcomeOpacity,
+              zIndex: 10,
+            }}
           >
-            {isMuted ? (
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7">
-                <path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0 0 21 12c0-4.28-3-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06A8.99 8.99 0 0 0 17.73 18l1.73 1.73L21 18.46 5.54 3 4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
-              </svg>
-            ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7">
-                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z" />
-              </svg>
-            )}
-          </button>
+            <p
+              className="hero-welcome-line font-cormorant text-charcoal/50 uppercase mb-2"
+              style={{ fontSize: "0.78rem", letterSpacing: "0.5em", fontWeight: 500 }}
+            >
+              Welcome to
+            </p>
+            <h1
+              className="hero-welcome-line font-cormorant text-charcoal font-semibold leading-none"
+              style={{ fontSize: "clamp(48px, 13vw, 72px)", letterSpacing: "-0.01em" }}
+            >
+              Lustro Lagos
+            </h1>
+          </div>
+
+          {/* ── Video — grows from contained to full screen ── */}
+          <div
+            className="absolute overflow-hidden"
+            style={{
+              top: videoTop,
+              left: videoLeft,
+              right: videoRight,
+              bottom: videoBottom,
+              borderRadius: videoBorderRadius,
+              zIndex: 20,
+              transition: "border-radius 0.05s linear",
+            }}
+          >
+            {/* Video 1 */}
+            <video
+              ref={video1Ref}
+              src={HERO_VIDEO_1}
+              autoPlay
+              muted
+              playsInline
+              disablePictureInPicture
+              onEnded={handleVideo1End}
+              onLoadedMetadata={(e) => Array.from(e.currentTarget.textTracks).forEach((t) => (t.mode = "hidden"))}
+              onContextMenu={(e) => e.preventDefault()}
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{ opacity: video2Active ? 0 : 1, transition: "opacity 0.8s ease" }}
+            />
+
+            {/* Video 2 */}
+            <video
+              ref={video2Ref}
+              src={HERO_VIDEO_2}
+              muted
+              playsInline
+              disablePictureInPicture
+              onEnded={handleVideo2End}
+              onLoadedMetadata={(e) => Array.from(e.currentTarget.textTracks).forEach((t) => (t.mode = "hidden"))}
+              onContextMenu={(e) => e.preventDefault()}
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{ opacity: video2Active ? 1 : 0, transition: "opacity 0.8s ease" }}
+            />
+
+            {/* Dark overlay — increases as video fills screen */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{ background: `rgba(0,0,0,${videoOverlay})` }}
+            />
+
+            {/* Crafted for — fades in over full-screen video */}
+            <div
+              className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
+              style={{ opacity: craftedOpacity }}
+            >
+              <p
+                style={{
+                  fontFamily: "'Tenor Sans', sans-serif",
+                  fontSize: "0.68rem",
+                  letterSpacing: "0.55em",
+                  color: "rgba(255,255,255,0.5)",
+                  textTransform: "uppercase",
+                  marginBottom: "8px",
+                }}
+              >
+                Crafted for
+              </p>
+              <span
+                className={`phrase-word ${transitioning ? "hidden" : "visible"}`}
+                style={{
+                  fontFamily: "'Great Vibes', cursive",
+                  fontSize: "clamp(52px, 14vw, 78px)",
+                  color: "#C8922A",
+                  lineHeight: 1.05,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {HERO_PHRASES[phraseIdx]}
+              </span>
+            </div>
+
+            {/* Mute button */}
+            <button
+              onClick={toggleMute}
+              className="absolute text-white/60 hover:text-white transition-colors"
+              style={{ bottom: 24, left: 18, opacity: muteOpacity, zIndex: 30 }}
+              aria-label={isMuted ? "Unmute" : "Mute"}
+            >
+              {isMuted ? (
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7">
+                  <path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0 0 21 12c0-4.28-3-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06A8.99 8.99 0 0 0 17.73 18l1.73 1.73L21 18.46 5.54 3 4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7">
+                  <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z" />
+                </svg>
+              )}
+            </button>
+          </div>
+
         </div>
       </div>
     </>
   );
 }
-
 
 // ─────────────────────────────────────────────────
 // ABOUT SECTION
