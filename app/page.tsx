@@ -696,7 +696,7 @@ function Hero() {
               fontSize: "clamp(0.75rem, 2vw, 0.95rem)",
               letterSpacing: "0.55em",
               fontStyle: "italic",
-              fontWeight: "300",
+              fontWeight: "350",
               color: "rgba(255,255,255,0.65)",
               textTransform: "uppercase",
               marginBottom: "16px",
@@ -705,7 +705,7 @@ function Hero() {
             Welcome to
           </p>
 
-          {/* Lustro Lagos */}
+          {/* Lustro Homes */}
           <h1
             className="hero-title font-cormorant text-white font-light leading-none"
             style={{
