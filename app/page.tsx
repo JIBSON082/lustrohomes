@@ -734,12 +734,14 @@ function Hero() {
           <p
             className="hero-crafted"
             style={{
-              fontFamily: "'Tenor Sans', sans-serif",
-              fontSize: "0.6rem",
-              letterSpacing: "0.6em",
-              color: "rgba(255,255,255,0.35)",
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: "clamp(0.75rem, 2vw, 0.9rem)",
+              letterSpacing: "0.45em",
+              fontStyle: "italic",
+              fontWeight: "300",
+              color: "rgba(255,255,255,0.6)",
               textTransform: "uppercase",
-              marginBottom: "6px",
+              marginBottom: "8px",
             }}
           >
             Crafted for
