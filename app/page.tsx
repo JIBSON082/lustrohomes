@@ -256,15 +256,20 @@ const SEARCHABLE_SECTIONS = [
 ];
 
 const NAV_H = 68;
-const TEXT_H = 170;
+const TEXT_H = 160;
 
 function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const videoContainerRef = useRef<HTMLDivElement>(null);
+  const welcomeRef = useRef<HTMLDivElement>(null);
+  const craftedRef = useRef<HTMLDivElement>(null);
+  const muteRef = useRef<HTMLButtonElement>(null);
   const video1Ref = useRef<HTMLVideoElement>(null);
   const video2Ref = useRef<HTMLVideoElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const rafRef = useRef<number>(0);
+  const progressRef = useRef(0);
 
-  const [progress, setProgress] = useState(0);
   const [isMuted, setIsMuted] = useState(true);
   const [video2Active, setVideo2Active] = useState(false);
   const [phraseIdx, setPhraseIdx] = useState(0);
@@ -273,21 +278,63 @@ function Hero() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Scroll progress 0→1 through the sticky section
-  // Replace the scroll useEffect with this:
-useEffect(() => {
-  const onScroll = () => {
-    if (!containerRef.current) return;
-    const containerTop = containerRef.current.offsetTop;
-    const scrolled = window.scrollY - containerTop;
-    const scrollable = containerRef.current.offsetHeight - window.innerHeight;
-    setProgress(Math.max(0, Math.min(1, scrolled / scrollable)));
-  };
-  window.addEventListener("scroll", onScroll, { passive: true });
-  return () => window.removeEventListener("scroll", onScroll);
-}, []);
+  const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-  // Phrase cycling
+  // ── Direct DOM mutation — no React state for scroll ──
+  const applyProgress = useCallback((p: number) => {
+    progressRef.current = p;
+
+    const videoTop    = lerp(NAV_H + TEXT_H, 0, p);
+    const videoLeft   = lerp(24, 0, p);
+    const videoRight  = lerp(24, 0, p);
+    const videoBottom = lerp(40, 0, p);
+    const radius      = lerp(14, 0, p);
+    const overlay     = lerp(0, 0.45, p);
+    const welcomeOp   = Math.max(0, 1 - p / 0.3);
+    const craftedOp   = Math.max(0, Math.min(1, (p - 0.85) / 0.15));
+    const muteOp      = Math.max(0, Math.min(1, (p - 0.35) / 0.25));
+
+    if (videoContainerRef.current) {
+      const s = videoContainerRef.current.style;
+      s.top    = `${videoTop}px`;
+      s.left   = `${videoLeft}px`;
+      s.right  = `${videoRight}px`;
+      s.bottom = `${videoBottom}px`;
+      s.borderRadius = `${radius}px`;
+    }
+
+    // Update overlay
+    const overlay_el = videoContainerRef.current?.querySelector(".video-overlay") as HTMLElement;
+    if (overlay_el) overlay_el.style.background = `rgba(0,0,0,${overlay})`;
+
+    if (welcomeRef.current) welcomeRef.current.style.opacity = String(welcomeOp);
+    if (craftedRef.current) craftedRef.current.style.opacity = String(craftedOp);
+    if (muteRef.current) muteRef.current.style.opacity = String(muteOp);
+  }, []);
+
+  // ── rAF scroll listener ──
+  useEffect(() => {
+    const onScroll = () => {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(() => {
+        if (!containerRef.current) return;
+        const rect = containerRef.current.getBoundingClientRect();
+        const scrolled = -rect.top;
+        const scrollable = rect.height - window.innerHeight;
+        const p = Math.max(0, Math.min(1, scrolled / scrollable));
+        applyProgress(p);
+      });
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll(); // set initial state
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(rafRef.current);
+    };
+  }, [applyProgress]);
+
+  // ── Phrase cycling ──
   useEffect(() => {
     const iv = setInterval(() => {
       setTransitioning(true);
@@ -299,7 +346,7 @@ useEffect(() => {
     return () => clearInterval(iv);
   }, []);
 
-  // Entrance animation
+  // ── Entrance animation ──
   useEffect(() => {
     const init = async () => {
       try {
@@ -317,7 +364,7 @@ useEffect(() => {
     init();
   }, []);
 
-  // Menu animation
+  // ── Menu animation ──
   useEffect(() => {
     if (!menuOpen) return;
     const init = async () => {
@@ -346,7 +393,6 @@ useEffect(() => {
     return () => { document.body.style.overflow = ""; };
   }, [menuOpen, searchOpen]);
 
-  // Video handlers
   const handleVideo1End = () => {
     setVideo2Active(true);
     video2Ref.current?.play().catch(() => {});
@@ -378,40 +424,17 @@ useEffect(() => {
     searchQuery.length > 1 && s.keywords.some((k) => k.includes(searchQuery.toLowerCase()))
   );
 
-  // ── Derived scroll values ──
-  const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
-
-  // Video grows from contained → full screen
-  const videoTop    = lerp(NAV_H + TEXT_H, 0, progress);
-  const videoLeft   = lerp(20, 0, progress);
-  const videoRight  = lerp(20, 0, progress);
-  const videoBottom = 0;
-  const videoBorderRadius = lerp(14, 0, progress);
-  const videoOverlay = lerp(0, 0.45, progress);
-
-  // Welcome text fades out in first 45% of scroll
-  const welcomeOpacity = Math.max(0, 1 - progress / 0.45);
-
-  // Crafted for fades in after 80% progress
-  const craftedOpacity = Math.max(0, Math.min(1, (progress - 0.8) / 0.2));
-
-  // Mute appears after 35% progress
-  const muteOpacity = Math.max(0, Math.min(1, (progress - 0.35) / 0.25));
-
   return (
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Tenor+Sans&display=swap');
-
         .hero-welcome-line { opacity: 0; }
-
         .phrase-word {
           display: block;
           transition: transform 0.85s cubic-bezier(0.16,1,0.3,1), opacity 0.6s ease;
         }
         .phrase-word.visible { transform: translateY(0); opacity: 1; }
         .phrase-word.hidden  { transform: translateY(28px); opacity: 0; }
-
         .underline-link { position: relative; display: inline-block; }
         .underline-link::after {
           content: '';
@@ -527,16 +550,23 @@ useEffect(() => {
         </div>
       </div>
 
-      {/* ── Tall scroll container — sticky magic lives here ── */}
+      {/* ── 200vh scroll track ── */}
       <div ref={containerRef} style={{ height: "200vh" }}>
-        <div style={{ position: "sticky", top: 0, height: "100dvh", overflow: "hidden", background: "#F5F0EA" }}>
+
+        {/* ── Sticky viewport ── */}
+        <div style={{
+          position: "sticky",
+          top: 0,
+          height: "100dvh",
+          overflow: "hidden",
+          background: "#F5F0EA",
+        }}>
 
           {/* ── Navbar ── */}
           <div
             className="absolute left-0 right-0 top-0 bg-cream-dark flex items-center justify-between px-5"
             style={{ height: `${NAV_H}px`, borderBottom: "1px solid rgba(0,0,0,0.08)", zIndex: 50 }}
           >
-            {/* Left: hamburger + logo */}
             <div className="flex items-center gap-3">
               <button onClick={() => setMenuOpen(true)} className="flex flex-col gap-[5px]" aria-label="Menu">
                 <span className="w-5 h-px bg-charcoal block" />
@@ -548,13 +578,9 @@ useEffect(() => {
                 alt="Lustro" width={38} height={38} className="object-contain rounded-full"
               />
             </div>
-
-            {/* Center: wordmark — tighter spacing */}
             <span className="absolute left-1/2 -translate-x-1/2 font-cormorant text-charcoal font-bold tracking-[0.1em] uppercase text-[1.05rem] whitespace-nowrap">
               Lustro Lagos
             </span>
-
-            {/* Right: Book */}
             <a
               href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
               target="_blank"
@@ -565,41 +591,33 @@ useEffect(() => {
             </a>
           </div>
 
-          {/* ── Welcome text — cream area above video ── */}
+          {/* ── Welcome text ── */}
           <div
+            ref={welcomeRef}
             className="absolute left-0 right-0 flex flex-col items-center justify-center text-center px-6"
-            style={{
-              top: NAV_H,
-              height: TEXT_H,
-              opacity: welcomeOpacity,
-              zIndex: 10,
-            }}
+            style={{ top: NAV_H, height: TEXT_H, zIndex: 10 }}
           >
-            <p
-              className="hero-welcome-line font-cormorant text-charcoal/50 uppercase mb-2"
-              style={{ fontSize: "0.78rem", letterSpacing: "0.5em", fontWeight: 500 }}
-            >
+            <p className="hero-welcome-line font-cormorant text-charcoal/50 uppercase mb-2"
+              style={{ fontSize: "0.78rem", letterSpacing: "0.45em", fontWeight: 500 }}>
               Welcome to
             </p>
-            <h1
-              className="hero-welcome-line font-cormorant text-charcoal font-semibold leading-none"
-              style={{ fontSize: "clamp(48px, 13vw, 72px)", letterSpacing: "-0.01em" }}
-            >
+            <h1 className="hero-welcome-line font-cormorant text-charcoal font-semibold leading-none"
+              style={{ fontSize: "clamp(46px, 12vw, 68px)", letterSpacing: "-0.01em" }}>
               Lustro Lagos
             </h1>
           </div>
 
-          {/* ── Video — grows from contained to full screen ── */}
+          {/* ── Video container — DOM-mutated directly ── */}
           <div
+            ref={videoContainerRef}
             className="absolute overflow-hidden"
             style={{
-              top: videoTop,
-              left: videoLeft,
-              right: videoRight,
-              bottom: videoBottom,
-              borderRadius: videoBorderRadius,
+              top: NAV_H + TEXT_H,
+              left: 24,
+              right: 24,
+              bottom: 40,
+              borderRadius: 14,
               zIndex: 20,
-              transition: "border-radius 0.05s linear",
             }}
           >
             {/* Video 1 */}
@@ -631,27 +649,23 @@ useEffect(() => {
               style={{ opacity: video2Active ? 1 : 0, transition: "opacity 0.8s ease" }}
             />
 
-            {/* Dark overlay — increases as video fills screen */}
-            <div
-              className="absolute inset-0 pointer-events-none"
-              style={{ background: `rgba(0,0,0,${videoOverlay})` }}
-            />
+            {/* Overlay */}
+            <div className="video-overlay absolute inset-0 pointer-events-none" style={{ background: "rgba(0,0,0,0)" }} />
 
-            {/* Crafted for — fades in over full-screen video */}
+            {/* Crafted for */}
             <div
+              ref={craftedRef}
               className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
-              style={{ opacity: craftedOpacity }}
+              style={{ opacity: 0 }}
             >
-              <p
-                style={{
-                  fontFamily: "'Tenor Sans', sans-serif",
-                  fontSize: "0.68rem",
-                  letterSpacing: "0.55em",
-                  color: "rgba(255,255,255,0.5)",
-                  textTransform: "uppercase",
-                  marginBottom: "8px",
-                }}
-              >
+              <p style={{
+                fontFamily: "'Tenor Sans', sans-serif",
+                fontSize: "0.68rem",
+                letterSpacing: "0.55em",
+                color: "rgba(255,255,255,0.5)",
+                textTransform: "uppercase",
+                marginBottom: "8px",
+              }}>
                 Crafted for
               </p>
               <span
@@ -670,9 +684,10 @@ useEffect(() => {
 
             {/* Mute button */}
             <button
+              ref={muteRef}
               onClick={toggleMute}
               className="absolute text-white/60 hover:text-white transition-colors"
-              style={{ bottom: 24, left: 18, opacity: muteOpacity, zIndex: 30 }}
+              style={{ bottom: 24, left: 18, opacity: 0, zIndex: 30 }}
               aria-label={isMuted ? "Unmute" : "Mute"}
             >
               {isMuted ? (
