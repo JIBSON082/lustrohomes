@@ -274,17 +274,18 @@ function Hero() {
   const [searchQuery, setSearchQuery] = useState("");
 
   // Scroll progress 0→1 through the sticky section
-  useEffect(() => {
-    const onScroll = () => {
-      if (!containerRef.current) return;
-      const { top, height } = containerRef.current.getBoundingClientRect();
-      const scrollable = height - window.innerHeight;
-      const scrolled = -top;
-      setProgress(Math.max(0, Math.min(1, scrolled / scrollable)));
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  // Replace the scroll useEffect with this:
+useEffect(() => {
+  const onScroll = () => {
+    if (!containerRef.current) return;
+    const containerTop = containerRef.current.offsetTop;
+    const scrolled = window.scrollY - containerTop;
+    const scrollable = containerRef.current.offsetHeight - window.innerHeight;
+    setProgress(Math.max(0, Math.min(1, scrolled / scrollable)));
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  return () => window.removeEventListener("scroll", onScroll);
+}, []);
 
   // Phrase cycling
   useEffect(() => {
@@ -527,7 +528,7 @@ function Hero() {
       </div>
 
       {/* ── Tall scroll container — sticky magic lives here ── */}
-      <div ref={containerRef} style={{ height: "300vh" }}>
+      <div ref={containerRef} style={{ height: "200vh" }}>
         <div style={{ position: "sticky", top: 0, height: "100dvh", overflow: "hidden", background: "#F5F0EA" }}>
 
           {/* ── Navbar ── */}
@@ -2656,7 +2657,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="overflow-x-hidden">
+    <main className="overflow-hidden">
       <Hero />
       <About />
       <Rooms />
