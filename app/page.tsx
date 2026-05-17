@@ -255,22 +255,10 @@ const SEARCHABLE_SECTIONS = [
   { label: "Dining", href: "#dining", keywords: ["dining", "restaurant", "food", "eat"] },
 ];
 
-const NAV_H = 68;
-const TEXT_H = 160;
-
 function Hero() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const videoContainerRef = useRef<HTMLDivElement>(null);
-  const welcomeRef = useRef<HTMLDivElement>(null);
-  const craftedRef = useRef<HTMLDivElement>(null);
-  const muteRef = useRef<HTMLButtonElement>(null);
-  const video1Ref = useRef<HTMLVideoElement>(null);
-  const video2Ref = useRef<HTMLVideoElement>(null);
-  const searchInputRef = useRef<HTMLInputElement>(null);
-  const rafRef = useRef<number>(0);
-  const progressRef = useRef(0);
-
+  const [scrolled, setScrolled] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
+  const [muteVisible, setMuteVisible] = useState(false);
   const [video2Active, setVideo2Active] = useState(false);
   const [phraseIdx, setPhraseIdx] = useState(0);
   const [transitioning, setTransitioning] = useState(false);
@@ -278,63 +266,26 @@ function Hero() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+  const video1Ref = useRef<HTMLVideoElement>(null);
+  const video2Ref = useRef<HTMLVideoElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
-  // ── Direct DOM mutation — no React state for scroll ──
-  const applyProgress = useCallback((p: number) => {
-    progressRef.current = p;
-
-    const videoTop    = lerp(NAV_H + TEXT_H, 0, p);
-    const videoLeft   = lerp(24, 0, p);
-    const videoRight  = lerp(24, 0, p);
-    const videoBottom = lerp(40, 0, p);
-    const radius      = lerp(14, 0, p);
-    const overlay     = lerp(0, 0.45, p);
-    const welcomeOp   = Math.max(0, 1 - p / 0.3);
-    const craftedOp   = Math.max(0, Math.min(1, (p - 0.85) / 0.15));
-    const muteOp      = Math.max(0, Math.min(1, (p - 0.35) / 0.25));
-
-    if (videoContainerRef.current) {
-      const s = videoContainerRef.current.style;
-      s.top    = `${videoTop}px`;
-      s.left   = `${videoLeft}px`;
-      s.right  = `${videoRight}px`;
-      s.bottom = `${videoBottom}px`;
-      s.borderRadius = `${radius}px`;
-    }
-
-    // Update overlay
-    const overlay_el = videoContainerRef.current?.querySelector(".video-overlay") as HTMLElement;
-    if (overlay_el) overlay_el.style.background = `rgba(0,0,0,${overlay})`;
-
-    if (welcomeRef.current) welcomeRef.current.style.opacity = String(welcomeOp);
-    if (craftedRef.current) craftedRef.current.style.opacity = String(craftedOp);
-    if (muteRef.current) muteRef.current.style.opacity = String(muteOp);
-  }, []);
-
-  // ── rAF scroll listener ──
+  // Scroll — nav color + text parallax
   useEffect(() => {
     const onScroll = () => {
-      cancelAnimationFrame(rafRef.current);
-      rafRef.current = requestAnimationFrame(() => {
-        if (!containerRef.current) return;
-        const rect = containerRef.current.getBoundingClientRect();
-        const scrolled = -rect.top;
-        const scrollable = rect.height - window.innerHeight;
-        const p = Math.max(0, Math.min(1, scrolled / scrollable));
-        applyProgress(p);
-      });
+      const y = window.scrollY;
+      setScrolled(y > 60);
+      if (textRef.current) {
+        textRef.current.style.transform = `translateY(-${y * 0.22}px)`;
+        textRef.current.style.opacity = String(Math.max(0, 1 - y / 380));
+      }
     };
-
     window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll(); // set initial state
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      cancelAnimationFrame(rafRef.current);
-    };
-  }, [applyProgress]);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-  // ── Phrase cycling ──
+  // Phrase cycling
   useEffect(() => {
     const iv = setInterval(() => {
       setTransitioning(true);
@@ -346,37 +297,94 @@ function Hero() {
     return () => clearInterval(iv);
   }, []);
 
-  // ── Entrance animation ──
+  // Cinematic entrance
   useEffect(() => {
     const init = async () => {
       try {
         const { gsap } = await import("gsap");
-        gsap.fromTo(".hero-welcome-line",
-          { opacity: 0, y: 28 },
-          { opacity: 1, y: 0, duration: 1.3, ease: "expo.out", delay: 0.3, stagger: 0.14 }
-        );
+        const tl = gsap.timeline({ onComplete: () => setMuteVisible(true) });
+
+        tl
+          // Black bars retract like cinema curtains
+          .to(".lb-top", {
+            scaleY: 0,
+            duration: 1.8,
+            ease: "expo.inOut",
+            delay: 0.5,
+          })
+          .to(".lb-bottom", {
+            scaleY: 0,
+            duration: 1.8,
+            ease: "expo.inOut",
+          }, "<")
+
+          // "Welcome to" fades up
+          .fromTo(".hero-eyebrow",
+            { opacity: 0, y: 16 },
+            { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" },
+            "-=1.0"
+          )
+
+          // "Lustro Lagos" — clip-path reveal upward
+          .fromTo(".hero-title",
+            { opacity: 0, clipPath: "inset(100% 0 0 0)", y: 20 },
+            { opacity: 1, clipPath: "inset(0% 0 0 0)", y: 0, duration: 1.2, ease: "expo.out" },
+            "-=0.7"
+          )
+
+          // Gold divider expands from center
+          .fromTo(".hero-divider",
+            { scaleX: 0, opacity: 0 },
+            { scaleX: 1, opacity: 1, duration: 0.9, ease: "power3.out", transformOrigin: "center" },
+            "-=0.5"
+          )
+
+          // "Crafted for"
+          .fromTo(".hero-crafted",
+            { opacity: 0, y: 12 },
+            { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" },
+            "-=0.4"
+          )
+
+          // Cycling phrase
+          .fromTo(".hero-phrase",
+            { opacity: 0, y: 18 },
+            { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
+            "-=0.4"
+          );
+
       } catch {
-        document.querySelectorAll(".hero-welcome-line").forEach((el) => {
-          (el as HTMLElement).style.opacity = "1";
+        // Fallback
+        [".lb-top", ".lb-bottom"].forEach((sel) => {
+          document.querySelectorAll(sel).forEach((el) => {
+            (el as HTMLElement).style.transform = "scaleY(0)";
+          });
         });
+        [".hero-eyebrow", ".hero-title", ".hero-divider", ".hero-crafted", ".hero-phrase"].forEach((sel) => {
+          document.querySelectorAll(sel).forEach((el) => {
+            (el as HTMLElement).style.opacity = "1";
+            (el as HTMLElement).style.clipPath = "none";
+          });
+        });
+        setMuteVisible(true);
       }
     };
     init();
   }, []);
 
-  // ── Menu animation ──
+  // Menu animation
   useEffect(() => {
     if (!menuOpen) return;
     const init = async () => {
       try {
         const { gsap } = await import("gsap");
         gsap.fromTo(".menu-link",
-          { opacity: 0, x: -30 },
-          { opacity: 1, x: 0, duration: 0.6, ease: "power3.out", stagger: 0.08, delay: 0.15 }
+          { opacity: 0, x: -28 },
+          { opacity: 1, x: 0, duration: 0.6, ease: "power3.out", stagger: 0.08, delay: 0.1 }
         );
         gsap.fromTo(".menu-cta",
-          { opacity: 0, y: 16 },
-          { opacity: 1, y: 0, duration: 0.5, ease: "power3.out", delay: 0.65 }
+          { opacity: 0, y: 14 },
+          { opacity: 1, y: 0, duration: 0.5, ease: "power3.out", delay: 0.6 }
         );
       } catch {}
     };
@@ -428,13 +436,29 @@ function Hero() {
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Tenor+Sans&display=swap');
-        .hero-welcome-line { opacity: 0; }
+
+        .lb-top {
+          transform-origin: top center;
+          transform: scaleY(1);
+        }
+        .lb-bottom {
+          transform-origin: bottom center;
+          transform: scaleY(1);
+        }
+
+        .hero-eyebrow  { opacity: 0; }
+        .hero-title    { opacity: 0; }
+        .hero-divider  { opacity: 0; }
+        .hero-crafted  { opacity: 0; }
+        .hero-phrase   { opacity: 0; }
+
         .phrase-word {
           display: block;
           transition: transform 0.85s cubic-bezier(0.16,1,0.3,1), opacity 0.6s ease;
         }
         .phrase-word.visible { transform: translateY(0); opacity: 1; }
         .phrase-word.hidden  { transform: translateY(28px); opacity: 0; }
+
         .underline-link { position: relative; display: inline-block; }
         .underline-link::after {
           content: '';
@@ -550,164 +574,225 @@ function Hero() {
         </div>
       </div>
 
-      {/* ── 200vh scroll track ── */}
-      <div ref={containerRef} style={{ height: "200vh" }}>
+      {/* ── Fixed Navbar — transparent → cream on scroll ── */}
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 px-5 transition-all duration-500 ${
+          scrolled
+            ? "bg-cream-dark border-b border-charcoal/8 py-4"
+            : "bg-transparent py-5"
+        }`}
+      >
+        <div className="flex items-center justify-between relative">
 
-        {/* ── Sticky viewport ── */}
-        <div style={{
-          position: "sticky",
-          top: 0,
+          {/* Left: hamburger + logo */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setMenuOpen(true)}
+              className="flex flex-col gap-[5px]"
+              aria-label="Menu"
+            >
+              <span className={`w-5 h-px block transition-colors duration-500 ${scrolled ? "bg-charcoal" : "bg-white"}`} />
+              <span className={`w-5 h-px block transition-colors duration-500 ${scrolled ? "bg-charcoal" : "bg-white"}`} />
+              <span className={`w-3 h-px block transition-colors duration-500 ${scrolled ? "bg-charcoal" : "bg-white"}`} />
+            </button>
+            <Image
+              src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777567002/lustrologo_wfervy.png"
+              alt="Lustro" width={38} height={38}
+              className="object-contain rounded-full"
+            />
+          </div>
+
+          {/* Center: wordmark */}
+          <span className={`absolute left-1/2 -translate-x-1/2 font-cormorant font-bold tracking-[0.1em] uppercase text-[1.05rem] whitespace-nowrap transition-colors duration-500 ${
+            scrolled ? "text-charcoal" : "text-white"
+          }`}>
+            Lustro Lagos
+          </span>
+
+          {/* Right: Book */}
+          <a
+            href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`font-dm-sans text-[0.6rem] tracking-[0.22em] uppercase px-4 py-2.5 transition-all duration-500 ${
+              scrolled
+                ? "bg-charcoal text-cream hover:bg-brown"
+                : "border border-white/50 text-white hover:bg-white/10"
+            }`}
+          >
+            Book
+          </a>
+        </div>
+      </nav>
+
+      {/* ── Hero Section — 100dvh, no sticky involved ── */}
+      <section
+        style={{
+          position: "relative",
           height: "100dvh",
           overflow: "hidden",
-          background: "#F5F0EA",
-        }}>
+          background: "#080808",
+        }}
+      >
+        {/* Video 1 */}
+        <video
+          ref={video1Ref}
+          src={HERO_VIDEO_1}
+          autoPlay
+          muted
+          playsInline
+          disablePictureInPicture
+          onEnded={handleVideo1End}
+          onLoadedMetadata={(e) => Array.from(e.currentTarget.textTracks).forEach((t) => (t.mode = "hidden"))}
+          onContextMenu={(e) => e.preventDefault()}
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{
+            opacity: video2Active ? 0 : 1,
+            transition: "opacity 0.8s ease",
+            transform: "scale(1.04)",
+          }}
+        />
 
-          {/* ── Navbar ── */}
-          <div
-            className="absolute left-0 right-0 top-0 bg-cream-dark flex items-center justify-between px-5"
-            style={{ height: `${NAV_H}px`, borderBottom: "1px solid rgba(0,0,0,0.08)", zIndex: 50 }}
-          >
-            <div className="flex items-center gap-3">
-              <button onClick={() => setMenuOpen(true)} className="flex flex-col gap-[5px]" aria-label="Menu">
-                <span className="w-5 h-px bg-charcoal block" />
-                <span className="w-5 h-px bg-charcoal block" />
-                <span className="w-3 h-px bg-charcoal block" />
-              </button>
-              <Image
-                src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777567002/lustrologo_wfervy.png"
-                alt="Lustro" width={38} height={38} className="object-contain rounded-full"
-              />
-            </div>
-            <span className="absolute left-1/2 -translate-x-1/2 font-cormorant text-charcoal font-bold tracking-[0.1em] uppercase text-[1.05rem] whitespace-nowrap">
-              Lustro Lagos
-            </span>
-            <a
-              href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-charcoal text-cream font-dm-sans text-[0.6rem] tracking-[0.22em] uppercase px-4 py-2.5 hover:bg-brown transition-colors"
-            >
-              Book
-            </a>
-          </div>
+        {/* Video 2 */}
+        <video
+          ref={video2Ref}
+          src={HERO_VIDEO_2}
+          muted
+          playsInline
+          disablePictureInPicture
+          onEnded={handleVideo2End}
+          onLoadedMetadata={(e) => Array.from(e.currentTarget.textTracks).forEach((t) => (t.mode = "hidden"))}
+          onContextMenu={(e) => e.preventDefault()}
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{
+            opacity: video2Active ? 1 : 0,
+            transition: "opacity 0.8s ease",
+            transform: "scale(1.04)",
+          }}
+        />
 
-          {/* ── Welcome text ── */}
-          <div
-            ref={welcomeRef}
-            className="absolute left-0 right-0 flex flex-col items-center justify-center text-center px-6"
-            style={{ top: NAV_H, height: TEXT_H, zIndex: 10 }}
-          >
-            <p className="hero-welcome-line font-cormorant text-charcoal/50 uppercase mb-2"
-              style={{ fontSize: "0.78rem", letterSpacing: "0.45em", fontWeight: 500 }}>
-              Welcome to
-            </p>
-            <h1 className="hero-welcome-line font-cormorant text-charcoal font-semibold leading-none"
-              style={{ fontSize: "clamp(46px, 12vw, 68px)", letterSpacing: "-0.01em" }}>
-              Lustro Lagos
-            </h1>
-          </div>
+        {/* Cinematic gradient */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.35) 100%)",
+          }}
+        />
 
-          {/* ── Video container — DOM-mutated directly ── */}
-          <div
-            ref={videoContainerRef}
-            className="absolute overflow-hidden"
+        {/* ── Letterbox bars — cinema curtains ── */}
+        <div
+          className="lb-top absolute left-0 right-0 top-0 bg-black"
+          style={{ height: "16vh", zIndex: 25 }}
+        />
+        <div
+          className="lb-bottom absolute left-0 right-0 bottom-0 bg-black"
+          style={{ height: "16vh", zIndex: 25 }}
+        />
+
+        {/* ── Centered text content ── */}
+        <div
+          ref={textRef}
+          className="absolute inset-0 flex flex-col items-center justify-center text-center px-6"
+          style={{ zIndex: 20 }}
+        >
+          {/* Welcome to */}
+          <p
+            className="hero-eyebrow"
             style={{
-              top: NAV_H + TEXT_H,
-              left: 24,
-              right: 24,
-              bottom: 40,
-              borderRadius: 14,
-              zIndex: 20,
+              fontFamily: "'Tenor Sans', sans-serif",
+              fontSize: "0.6rem",
+              letterSpacing: "0.7em",
+              color: "rgba(255,255,255,0.45)",
+              textTransform: "uppercase",
+              marginBottom: "16px",
             }}
           >
-            {/* Video 1 */}
-            <video
-              ref={video1Ref}
-              src={HERO_VIDEO_1}
-              autoPlay
-              muted
-              playsInline
-              disablePictureInPicture
-              onEnded={handleVideo1End}
-              onLoadedMetadata={(e) => Array.from(e.currentTarget.textTracks).forEach((t) => (t.mode = "hidden"))}
-              onContextMenu={(e) => e.preventDefault()}
-              className="absolute inset-0 w-full h-full object-cover"
-              style={{ opacity: video2Active ? 0 : 1, transition: "opacity 0.8s ease" }}
-            />
+            Welcome to
+          </p>
 
-            {/* Video 2 */}
-            <video
-              ref={video2Ref}
-              src={HERO_VIDEO_2}
-              muted
-              playsInline
-              disablePictureInPicture
-              onEnded={handleVideo2End}
-              onLoadedMetadata={(e) => Array.from(e.currentTarget.textTracks).forEach((t) => (t.mode = "hidden"))}
-              onContextMenu={(e) => e.preventDefault()}
-              className="absolute inset-0 w-full h-full object-cover"
-              style={{ opacity: video2Active ? 1 : 0, transition: "opacity 0.8s ease" }}
-            />
+          {/* Lustro Lagos */}
+          <h1
+            className="hero-title font-cormorant text-white font-light leading-none"
+            style={{
+              fontSize: "clamp(54px, 15vw, 96px)",
+              letterSpacing: "-0.01em",
+              marginBottom: "24px",
+              clipPath: "inset(0 0 0 0)",
+            }}
+          >
+            Lustro Lagos
+          </h1>
 
-            {/* Overlay */}
-            <div className="video-overlay absolute inset-0 pointer-events-none" style={{ background: "rgba(0,0,0,0)" }} />
+          {/* Gold divider */}
+          <div
+            className="hero-divider"
+            style={{
+              width: "72px",
+              height: "1px",
+              background: "linear-gradient(90deg, transparent, #C8922A 30%, #C8922A 70%, transparent)",
+              marginBottom: "24px",
+            }}
+          />
 
-            {/* Crafted for */}
-            <div
-              ref={craftedRef}
-              className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
-              style={{ opacity: 0 }}
+          {/* Crafted for */}
+          <p
+            className="hero-crafted"
+            style={{
+              fontFamily: "'Tenor Sans', sans-serif",
+              fontSize: "0.6rem",
+              letterSpacing: "0.6em",
+              color: "rgba(255,255,255,0.35)",
+              textTransform: "uppercase",
+              marginBottom: "6px",
+            }}
+          >
+            Crafted for
+          </p>
+
+          {/* Cycling script phrase */}
+          <div className="hero-phrase" style={{ minHeight: "72px" }}>
+            <span
+              className={`phrase-word ${transitioning ? "hidden" : "visible"}`}
+              style={{
+                fontFamily: "'Great Vibes', cursive",
+                fontSize: "clamp(46px, 13vw, 72px)",
+                color: "#C8922A",
+                lineHeight: 1.1,
+                whiteSpace: "nowrap",
+              }}
             >
-              <p style={{
-                fontFamily: "'Tenor Sans', sans-serif",
-                fontSize: "0.68rem",
-                letterSpacing: "0.55em",
-                color: "rgba(255,255,255,0.5)",
-                textTransform: "uppercase",
-                marginBottom: "8px",
-              }}>
-                Crafted for
-              </p>
-              <span
-                className={`phrase-word ${transitioning ? "hidden" : "visible"}`}
-                style={{
-                  fontFamily: "'Great Vibes', cursive",
-                  fontSize: "clamp(52px, 14vw, 78px)",
-                  color: "#C8922A",
-                  lineHeight: 1.05,
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {HERO_PHRASES[phraseIdx]}
-              </span>
-            </div>
-
-            {/* Mute button */}
-            <button
-              ref={muteRef}
-              onClick={toggleMute}
-              className="absolute text-white/60 hover:text-white transition-colors"
-              style={{ bottom: 24, left: 18, opacity: 0, zIndex: 30 }}
-              aria-label={isMuted ? "Unmute" : "Mute"}
-            >
-              {isMuted ? (
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7">
-                  <path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0 0 21 12c0-4.28-3-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06A8.99 8.99 0 0 0 17.73 18l1.73 1.73L21 18.46 5.54 3 4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
-                </svg>
-              ) : (
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7">
-                  <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z" />
-                </svg>
-              )}
-            </button>
+              {HERO_PHRASES[phraseIdx]}
+            </span>
           </div>
-
         </div>
-      </div>
+
+        {/* Mute button */}
+        <button
+          onClick={toggleMute}
+          className="absolute text-white/45 hover:text-white transition-colors duration-300"
+          style={{
+            bottom: 28,
+            left: 20,
+            zIndex: 40,
+            opacity: muteVisible ? 1 : 0,
+            transition: "opacity 0.8s ease",
+          }}
+          aria-label={isMuted ? "Unmute" : "Mute"}
+        >
+          {isMuted ? (
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7">
+              <path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0 0 21 12c0-4.28-3-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06A8.99 8.99 0 0 0 17.73 18l1.73 1.73L21 18.46 5.54 3 4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7">
+              <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z" />
+            </svg>
+          )}
+        </button>
+      </section>
     </>
   );
 }
-
 // ─────────────────────────────────────────────────
 // ABOUT SECTION
 // ─────────────────────────────────────────────────
