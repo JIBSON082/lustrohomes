@@ -327,8 +327,8 @@ function Hero() {
 
           // "Lustro Lagos" — clip-path reveal upward
           .fromTo(".hero-title",
-            { opacity: 0, clipPath: "inset(100% 0 0 0)", y: 20 },
-            { opacity: 1, clipPath: "inset(0% 0 0 0)", y: 0, duration: 1.2, ease: "expo.out" },
+            { opacity: 0, clipPath: "inset(100% 0 -30% 0)", y: 20 },
+            { opacity: 1, clipPath: "inset(0% 0 -30% 0)", y: 0, duration: 1.2, ease: "expo.out" },
             "-=0.7"
           )
 
@@ -585,22 +585,15 @@ function Hero() {
         <div className="flex items-center justify-between relative">
 
           {/* Left: hamburger + logo */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setMenuOpen(true)}
-              className="flex flex-col gap-[5px]"
-              aria-label="Menu"
-            >
-              <span className={`w-5 h-px block transition-colors duration-500 ${scrolled ? "bg-charcoal" : "bg-white"}`} />
-              <span className={`w-5 h-px block transition-colors duration-500 ${scrolled ? "bg-charcoal" : "bg-white"}`} />
-              <span className={`w-3 h-px block transition-colors duration-500 ${scrolled ? "bg-charcoal" : "bg-white"}`} />
-            </button>
-            <Image
-              src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777567002/lustrologo_wfervy.png"
-              alt="Lustro" width={38} height={38}
-              className="object-contain rounded-full"
-            />
-          </div>
+          <button
+            onClick={() => setMenuOpen(true)}
+            className="flex flex-col gap-[5px]"
+            aria-label="Menu"
+          >
+            <span className={`w-5 h-px block transition-colors duration-500 ${scrolled ? "bg-charcoal" : "bg-white"}`} />
+            <span className={`w-5 h-px block transition-colors duration-500 ${scrolled ? "bg-charcoal" : "bg-white"}`} />
+            <span className={`w-3 h-px block transition-colors duration-500 ${scrolled ? "bg-charcoal" : "bg-white"}`} />
+          </button>
 
           {/* Center: wordmark */}
           <span className={`absolute left-1/2 -translate-x-1/2 font-cormorant font-bold tracking-[0.1em] uppercase text-[1.05rem] whitespace-nowrap transition-colors duration-500 ${
@@ -699,10 +692,12 @@ function Hero() {
           <p
             className="hero-eyebrow"
             style={{
-              fontFamily: "'Tenor Sans', sans-serif",
-              fontSize: "0.6rem",
-              letterSpacing: "0.7em",
-              color: "rgba(255,255,255,0.45)",
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: "clamp(0.75rem, 2vw, 0.95rem)",
+              letterSpacing: "0.55em",
+              fontStyle: "italic",
+              fontWeight: "300",
+              color: "rgba(255,255,255,0.65)",
               textTransform: "uppercase",
               marginBottom: "16px",
             }}
@@ -717,7 +712,8 @@ function Hero() {
               fontSize: "clamp(54px, 15vw, 96px)",
               letterSpacing: "-0.01em",
               marginBottom: "24px",
-              clipPath: "inset(0 0 0 0)",
+              clipPath: "inset(0 0 -30% 0)",
+              paddingBottom: "8px",
             }}
           >
             Lustro Lagos
@@ -772,7 +768,7 @@ function Hero() {
           className="absolute text-white/45 hover:text-white transition-colors duration-300"
           style={{
             bottom: 28,
-            left: 20,
+            right: 20,
             zIndex: 40,
             opacity: muteVisible ? 1 : 0,
             transition: "opacity 0.8s ease",
@@ -780,7 +776,7 @@ function Hero() {
           aria-label={isMuted ? "Unmute" : "Mute"}
         >
           {isMuted ? (
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
               <path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0 0 21 12c0-4.28-3-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06A8.99 8.99 0 0 0 17.73 18l1.73 1.73L21 18.46 5.54 3 4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
             </svg>
           ) : (
