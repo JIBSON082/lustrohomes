@@ -695,8 +695,7 @@ function Hero() {
               fontFamily: "'Cormorant Garamond', serif",
               fontSize: "clamp(0.75rem, 2vw, 0.95rem)",
               letterSpacing: "0.55em",
-              fontStyle: "italic",
-              
+              fontStyle: "italic", 
               color: "rgba(255,255,255,0.9)",
               fontWeight: "500",
               textTransform: "uppercase",
@@ -739,7 +738,6 @@ function Hero() {
               fontSize: "clamp(0.75rem, 2vw, 0.9rem)",
               letterSpacing: "0.45em",
               fontStyle: "italic",
-              fontWeight: "300",
               color: "rgba(255,255,255,0.88)",
               fontWeight: "500",
               textTransform: "uppercase",
