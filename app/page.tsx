@@ -9,13 +9,14 @@ import Image from "next/image";
 const WHATSAPP_NUMBER = "2348000000000"; // ← Replace with actual WhatsApp number
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
 
-const NAV_LINKS = [
-  { label: "Rooms & Suites", href: "#rooms" },
-  { label: "Gallery", href: "#gallery" },
-  { label: "Dining", href: "#dining" },
-  { label: "Investment", href: "#invest" },
-  { label: "Yankee by Lustro", href: "#yankee" },
-  { label: "Contact", href: "#contact" },
+const HERO_NAV_LINKS = [
+  { label: "Our Story",        href: "#about"   },
+  { label: "Rooms & Suites",   href: "#rooms"   },
+  { label: "Dining",           href: "#dining"  },
+  { label: "Yankee by Lustro", href: "#yankee"  },
+  { label: "Gallery",          href: "#gallery" },
+  { label: "Investment",       href: "#invest"  },
+  { label: "Contact",          href: "#contact" },
 ];
 
 
@@ -2759,15 +2760,17 @@ export default function Home() {
 
   return (
     <main className="overflow-x-clip">
-      <Hero />
-      <About />
-      <Rooms />
-      <Dining />
-      <Gallery />
-      <Investment />
-      <Testimonials />
-      <Contact />
-      <Footer />
+     <Hero />
+     <StatsBar />
+     <About />
+     <Rooms />
+     <Dining />
+     <YankeeByLustro />
+     <Gallery />
+     <Investment />
+     <Testimonials />
+     <Contact />
+     <Footer />
     </main>
   );
 }
