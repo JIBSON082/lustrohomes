@@ -697,7 +697,8 @@ function Hero() {
               letterSpacing: "0.55em",
               fontStyle: "italic",
               fontWeight: "350",
-              color: "rgba(255,255,255,0.65)",
+              color: "rgba(255,255,255,0.9)",
+              fontWeight: "500",
               textTransform: "uppercase",
               marginBottom: "16px",
             }}
@@ -716,7 +717,7 @@ function Hero() {
               paddingBottom: "8px",
             }}
           >
-            Lustro Lagos
+            Lustro Homes
           </h1>
 
           {/* Gold divider */}
@@ -739,9 +740,13 @@ function Hero() {
               letterSpacing: "0.45em",
               fontStyle: "italic",
               fontWeight: "300",
-              color: "rgba(255,255,255,0.6)",
+              color: "rgba(255,255,255,0.88)",
+              fontWeight: "500",
               textTransform: "uppercase",
               marginBottom: "8px",
+              textAlign: "center",
+              width: "100%",
+              display: "block",
             }}
           >
             Crafted for
