@@ -238,15 +238,6 @@ const HERO_VIDEO_2 =
 
 const HERO_PHRASES = ["Staycation", "Signature Dining", "Investment"];
 
-const HERO_NAV_LINKS = [
-  { label: "Rooms & Suites", href: "#rooms" },
-  { label: "Gallery", href: "#gallery" },
-  { label: "Dining", href: "#dining" },
-  { label: "Investment", href: "#invest" },
-  { label: "Yankee by Lustro", href: "#yankee" },
-  { label: "Contact", href: "#contact" },
-];
-
 const SEARCHABLE_SECTIONS = [
   { label: "Rooms & Suites", href: "#rooms", keywords: ["rooms", "suites", "mykonos", "malibu", "seychelles", "beverly hills", "cappadocia", "santorini"] },
   { label: "Gallery", href: "#gallery", keywords: ["gallery", "photos", "images", "videos"] },
