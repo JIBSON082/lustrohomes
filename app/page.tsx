@@ -2546,6 +2546,9 @@ function Footer() {
 // MAIN HOME COMPONENT
 // ─────────────────────────────────────────────────
 export default function Home() {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, []);
   const [navScrolled, setNavScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
