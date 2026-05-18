@@ -9,6 +9,22 @@ import Image from "next/image";
 const WHATSAPP_NUMBER = "2348000000000"; // ← Replace with actual WhatsApp number
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
 
+const HERO_VIDEO_1 =
+  "https://res.cloudinary.com/dx3k7hbnc/video/upload/v1777632548/Hero-video_egr33p.mp4";
+const HERO_VIDEO_2 =
+  "https://res.cloudinary.com/dx3k7hbnc/video/upload/SaveVid.Net_AQPE4buCAPwMTpt_DXF2wOWf5MzYPthNbLKMeVWJDkJ8IefN-lUBT7-LEaODGn4_ONeOzQENCu6WWN7xr8X1ADpMhcGmT9_TKwVITzA_2_v6uxeg.mp4";
+
+const HERO_PHRASES = ["Staycation", "Signature Dining", "Investment"];
+
+const SEARCHABLE_SECTIONS = [
+  { label: "Rooms & Suites", href: "#rooms", keywords: ["rooms", "suites", "mykonos", "malibu", "seychelles", "beverly hills", "cappadocia", "santorini"] },
+  { label: "Gallery", href: "#gallery", keywords: ["gallery", "photos", "images", "videos"] },
+  { label: "Investment", href: "#invest", keywords: ["invest", "investment", "returns", "roi", "profit"] },
+  { label: "Yankee by Lustro", href: "#yankee", keywords: ["yankee", "sister"] },
+  { label: "Book Your Stay", href: `${WHATSAPP_URL}?text=I'd like to book`, keywords: ["book", "reserve", "stay"] },
+  { label: "Dining", href: "#dining", keywords: ["dining", "restaurant", "food", "eat"] },
+];
+
 const HERO_NAV_LINKS = [
   { label: "Our Story",        href: "#about"   },
   { label: "Rooms & Suites",   href: "#rooms"   },
@@ -231,21 +247,6 @@ function Navbar({
 // HERO SECTION — Cinematic Video Background
 // ─────────────────────────────────────────────────
 
-const HERO_VIDEO_1 =
-  "https://res.cloudinary.com/dx3k7hbnc/video/upload/v1777632548/Hero-video_egr33p.mp4";
-const HERO_VIDEO_2 =
-  "https://res.cloudinary.com/dx3k7hbnc/video/upload/SaveVid.Net_AQPE4buCAPwMTpt_DXF2wOWf5MzYPthNbLKMeVWJDkJ8IefN-lUBT7-LEaODGn4_ONeOzQENCu6WWN7xr8X1ADpMhcGmT9_TKwVITzA_2_v6uxeg.mp4";
-
-const HERO_PHRASES = ["Staycation", "Signature Dining", "Investment"];
-
-const SEARCHABLE_SECTIONS = [
-  { label: "Rooms & Suites", href: "#rooms", keywords: ["rooms", "suites", "mykonos", "malibu", "seychelles", "beverly hills", "cappadocia", "santorini"] },
-  { label: "Gallery", href: "#gallery", keywords: ["gallery", "photos", "images", "videos"] },
-  { label: "Investment", href: "#invest", keywords: ["invest", "investment", "returns", "roi", "profit"] },
-  { label: "Yankee by Lustro", href: "#yankee", keywords: ["yankee", "sister"] },
-  { label: "Book Your Stay", href: `${WHATSAPP_URL}?text=I'd like to book`, keywords: ["book", "reserve", "stay"] },
-  { label: "Dining", href: "#dining", keywords: ["dining", "restaurant", "food", "eat"] },
-];
 
 function Hero() {
   const [scrolled, setScrolled] = useState(false);
