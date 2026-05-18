@@ -795,6 +795,176 @@ function Hero() {
     </>
   );
 }
+
+
+function StatsBar() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [animated, setAnimated] = useState(false);
+  const [counts, setCounts] = useState({ guests: 0, properties: 0, revenue: 0, delivery: 0 });
+
+  const targets = {
+    guests: 15000,
+    properties: 3,
+    revenue: 2,
+    delivery: 100,
+  };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !animated) {
+          setAnimated(true);
+          animateCounts();
+        }
+      },
+      { threshold: 0.4 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, [animated]);
+
+  const animateCounts = () => {
+    const duration = 2000;
+    const steps = 60;
+    const interval = duration / steps;
+
+    let step = 0;
+    const timer = setInterval(() => {
+      step++;
+      const progress = step / steps;
+      const ease = 1 - Math.pow(1 - progress, 3);
+
+      setCounts({
+        guests: Math.floor(ease * targets.guests),
+        properties: Math.floor(ease * targets.properties),
+        revenue: Math.floor(ease * targets.revenue),
+        delivery: Math.floor(ease * targets.delivery),
+      });
+
+      if (step >= steps) {
+        clearInterval(timer);
+        setCounts({
+          guests: targets.guests,
+          properties: targets.properties,
+          revenue: targets.revenue,
+          delivery: targets.delivery,
+        });
+      }
+    }, interval);
+  };
+
+  const stats = [
+    {
+      value: counts.guests >= targets.guests ? "15,000+" : `${counts.guests.toLocaleString()}+`,
+      label: "Guests Hosted",
+    },
+    {
+      value: counts.properties >= targets.properties ? "3" : `${counts.properties}`,
+      label: "Iconic Properties",
+    },
+    {
+      value: counts.revenue >= targets.revenue ? "₦2M+" : `₦${counts.revenue}M+`,
+      label: "Monthly Revenue",
+    },
+    {
+      value: counts.delivery >= targets.delivery ? "100%" : `${counts.delivery}%`,
+      label: "Delivery Rate",
+    },
+  ];
+
+  return (
+    <section
+      ref={sectionRef}
+      className="bg-charcoal-light py-20 md:py-28 reveal-element"
+    >
+      <div className="max-w-5xl mx-auto px-6">
+
+        {/* Header */}
+        <div className="text-center mb-16">
+          <p
+            className="font-dm-sans text-gold/60 uppercase mb-3"
+            style={{ fontSize: "0.6rem", letterSpacing: "0.5em" }}
+          >
+            The Numbers
+          </p>
+          <h2 className="font-cormorant text-3xl md:text-4xl text-cream font-light">
+            A Track Record That Speaks
+          </h2>
+          <div
+            className="mx-auto mt-5"
+            style={{
+              width: "48px",
+              height: "1px",
+              background: "linear-gradient(90deg, transparent, #C8922A, transparent)",
+            }}
+          />
+        </div>
+
+        {/* Stats grid */}
+        <div className="grid grid-cols-2 gap-px bg-cream/5 rounded-2xl overflow-hidden mb-16">
+          {stats.map((stat, i) => (
+            <div
+              key={stat.label}
+              className={`bg-charcoal-light flex flex-col items-center justify-center py-10 px-4 text-center ${
+                i === 0 ? "rounded-tl-2xl" :
+                i === 1 ? "rounded-tr-2xl" :
+                i === 2 ? "rounded-bl-2xl" :
+                "rounded-br-2xl"
+              }`}
+            >
+              <p
+                className="font-cormorant text-gold font-light leading-none mb-3"
+                style={{ fontSize: "clamp(36px, 10vw, 52px)" }}
+              >
+                {stat.value}
+              </p>
+              <p
+                className="font-dm-sans text-cream/35 uppercase"
+                style={{ fontSize: "0.58rem", letterSpacing: "0.35em" }}
+              >
+                {stat.label}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* Gold divider */}
+        <div
+          className="mx-auto mb-16"
+          style={{
+            width: "64px",
+            height: "1px",
+            background: "linear-gradient(90deg, transparent, #C8922A 30%, #C8922A 70%, transparent)",
+          }}
+        />
+
+        {/* CTAs */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a
+            href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full sm:w-auto text-center bg-brown text-cream font-dm-sans text-sm tracking-[0.18em] uppercase px-12 py-4 hover:bg-brown-light transition-colors"
+          >
+            Book Your Stay
+          </a>
+          <a
+            href="#invest"
+            onClick={(e) => {
+              e.preventDefault();
+              document.querySelector("#invest")?.scrollIntoView({ behavior: "smooth" });
+            }}
+            className="w-full sm:w-auto text-center border border-cream/20 text-cream/60 font-dm-sans text-sm tracking-[0.18em] uppercase px-12 py-4 hover:border-gold hover:text-gold transition-all duration-300"
+          >
+            View Investment
+          </a>
+        </div>
+
+      </div>
+    </section>
+  );
+}
+
 // ─────────────────────────────────────────────────
 // ABOUT SECTION
 // ─────────────────────────────────────────────────
