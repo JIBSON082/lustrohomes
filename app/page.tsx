@@ -235,7 +235,7 @@ const HERO_VIDEO_1 =
 const HERO_VIDEO_2 =
   "https://res.cloudinary.com/dx3k7hbnc/video/upload/SaveVid.Net_AQPE4buCAPwMTpt_DXF2wOWf5MzYPthNbLKMeVWJDkJ8IefN-lUBT7-LEaODGn4_ONeOzQENCu6WWN7xr8X1ADpMhcGmT9_TKwVITzA_2_v6uxeg.mp4";
 
-const HERO_PHRASES = ["Staycation", "Dining", "Investment"];
+const HERO_PHRASES = ["Staycation", "Signature Dining", "Investment"];
 
 const HERO_NAV_LINKS = [
   { label: "Rooms & Suites", href: "#rooms" },
@@ -751,14 +751,14 @@ function Hero() {
           </p>
 
           {/* Cycling script phrase */}
-          <div className="hero-phrase" style={{ minHeight: "72px" }}>
+          <div className="hero-phrase" style={{ minHeight: "74px" }}>
             <span
               className={`phrase-word ${transitioning ? "hidden" : "visible"}`}
               style={{
                 fontFamily: "'Great Vibes', cursive",
                 fontSize: "clamp(46px, 13vw, 72px)",
                 color: "#C8922A",
-                lineHeight: 1.1,
+                lineHeight: 1.2,
                 whiteSpace: "nowrap",
               }}
             >
