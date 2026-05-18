@@ -696,7 +696,7 @@ function Hero() {
               fontSize: "clamp(0.75rem, 2vw, 0.95rem)",
               letterSpacing: "0.55em",
               fontStyle: "italic",
-              fontWeight: "350",
+              
               color: "rgba(255,255,255,0.9)",
               fontWeight: "500",
               textTransform: "uppercase",
