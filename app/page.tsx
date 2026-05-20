@@ -768,17 +768,10 @@ function About() {
           </h2>
           <div className="section-line mb-8" />
           <p className="font-dm-sans text-charcoal/65 leading-[1.85] text-sm md:text-base mb-5">
-            Born in the creative heart of Yaba, Lustro Homes was forged with a
-            single, uncompromising vision — to deliver a shortlet experience
-            that rivals the world's finest. Every corner, every amenity, every
-            interaction is curated to make you feel something rare: true luxury
-            in your own city.
+            We started Lustro Homes in Yaba because we wanted to redefine what a local getaway could look like. Our dream was to build a space that pairs the comfort of your own home with the elevated luxury of a five-star stay.
           </p>
           <p className="font-dm-sans text-charcoal/65 leading-[1.85] text-sm md:text-base mb-10">
-            From our signature in-house dining experience at Lustro Lagos
-            Restaurant, to our meticulously appointed suites, we don't just
-            offer a place to stay — we deliver an editorial moment in your life
-            that you'll carry long after checkout.
+            We obsessed over every detail. Every corner of our suites and every single dish at Lustro Lagos Restaurant was chosen with you in mind. To us, this isn't just about handing over a room key. It’s about giving you a place to truly breathe, recharge, and enjoy a weekend you won’t want to end.
           </p>
 
           {/* Mini stats */}
