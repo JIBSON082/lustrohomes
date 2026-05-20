@@ -660,12 +660,12 @@ function StatsBar() {
   return (
     <section
       ref={sectionRef}
-      className="bg-charcoal-light py-20 md:py-28 reveal-element"
+      className="bg-charcoal-light py-10 md:py-14 reveal-element"
     >
       <div className="max-w-5xl mx-auto px-6">
 
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-8">
           <p
             className="font-dm-sans text-gold/60 uppercase mb-3"
             style={{ fontSize: "0.6rem", letterSpacing: "0.5em" }}
@@ -686,11 +686,11 @@ function StatsBar() {
         </div>
 
         {/* Stats grid */}
-        <div className="grid grid-cols-2 gap-px bg-cream/5 rounded-2xl overflow-hidden mb-16">
+        <div className="grid grid-cols-2 gap-px bg-cream/5 rounded-2xl overflow-hidden mb-8">
           {stats.map((stat, i) => (
             <div
               key={stat.label}
-              className={`bg-charcoal-light flex flex-col items-center justify-center py-10 px-4 text-center ${
+              className={`bg-charcoal-light flex flex-col items-center justify-center py-5 px-4 text-center ${
                 i === 0 ? "rounded-tl-2xl" :
                 i === 1 ? "rounded-tr-2xl" :
                 i === 2 ? "rounded-bl-2xl" :
@@ -715,7 +715,7 @@ function StatsBar() {
 
         {/* Gold divider */}
         <div
-          className="mx-auto mb-16"
+          className="mx-auto mb-8"
           style={{
             width: "64px",
             height: "1px",
