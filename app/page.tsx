@@ -1809,7 +1809,7 @@ function Gallery() {
 
           {/* Main Display */}
           <div
-            className="relative rounded-2xl overflow-hidden bg-charcoal select-none""
+            className="relative rounded-2xl overflow-hidden bg-charcoal select-none"
             style={{ maxHeight: "420px" }}
           >
 
@@ -1976,7 +1976,7 @@ function Gallery() {
             <span className="text-base">→</span>
           </a>
         </div>
-      </div>
+      
     </section>
   );
 }
