@@ -1126,7 +1126,6 @@ function YankeeByLustro() {
   const videos = [
     { publicId: "Yankee_by_Lustro_1_fatub8", label: "The Arrival" },
     { publicId: "Yankee_by_Lustro_2_fegw75", label: "The Interior" },
-    { publicId: "Yankee_by_Lustro_3_aqx3ji", label: "The Experience" },
   ];
 
   const getVideoUrl = (publicId: string) =>
@@ -1178,10 +1177,8 @@ function YankeeByLustro() {
 
         {/* Header */}
         <div className="text-center mb-16 reveal-element">
-          <p className="font-dm-sans text-[0.65rem] text-gold uppercase tracking-[0.28em] mb-4">
-            Sister Property
-          </p>
-          <h2 className="font-cormorant text-5xl md:text-6xl text-cream font-light">
+          
+          <h2 className="font-cinzel text-5xl md:text-6xl text-cream font-light">
             Yankee by Lustro
           </h2>
           <div className="section-line mx-auto mt-6" />
@@ -1220,7 +1217,7 @@ function YankeeByLustro() {
 
             {/* Label overlay */}
            <div className="absolute top-5 left-5 pointer-events-none">
-  <p className="font-dm-sans text-xs text-gold uppercase tracking-[0.28em] font-semibold drop-shadow-lg">
+  <p className="font-cinzel text-xs text-gold uppercase tracking-[0.28em] font-semibold drop-shadow-lg">
     Yankee by Lustro
   </p>
 </div>
