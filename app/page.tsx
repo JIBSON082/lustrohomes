@@ -1219,14 +1219,11 @@ function YankeeByLustro() {
             />
 
             {/* Label overlay */}
-            <div className="absolute top-5 left-5 pointer-events-none">
-              <p className="font-dm-sans text-[0.55rem] text-gold/70 uppercase tracking-[0.22em] mb-1">
-                Yankee by Lustro
-              </p>
-              <h3 className="font-cormorant text-3xl text-cream font-light leading-none drop-shadow-lg">
-                {active.label}
-              </h3>
-            </div>
+           <div className="absolute top-5 left-5 pointer-events-none">
+  <p className="font-dm-sans text-xs text-gold uppercase tracking-[0.28em] font-semibold drop-shadow-lg">
+    Yankee by Lustro
+  </p>
+</div>
 
             {/* Controls */}
             <div className="absolute bottom-0 left-0 right-0 px-5 py-4 flex items-center justify-between bg-gradient-to-t from-black/50 to-transparent">
@@ -1263,31 +1260,7 @@ function YankeeByLustro() {
             </div>
           </div>
 
-          {/* Thumbnail Strip */}
-          <div className="flex gap-2.5 overflow-x-auto pb-1 no-scrollbar mb-10">
-            {videos.map((video, i) => (
-              <button
-                key={video.publicId}
-                onClick={() => { setActiveIdx(i); setPlaying(true); }}
-                className={`relative flex-shrink-0 rounded-xl overflow-hidden transition-all duration-500 ${
-                  activeIdx === i
-                    ? "ring-2 ring-gold scale-[1.06] opacity-100"
-                    : "opacity-40 hover:opacity-75"
-                }`}
-                style={{ width: "88px", height: "112px" }}
-              >
-                <img
-                  src={getThumbUrl(video.publicId)}
-                  alt={video.label}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <p className="absolute bottom-2 left-0 right-0 font-dm-sans text-[0.5rem] text-cream text-center uppercase tracking-wider px-1 truncate">
-                  {video.label}
-                </p>
-              </button>
-            ))}
-          </div>
+          
 
           {/* CTA */}
           <div className="glass rounded-2xl p-8 md:p-10 text-center" style={{ isolation: "isolate" }}>
