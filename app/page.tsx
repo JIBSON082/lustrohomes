@@ -895,9 +895,6 @@ function Rooms() {
   const getVideoUrl = (publicId: string) =>
     `https://res.cloudinary.com/dx3k7hbnc/video/upload/${publicId}.mp4`;
 
-  const getThumbUrl = (publicId: string) =>
-    `https://res.cloudinary.com/dx3k7hbnc/video/upload/so_2,w_300,h_400,c_fill,q_auto,f_auto/${publicId}.jpg`;
-
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -914,11 +911,6 @@ function Rooms() {
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, [activeIdx]);
-
-  const handleSelect = (i: number) => {
-    setActiveIdx(i);
-    setPlaying(true);
-  };
 
   const handleVideoEnded = () => {
     const next = (activeIdx + 1) % rooms.length;
@@ -938,12 +930,22 @@ function Rooms() {
     setMuted(!muted);
   };
 
+  const goPrev = () => {
+    setActiveIdx((i) => (i - 1 + rooms.length) % rooms.length);
+    setPlaying(true);
+  };
+
+  const goNext = () => {
+    setActiveIdx((i) => (i + 1) % rooms.length);
+    setPlaying(true);
+  };
+
   return (
-    <section ref={sectionRef} id="rooms" className="bg-cream-dark py-24 md:py-36">
+    <section ref={sectionRef} id="rooms" className="bg-cream-dark py-16 md:py-24">
       <div className="max-w-5xl mx-auto px-6">
 
         {/* Header */}
-        <div className="text-center mb-16 reveal-element">
+        <div className="text-center mb-10 reveal-element">
           <p className="font-dm-sans text-[0.65rem] text-brown uppercase tracking-[0.28em] mb-4">
             Rooms & Suites
           </p>
@@ -953,11 +955,11 @@ function Rooms() {
           <div className="section-line mx-auto mt-6" />
         </div>
 
-        {/* Gallery Block */}
         <div className="reveal-element">
 
-          {/* Main Video Player */}
-          <div className="relative rounded-2xl overflow-hidden bg-charcoal mb-4 select-none">
+          {/* ── Main Video ── */}
+          <div className="relative rounded-2xl overflow-hidden bg-charcoal select-none"
+            style={{ marginBottom: 0 }}>
             <video
               ref={videoRef}
               key={active.publicId}
@@ -975,15 +977,12 @@ function Rooms() {
                 if (playing) e.currentTarget.play().catch(() => {});
               }}
               className="w-full object-cover cursor-pointer"
-              style={{
-                maxHeight: "480px",
-                pointerEvents: "auto",
-              } as React.CSSProperties}
+              style={{ maxHeight: "420px", pointerEvents: "auto" } as React.CSSProperties}
               controlsList="nodownload nofullscreen noremoteplayback"
               onContextMenu={(e) => e.preventDefault()}
             />
 
-            {/* Room name overlay */}
+            {/* Tier + name overlay — top left */}
             <div className="absolute top-5 left-5 pointer-events-none">
               <span className="font-dm-sans text-[0.55rem] text-cream/60 uppercase tracking-[0.22em] mb-1 block">
                 {active.tier}
@@ -1000,8 +999,15 @@ function Rooms() {
               </span>
             </div>
 
-            {/* Custom Controls */}
-            <div className="absolute bottom-0 left-0 right-0 px-5 py-4 flex items-center justify-between bg-gradient-to-t from-black/50 to-transparent">
+            {/* Room counter — bottom centre */}
+            <div className="absolute bottom-14 left-0 right-0 flex justify-center pointer-events-none">
+              <span className="font-dm-sans text-[0.52rem] text-cream/45 tracking-[0.3em] uppercase">
+                {activeIdx + 1} / {rooms.length}
+              </span>
+            </div>
+
+            {/* Controls bar */}
+            <div className="absolute bottom-0 left-0 right-0 px-5 py-4 flex items-center justify-between bg-gradient-to-t from-black/55 to-transparent">
               <button
                 onClick={togglePlay}
                 className="w-9 h-9 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center hover:bg-white/25 transition-colors"
@@ -1017,6 +1023,29 @@ function Rooms() {
                   </svg>
                 )}
               </button>
+
+              {/* Prev / Next arrows — centre */}
+              <div className="flex items-center gap-5">
+                <button
+                  onClick={goPrev}
+                  className="text-cream/60 hover:text-cream transition-colors"
+                  aria-label="Previous room"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button
+                  onClick={goNext}
+                  className="text-cream/60 hover:text-cream transition-colors"
+                  aria-label="Next room"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+
               <button
                 onClick={toggleMute}
                 className="w-9 h-9 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center hover:bg-white/25 transition-colors"
@@ -1035,75 +1064,47 @@ function Rooms() {
             </div>
           </div>
 
-          {/* Thumbnail Strip */}
-          <div className="flex gap-2.5 overflow-x-auto pb-1 no-scrollbar mb-8">
-            {rooms.map((room, i) => (
-              <button
-                key={room.name}
-                onClick={() => handleSelect(i)}
-                className={`relative flex-shrink-0 rounded-xl overflow-hidden transition-all duration-500 ${
-                  activeIdx === i
-                    ? "ring-2 ring-gold scale-[1.06] opacity-100"
-                    : "opacity-40 hover:opacity-75"
-                }`}
-                style={{ width: "88px", height: "112px" }}
-              >
-                <img
-                  src={getThumbUrl(room.publicId)}
-                  alt={room.name}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <p className="absolute bottom-2 left-0 right-0 font-dm-sans text-[0.5rem] text-cream text-center uppercase tracking-wider px-1 truncate">
-                  {room.name}
-                </p>
-              </button>
-            ))}
-          </div>
+          {/* ── Detail card — directly below video, no gap ── */}
+          <div className="bg-cream rounded-b-2xl px-6 py-6 shadow-sm">
 
-          {/* Room Detail Card */}
-          <div className="bg-cream rounded-2xl p-8 md:p-10 flex flex-col md:flex-row md:items-center gap-8 shadow-sm">
+            {/* Tag + tier row */}
+            <div className="flex items-center gap-3 mb-3 flex-wrap">
+              <span className="font-dm-sans text-[0.58rem] bg-brown text-cream px-3 py-1.5 rounded-full tracking-[0.18em] uppercase">
+                {active.tag}
+              </span>
+              <span className="font-dm-sans text-[0.58rem] text-brown/50 uppercase tracking-[0.18em]">
+                {active.tier}
+              </span>
+            </div>
 
-            {/* Left — Info */}
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-4 flex-wrap">
-                <span className="font-dm-sans text-[0.58rem] bg-brown text-cream px-3 py-1.5 rounded-full tracking-[0.18em] uppercase">
-                  {active.tag}
-                </span>
-                <span className="font-dm-sans text-[0.58rem] text-brown/50 uppercase tracking-[0.18em]">
-                  {active.tier}
-                </span>
-              </div>
-              <h3 className="font-cormorant text-4xl md:text-5xl text-charcoal font-light mb-1 leading-none">
+            {/* Name + price row */}
+            <div className="flex items-baseline justify-between mb-3">
+              <h3 className="font-cormorant text-3xl text-charcoal font-light leading-none">
                 The {active.name}
               </h3>
-              <div className="flex items-baseline gap-2 mb-5">
-                <p className="font-cormorant text-3xl text-gold">
-                  {active.price}
-                </p>
-                <span className="font-dm-sans text-xs text-charcoal/40">
-                  / night
-                </span>
+              <div className="flex items-baseline gap-1 flex-shrink-0 ml-3">
+                <p className="font-cormorant text-2xl text-gold">{active.price}</p>
+                <span className="font-dm-sans text-[0.65rem] text-charcoal/40">/ night</span>
               </div>
-              <p className="font-dm-sans text-sm text-charcoal/55 leading-[1.9]">
-                {active.about}
-              </p>
             </div>
 
-            {/* Right — CTA */}
-            <div className="md:w-52 flex-shrink-0 flex flex-col gap-3">
-              <a
-                href={`${WHATSAPP_URL}?text=I'd like to book The ${active.name} at Lustro Homes`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block text-center bg-charcoal text-cream font-dm-sans text-sm py-4 rounded-full hover:bg-brown transition-colors"
-              >
-                Book This Room
-              </a>
-              <p className="font-dm-sans text-[0.58rem] text-charcoal/30 text-center uppercase tracking-wider">
-                Instant confirmation via WhatsApp
-              </p>
-            </div>
+            {/* Description */}
+            <p className="font-dm-sans text-sm text-charcoal/55 leading-[1.8] mb-5">
+              {active.about}
+            </p>
+
+            {/* CTA */}
+            <a
+              href={`${WHATSAPP_URL}?text=I'd like to book The ${active.name} at Lustro Homes`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block text-center bg-charcoal text-cream font-dm-sans text-sm py-3.5 rounded-full hover:bg-brown transition-colors"
+            >
+              Book This Room
+            </a>
+            <p className="font-dm-sans text-[0.55rem] text-charcoal/30 text-center uppercase tracking-wider mt-2">
+              Instant confirmation via WhatsApp
+            </p>
 
           </div>
         </div>
