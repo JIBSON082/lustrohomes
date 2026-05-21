@@ -1720,7 +1720,6 @@ function Gallery() {
   const [playing, setPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
-  const thumbsRef = useRef<HTMLDivElement>(null);
 
   const items: GalleryItem[] = [
     { type: "video", publicId: "Lustro_Gallery_video_1_oxi2ea", label: "Lustro Life" },
@@ -1742,18 +1741,6 @@ function Gallery() {
   const getVideoUrl = (publicId: string) =>
     `https://res.cloudinary.com/dx3k7hbnc/video/upload/${publicId}.mp4`;
 
-  const getVideoThumb = (publicId: string) =>
-    `https://res.cloudinary.com/dx3k7hbnc/video/upload/so_2,w_300,h_400,c_fill,q_auto,f_auto/${publicId}.jpg`;
-
-  useEffect(() => {
-    const container = thumbsRef.current;
-    if (!container) return;
-    const activeThumb = container.children[activeIdx] as HTMLElement;
-    if (activeThumb) {
-      activeThumb.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-    }
-  }, [activeIdx]);
-
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -1773,22 +1760,10 @@ function Gallery() {
     return () => observer.disconnect();
   }, [activeIdx, activeItem.type]);
 
-  const handleSelect = (i: number) => {
-    videoRef.current?.pause();
-    setActiveIdx(i);
-    setPlaying(true);
-  };
-
   const handleVideoEnded = () => {
-    const nextVideoIdx = items.findIndex(
-      (item, i) => i > activeIdx && item.type === "video"
-    );
-    if (nextVideoIdx !== -1) {
-      setActiveIdx(nextVideoIdx);
-      setPlaying(true);
-    } else {
-      setPlaying(false);
-    }
+    const next = (activeIdx + 1) % items.length;
+    setActiveIdx(next);
+    setPlaying(true);
   };
 
   const togglePlay = () => {
@@ -1801,6 +1776,18 @@ function Gallery() {
     if (!videoRef.current) return;
     videoRef.current.muted = !muted;
     setMuted(!muted);
+  };
+
+  const goPrev = () => {
+    videoRef.current?.pause();
+    setActiveIdx((i) => (i - 1 + items.length) % items.length);
+    setPlaying(true);
+  };
+
+  const goNext = () => {
+    videoRef.current?.pause();
+    setActiveIdx((i) => (i + 1) % items.length);
+    setPlaying(true);
   };
 
   return (
@@ -1820,10 +1807,10 @@ function Gallery() {
 
         <div className="reveal-element">
 
-          {/* Main Display — portrait frame, centered */}
+          {/* Main Display */}
           <div
-            className="relative rounded-2xl overflow-hidden bg-charcoal mb-4 select-none"
-            style={{ height: "70vh", maxWidth: "400px", margin: "0 auto" }}
+            className="relative rounded-t-2xl overflow-hidden bg-charcoal select-none"
+            style={{ maxHeight: "420px" }}
           >
 
             {/* VIDEO */}
@@ -1845,11 +1832,25 @@ function Gallery() {
                     );
                     if (playing) e.currentTarget.play().catch(() => {});
                   }}
-                  className="absolute inset-0 w-full h-full cursor-pointer"
-                  style={{ objectFit: "cover", pointerEvents: "auto" } as React.CSSProperties}
+                  className="w-full object-cover cursor-pointer"
+                  style={{ maxHeight: "420px", pointerEvents: "auto" } as React.CSSProperties}
                   controlsList="nodownload nofullscreen noremoteplayback"
                   onContextMenu={(e) => e.preventDefault()}
                 />
+
+                {/* Type badge — top left */}
+                <div className="absolute top-5 left-5 pointer-events-none">
+                  <span className="font-dm-sans text-[0.55rem] text-cream/60 uppercase tracking-[0.22em]">
+                    Video
+                  </span>
+                </div>
+
+                {/* Counter — top right */}
+                <div className="absolute top-5 right-5 pointer-events-none">
+                  <span className="font-dm-sans text-[0.52rem] text-cream/45 tracking-[0.3em] uppercase">
+                    {activeIdx + 1} / {items.length}
+                  </span>
+                </div>
 
                 {/* Controls */}
                 <div className="absolute bottom-0 left-0 right-0 px-5 py-4 flex items-center justify-between bg-gradient-to-t from-black/55 to-transparent">
@@ -1868,6 +1869,20 @@ function Gallery() {
                       </svg>
                     )}
                   </button>
+
+                  <div className="flex items-center gap-5">
+                    <button onClick={goPrev} className="text-cream/60 hover:text-cream transition-colors" aria-label="Previous">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </button>
+                    <button onClick={goNext} className="text-cream/60 hover:text-cream transition-colors" aria-label="Next">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  </div>
+
                   <button
                     onClick={toggleMute}
                     className="w-9 h-9 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center hover:bg-white/25 transition-colors"
@@ -1884,13 +1899,6 @@ function Gallery() {
                     )}
                   </button>
                 </div>
-
-                {/* Counter */}
-                <div className="absolute top-5 right-5 pointer-events-none">
-                  <span className="font-dm-sans text-[0.55rem] text-cream/50 uppercase tracking-[0.2em]">
-                    {activeIdx + 1} / {items.length}
-                  </span>
-                </div>
               </>
             )}
 
@@ -1901,51 +1909,85 @@ function Gallery() {
                   key={activeItem.src}
                   src={activeItem.src}
                   alt={activeItem.alt}
-                  className="absolute inset-0 w-full h-full"
-                  style={{ objectFit: "cover" }}
+                  className="w-full object-cover"
+                  style={{ maxHeight: "420px" }}
                 />
-                {/* Counter */}
+
+                {/* Type badge — top left */}
+                <div className="absolute top-5 left-5 pointer-events-none">
+                  <span className="font-dm-sans text-[0.55rem] text-cream/60 uppercase tracking-[0.22em]">
+                    Photo
+                  </span>
+                </div>
+
+                {/* Counter — top right */}
                 <div className="absolute top-5 right-5 pointer-events-none">
-                  <span className="font-dm-sans text-[0.55rem] text-cream/50 uppercase tracking-[0.2em]">
+                  <span className="font-dm-sans text-[0.52rem] text-cream/45 tracking-[0.3em] uppercase">
                     {activeIdx + 1} / {items.length}
                   </span>
+                </div>
+
+                {/* Prev / Next for images */}
+                <div className="absolute bottom-0 left-0 right-0 px-5 py-4 flex items-center justify-center gap-5 bg-gradient-to-t from-black/40 to-transparent">
+                  <button onClick={goPrev} className="text-cream/60 hover:text-cream transition-colors" aria-label="Previous">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <button onClick={goNext} className="text-cream/60 hover:text-cream transition-colors" aria-label="Next">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
                 </div>
               </>
             )}
           </div>
 
-          {/* Thumbnail Strip */}
-          <div
-            ref={thumbsRef}
-            className="flex gap-2.5 overflow-x-auto pb-1 no-scrollbar"
-            style={{ maxWidth: "400px", margin: "0 auto" }}
-          >
-            {items.map((item, i) => (
+          {/* Detail card — directly below, no gap */}
+          <div className="bg-cream rounded-b-2xl px-6 py-6 shadow-sm">
+
+            {/* Type tag */}
+            <div className="flex items-center gap-3 mb-3">
+              <span className="font-dm-sans text-[0.58rem] bg-brown text-cream px-3 py-1.5 rounded-full tracking-[0.18em] uppercase">
+                {activeItem.type === "video" ? "Video" : "Photo"}
+              </span>
+              <span className="font-dm-sans text-[0.58rem] text-brown/50 uppercase tracking-[0.18em]">
+                Lustro Homes
+              </span>
+            </div>
+
+            {/* Label */}
+            <h3 className="font-cormorant text-3xl text-charcoal font-light leading-none mb-4">
+              {activeItem.label}
+            </h3>
+
+            {/* Prev / Next */}
+            <div className="flex items-center justify-between">
               <button
-                key={i}
-                onClick={() => handleSelect(i)}
-                className={`relative flex-shrink-0 rounded-xl overflow-hidden transition-all duration-300 ${
-                  activeIdx === i
-                    ? "ring-2 ring-gold scale-[1.06] opacity-100"
-                    : "opacity-40 hover:opacity-75"
-                }`}
-                style={{ width: "88px", height: "112px" }}
+                onClick={goPrev}
+                className="flex items-center gap-2 font-dm-sans text-[0.65rem] text-charcoal/50 uppercase tracking-wider hover:text-charcoal transition-colors"
               >
-                <img
-                  src={item.type === "video" ? getVideoThumb(item.publicId) : item.src}
-                  alt={item.type === "video" ? item.label : item.alt}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/65 to-transparent" />
-                {item.type === "video" && (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-white/80">
-                      <path d="M8 5.14v14l11-7-11-7z" />
-                    </svg>
-                  </div>
-                )}
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+                Prev
               </button>
-            ))}
+
+              <span className="font-dm-sans text-[0.55rem] text-charcoal/30 uppercase tracking-[0.3em]">
+                {activeIdx + 1} / {items.length}
+              </span>
+
+              <button
+                onClick={goNext}
+                className="flex items-center gap-2 font-dm-sans text-[0.65rem] text-charcoal/50 uppercase tracking-wider hover:text-charcoal transition-colors"
+              >
+                Next
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
 
