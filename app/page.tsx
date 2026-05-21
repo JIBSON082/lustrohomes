@@ -1809,7 +1809,7 @@ function Gallery() {
 
           {/* Main Display */}
           <div
-            className="relative rounded-t-2xl overflow-hidden bg-charcoal select-none"
+            className="relative rounded-2xl overflow-hidden bg-charcoal select-none""
             style={{ maxHeight: "420px" }}
           >
 
@@ -1833,17 +1833,12 @@ function Gallery() {
                     if (playing) e.currentTarget.play().catch(() => {});
                   }}
                   className="w-full object-cover cursor-pointer"
-                  style={{ maxHeight: "420px", pointerEvents: "auto" } as React.CSSProperties}
+                  style={{ width: "100%", height: "auto", pointerEvents: "auto" } as React.CSSProperties}
                   controlsList="nodownload nofullscreen noremoteplayback"
                   onContextMenu={(e) => e.preventDefault()}
                 />
 
-                {/* Type badge — top left */}
-                <div className="absolute top-5 left-5 pointer-events-none">
-                  <span className="font-dm-sans text-[0.55rem] text-cream/60 uppercase tracking-[0.22em]">
-                    Video
-                  </span>
-                </div>
+                
 
                 {/* Counter — top right */}
                 <div className="absolute top-5 right-5 pointer-events-none">
@@ -1913,12 +1908,7 @@ function Gallery() {
                   style={{ maxHeight: "420px" }}
                 />
 
-                {/* Type badge — top left */}
-                <div className="absolute top-5 left-5 pointer-events-none">
-                  <span className="font-dm-sans text-[0.55rem] text-cream/60 uppercase tracking-[0.22em]">
-                    Photo
-                  </span>
-                </div>
+                
 
                 {/* Counter — top right */}
                 <div className="absolute top-5 right-5 pointer-events-none">
@@ -1944,51 +1934,33 @@ function Gallery() {
             )}
           </div>
 
-          {/* Detail card — directly below, no gap */}
-          <div className="bg-cream rounded-b-2xl px-6 py-6 shadow-sm">
+          {/* Prev / Next only */}
+        <div className="flex items-center justify-between mt-4 px-1">
+          <button
+            onClick={goPrev}
+            className="flex items-center gap-2 font-dm-sans text-[0.65rem] text-charcoal/50 uppercase tracking-wider hover:text-charcoal transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            Prev
+          </button>
 
-            {/* Type tag */}
-            <div className="flex items-center gap-3 mb-3">
-              <span className="font-dm-sans text-[0.58rem] bg-brown text-cream px-3 py-1.5 rounded-full tracking-[0.18em] uppercase">
-                {activeItem.type === "video" ? "Video" : "Photo"}
-              </span>
-              <span className="font-dm-sans text-[0.58rem] text-brown/50 uppercase tracking-[0.18em]">
-                Lustro Homes
-              </span>
-            </div>
+          <span className="font-dm-sans text-[0.55rem] text-charcoal/30 uppercase tracking-[0.3em]">
+            {activeIdx + 1} / {items.length}
+          </span>
 
-            {/* Label */}
-            <h3 className="font-cormorant text-3xl text-charcoal font-light leading-none mb-4">
-              {activeItem.label}
-            </h3>
-
-            {/* Prev / Next */}
-            <div className="flex items-center justify-between">
-              <button
-                onClick={goPrev}
-                className="flex items-center gap-2 font-dm-sans text-[0.65rem] text-charcoal/50 uppercase tracking-wider hover:text-charcoal transition-colors"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                </svg>
-                Prev
-              </button>
-
-              <span className="font-dm-sans text-[0.55rem] text-charcoal/30 uppercase tracking-[0.3em]">
-                {activeIdx + 1} / {items.length}
-              </span>
-
-              <button
-                onClick={goNext}
-                className="flex items-center gap-2 font-dm-sans text-[0.65rem] text-charcoal/50 uppercase tracking-wider hover:text-charcoal transition-colors"
-              >
-                Next
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            </div>
-          </div>
+          <button
+            onClick={goNext}
+            className="flex items-center gap-2 font-dm-sans text-[0.65rem] text-charcoal/50 uppercase tracking-wider hover:text-charcoal transition-colors"
+          >
+            Next
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+        </div>
         </div>
 
         {/* Instagram link */}
