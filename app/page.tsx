@@ -1208,7 +1208,7 @@ function YankeeByLustro() {
               }}
               className="w-full object-cover cursor-pointer"
               style={{
-                maxHeight: "480px",
+                maxHeight: "520px",
                 pointerEvents: "auto",
               } as React.CSSProperties}
               controlsList="nodownload nofullscreen noremoteplayback"
