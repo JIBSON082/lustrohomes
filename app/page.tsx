@@ -1810,7 +1810,7 @@ function Gallery() {
           {/* Main Display */}
           <div
             className="relative rounded-2xl overflow-hidden bg-charcoal select-none"
-            style={{ maxHeight: "420px" }}
+            style={{ maxHeight: "520px" }}
           >
 
             {/* VIDEO */}
