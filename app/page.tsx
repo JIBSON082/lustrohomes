@@ -1935,33 +1935,34 @@ function Gallery() {
           </div>
 
           {/* Prev / Next only */}
-        <div className="flex items-center justify-between mt-4 px-1">
-          <button
-            onClick={goPrev}
-            className="flex items-center gap-2 font-dm-sans text-[0.65rem] text-charcoal/50 uppercase tracking-wider hover:text-charcoal transition-colors"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-            </svg>
-            Prev
-          </button>
+          <div className="flex items-center justify-between mt-4 px-1">
+            <button
+              onClick={goPrev}
+              className="flex items-center gap-2 font-dm-sans text-[0.65rem] text-charcoal/50 uppercase tracking-wider hover:text-charcoal transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+              Prev
+            </button>
 
-          <span className="font-dm-sans text-[0.55rem] text-charcoal/30 uppercase tracking-[0.3em]">
-            {activeIdx + 1} / {items.length}
-          </span>
+            <span className="font-dm-sans text-[0.55rem] text-charcoal/30 uppercase tracking-[0.3em]">
+              {activeIdx + 1} / {items.length}
+            </span>
 
-          <button
-            onClick={goNext}
-            className="flex items-center gap-2 font-dm-sans text-[0.65rem] text-charcoal/50 uppercase tracking-wider hover:text-charcoal transition-colors"
-          >
-            Next
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
+            <button
+              onClick={goNext}
+              className="flex items-center gap-2 font-dm-sans text-[0.65rem] text-charcoal/50 uppercase tracking-wider hover:text-charcoal transition-colors"
+            >
+              Next
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+
         </div>
-        </div>
-        </div>
+      </div>
 
         {/* Instagram link */}
         <div className="text-center mt-12 reveal-element">
@@ -1979,7 +1980,6 @@ function Gallery() {
     </section>
   );
 }
-
 
 // ─────────────────────────────────────────────────
 // INVESTMENT JOURNEY
