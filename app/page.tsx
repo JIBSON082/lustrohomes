@@ -40,8 +40,7 @@ const HERO_NAV_LINKS = [
 // HERO SECTION — Cinematic Video Background
 // ─────────────────────────────────────────────────
 
-
-function Hero() {
+Function Hero() {
   const [scrolled, setScrolled] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [muteVisible, setMuteVisible] = useState(false);
@@ -187,17 +186,33 @@ function Hero() {
     return () => { document.body.style.overflow = ""; };
   }, [menuOpen, searchOpen]);
 
-  const handleVideo1End = () => {
-    setVideo2Active(true);
-    video2Ref.current?.play().catch(() => {});
-  };
-  const handleVideo2End = () => {
-    setVideo2Active(false);
-    if (video1Ref.current) {
-      video1Ref.current.currentTime = 0;
-      video1Ref.current.play().catch(() => {});
+  // Modified: TimeUpdate handlers for seamless cinematic crossfade
+  const handleVideo1TimeUpdate = () => {
+    if (video2Active || !video1Ref.current) return;
+    
+    // Trigger crossfade 0.8s before video ends
+    if (video1Ref.current.duration - video1Ref.current.currentTime <= 0.8) {
+      if (video2Ref.current) {
+        video2Ref.current.currentTime = 0;
+        video2Ref.current.play().catch((err) => console.warn("Video 2 playback failed:", err));
+      }
+      setVideo2Active(true);
     }
   };
+
+  const handleVideo2TimeUpdate = () => {
+    if (!video2Active || !video2Ref.current) return;
+    
+    // Trigger crossfade 0.8s before video ends
+    if (video2Ref.current.duration - video2Ref.current.currentTime <= 0.8) {
+      if (video1Ref.current) {
+        video1Ref.current.currentTime = 0;
+        video1Ref.current.play().catch((err) => console.warn("Video 1 playback failed:", err));
+      }
+      setVideo2Active(false);
+    }
+  };
+
   const toggleMute = () => {
     const m = !isMuted;
     if (video1Ref.current) video1Ref.current.muted = m;
@@ -413,15 +428,16 @@ function Hero() {
           background: "#080808",
         }}
       >
-        {/* Video 1 */}
+        {/* Video 1 - Modified with onTimeUpdate and preload */}
         <video
           ref={video1Ref}
           src={HERO_VIDEO_1}
           autoPlay
           muted
+          preload="auto"
           playsInline
           disablePictureInPicture
-          onEnded={handleVideo1End}
+          onTimeUpdate={handleVideo1TimeUpdate}
           onLoadedMetadata={(e) => Array.from(e.currentTarget.textTracks).forEach((t) => (t.mode = "hidden"))}
           onContextMenu={(e) => e.preventDefault()}
           className="absolute inset-0 w-full h-full object-cover"
@@ -432,14 +448,15 @@ function Hero() {
           }}
         />
 
-        {/* Video 2 */}
+        {/* Video 2 - Modified with onTimeUpdate and preload */}
         <video
           ref={video2Ref}
           src={HERO_VIDEO_2}
           muted
+          preload="auto"
           playsInline
           disablePictureInPicture
-          onEnded={handleVideo2End}
+          onTimeUpdate={handleVideo2TimeUpdate}
           onLoadedMetadata={(e) => Array.from(e.currentTarget.textTracks).forEach((t) => (t.mode = "hidden"))}
           onContextMenu={(e) => e.preventDefault()}
           className="absolute inset-0 w-full h-full object-cover"
