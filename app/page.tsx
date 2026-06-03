@@ -40,7 +40,7 @@ const HERO_NAV_LINKS = [
 // HERO SECTION — Cinematic Video Background
 // ─────────────────────────────────────────────────
 
-Function Hero() {
+function Hero() {
   const [scrolled, setScrolled] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [muteVisible, setMuteVisible] = useState(false);
