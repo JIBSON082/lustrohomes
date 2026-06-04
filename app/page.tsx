@@ -42,17 +42,12 @@ const HERO_NAV_LINKS = [
 
 function Hero() {
   const [scrolled, setScrolled] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
-  const [muteVisible, setMuteVisible] = useState(false);
-  const [video2Active, setVideo2Active] = useState(false);
   const [phraseIdx, setPhraseIdx] = useState(0);
   const [transitioning, setTransitioning] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const video1Ref = useRef<HTMLVideoElement>(null);
-  const video2Ref = useRef<HTMLVideoElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -87,7 +82,7 @@ function Hero() {
     const init = async () => {
       try {
         const { gsap } = await import("gsap");
-        const tl = gsap.timeline({ onComplete: () => setMuteVisible(true) });
+        const tl = gsap.timeline();
 
         tl
           // Black bars retract like cinema curtains
@@ -151,7 +146,6 @@ function Hero() {
             (el as HTMLElement).style.clipPath = "none";
           });
         });
-        setMuteVisible(true);
       }
     };
     init();
@@ -185,40 +179,6 @@ function Hero() {
     document.body.style.overflow = menuOpen || searchOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [menuOpen, searchOpen]);
-
-  // Modified: TimeUpdate handlers for seamless cinematic crossfade
-  const handleVideo1TimeUpdate = () => {
-    if (video2Active || !video1Ref.current) return;
-    
-    // Trigger crossfade 0.8s before video ends
-    if (video1Ref.current.duration - video1Ref.current.currentTime <= 0.8) {
-      if (video2Ref.current) {
-        video2Ref.current.currentTime = 0;
-        video2Ref.current.play().catch((err) => console.warn("Video 2 playback failed:", err));
-      }
-      setVideo2Active(true);
-    }
-  };
-
-  const handleVideo2TimeUpdate = () => {
-    if (!video2Active || !video2Ref.current) return;
-    
-    // Trigger crossfade 0.8s before video ends
-    if (video2Ref.current.duration - video2Ref.current.currentTime <= 0.8) {
-      if (video1Ref.current) {
-        video1Ref.current.currentTime = 0;
-        video1Ref.current.play().catch((err) => console.warn("Video 1 playback failed:", err));
-      }
-      setVideo2Active(false);
-    }
-  };
-
-  const toggleMute = () => {
-    const m = !isMuted;
-    if (video1Ref.current) video1Ref.current.muted = m;
-    if (video2Ref.current) video2Ref.current.muted = m;
-    setIsMuted(m);
-  };
 
   const handleSearchNavigate = (href: string) => {
     setSearchOpen(false);
@@ -428,43 +388,12 @@ function Hero() {
           background: "#080808",
         }}
       >
-        {/* Video 1 - Modified with onTimeUpdate and preload */}
-        <video
-          ref={video1Ref}
-          src={HERO_VIDEO_1}
-          autoPlay
-          muted
-          preload="auto"
-          playsInline
-          disablePictureInPicture
-          onTimeUpdate={handleVideo1TimeUpdate}
-          onLoadedMetadata={(e) => Array.from(e.currentTarget.textTracks).forEach((t) => (t.mode = "hidden"))}
-          onContextMenu={(e) => e.preventDefault()}
+        {/* Background Image Replacing Videos */}
+        <img
+          src="https://res.cloudinary.com/dx3k7hbnc/image/upload/v1780580829/6vxk9fbdvdrmr0cyjbfv367b28_result_0_igqrjm.png"
+          alt="Lustro Homes Hero"
           className="absolute inset-0 w-full h-full object-cover"
-          style={{
-            opacity: video2Active ? 0 : 1,
-            transition: "opacity 0.8s ease",
-            transform: "scale(1.04)",
-          }}
-        />
-
-        {/* Video 2 - Modified with onTimeUpdate and preload */}
-        <video
-          ref={video2Ref}
-          src={HERO_VIDEO_2}
-          muted
-          preload="auto"
-          playsInline
-          disablePictureInPicture
-          onTimeUpdate={handleVideo2TimeUpdate}
-          onLoadedMetadata={(e) => Array.from(e.currentTarget.textTracks).forEach((t) => (t.mode = "hidden"))}
-          onContextMenu={(e) => e.preventDefault()}
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{
-            opacity: video2Active ? 1 : 0,
-            transition: "opacity 0.8s ease",
-            transform: "scale(1.04)",
-          }}
+          style={{ transform: "scale(1.04)" }}
         />
 
         {/* Cinematic gradient */}
@@ -569,30 +498,6 @@ function Hero() {
             </span>
           </div>
         </div>
-
-        {/* Mute button */}
-        <button
-          onClick={toggleMute}
-          className="absolute text-white/45 hover:text-white transition-colors duration-300"
-          style={{
-            bottom: 28,
-            right: 20,
-            zIndex: 40,
-            opacity: muteVisible ? 1 : 0,
-            transition: "opacity 0.8s ease",
-          }}
-          aria-label={isMuted ? "Unmute" : "Mute"}
-        >
-          {isMuted ? (
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-              <path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0 0 21 12c0-4.28-3-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06A8.99 8.99 0 0 0 17.73 18l1.73 1.73L21 18.46 5.54 3 4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
-            </svg>
-          ) : (
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7">
-              <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z" />
-            </svg>
-          )}
-        </button>
       </section>
     </>
   );
