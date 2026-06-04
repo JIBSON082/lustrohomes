@@ -445,92 +445,105 @@ function Hero() {
   );
 }
 
+// Move targets outside component — never changes, no reason to recreate
+const STATS_TARGETS = {
+  guests: 15000,
+  properties: 3,
+  revenue: 2,
+  delivery: 100,
+};
+
 function StatsBar() {
   const sectionRef = useRef<HTMLElement>(null);
   const [animated, setAnimated] = useState(false);
-  const [counts, setCounts] = useState({ guests: 0, properties: 0, revenue: 0, delivery: 0 });
-
-  const targets = {
-    guests: 15000,
-    properties: 3,
-    revenue: 2,
-    delivery: 100,
-  };
+  const [counts, setCounts] = useState({
+    guests: 0,
+    properties: 0,
+    revenue: 0,
+    delivery: 0,
+  });
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !animated) {
           setAnimated(true);
-          animateCounts();
+
+          const duration = 2000;
+          const steps = 60;
+          const interval = duration / steps;
+          let step = 0;
+
+          const timer = setInterval(() => {
+            step++;
+            const progress = step / steps;
+            const ease = 1 - Math.pow(1 - progress, 3);
+
+            setCounts({
+              guests: Math.floor(ease * STATS_TARGETS.guests),
+              properties: Math.floor(ease * STATS_TARGETS.properties),
+              // Multiply by 10 internally so animation has 20 steps, not 2
+              revenue: Math.floor(ease * (STATS_TARGETS.revenue * 10)) / 10,
+              delivery: Math.floor(ease * STATS_TARGETS.delivery),
+            });
+
+            if (step >= steps) {
+              clearInterval(timer);
+              setCounts({
+                guests: STATS_TARGETS.guests,
+                properties: STATS_TARGETS.properties,
+                revenue: STATS_TARGETS.revenue,
+                delivery: STATS_TARGETS.delivery,
+              });
+            }
+          }, interval);
         }
       },
       { threshold: 0.4 }
     );
+
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, [animated]);
 
-  const animateCounts = () => {
-    const duration = 2000;
-    const steps = 60;
-    const interval = duration / steps;
-
-    let step = 0;
-    const timer = setInterval(() => {
-      step++;
-      const progress = step / steps;
-      const ease = 1 - Math.pow(1 - progress, 3);
-
-      setCounts({
-        guests: Math.floor(ease * targets.guests),
-        properties: Math.floor(ease * targets.properties),
-        revenue: Math.floor(ease * targets.revenue),
-        delivery: Math.floor(ease * targets.delivery),
-      });
-
-      if (step >= steps) {
-        clearInterval(timer);
-        setCounts({
-          guests: targets.guests,
-          properties: targets.properties,
-          revenue: targets.revenue,
-          delivery: targets.delivery,
-        });
-      }
-    }, interval);
-  };
-
-  const stats = [
+  const stats = useMemo(() => [
     {
-      value: counts.guests >= targets.guests ? "15,000+" : `${counts.guests.toLocaleString()}+`,
+      value: counts.guests >= STATS_TARGETS.guests
+        ? "15,000+"
+        : `${counts.guests.toLocaleString()}+`,
       label: "Guests Hosted",
     },
     {
-      value: counts.properties >= targets.properties ? "3" : `${counts.properties}`,
+      value: counts.properties >= STATS_TARGETS.properties
+        ? "3"
+        : `${counts.properties}`,
       label: "Iconic Properties",
     },
     {
-      value: counts.revenue >= targets.revenue ? "₦2M+" : `₦${counts.revenue}M+`,
+      value: counts.revenue >= STATS_TARGETS.revenue
+        ? "₦2M+"
+        : `₦${counts.revenue.toFixed(1)}M+`,
       label: "Monthly Revenue",
     },
     {
-      value: counts.delivery >= targets.delivery ? "100%" : `${counts.delivery}%`,
+      value: counts.delivery >= STATS_TARGETS.delivery
+        ? "100%"
+        : `${counts.delivery}%`,
       label: "Delivery Rate",
     },
-  ];
+  ], [counts]);
 
   return (
     <section
       ref={sectionRef}
-      className="bg-charcoal-light py-10 md:py-14 reveal-element"
+      className="bg-charcoal-light py-8 md:py-10 reveal-element"  {/* HEIGHT: change py-8 md:py-10 */}
     >
       <div className="max-w-5xl mx-auto px-6">
 
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">  {/* HEIGHT: change mb-6 */}
           <p
-            className="font-dm-sans text-gold/60 uppercase mb-3"
+            className="font-dm-sans text-gold/60 uppercase mb-2"
             style={{ fontSize: "0.6rem", letterSpacing: "0.5em" }}
           >
             The Numbers
@@ -539,7 +552,7 @@ function StatsBar() {
             A Track Record That Speaks
           </h2>
           <div
-            className="mx-auto mt-5"
+            className="mx-auto mt-4"
             style={{
               width: "48px",
               height: "1px",
@@ -548,21 +561,20 @@ function StatsBar() {
           />
         </div>
 
-        {/* Stats grid */}
-        <div className="grid grid-cols-2 gap-px bg-cream/5 rounded-2xl overflow-hidden mb-8">
+        {/* Stats grid — fixed iOS Safari rendering with border instead of gap-px trick */}
+        <div className="grid grid-cols-2 mb-6">  {/* HEIGHT: change mb-6 */}
           {stats.map((stat, i) => (
             <div
               key={stat.label}
-              className={`bg-charcoal-light flex flex-col items-center justify-center py-5 px-4 text-center ${
-                i === 0 ? "rounded-tl-2xl" :
-                i === 1 ? "rounded-tr-2xl" :
-                i === 2 ? "rounded-bl-2xl" :
-                "rounded-br-2xl"
-              }`}
+              className="flex flex-col items-center justify-center py-4 px-4 text-center"  {/* HEIGHT: change py-4 */}
+              style={{
+                borderRight: i % 2 === 0 ? "1px solid rgba(255,255,255,0.06)" : "none",
+                borderBottom: i < 2 ? "1px solid rgba(255,255,255,0.06)" : "none",
+              }}
             >
               <p
-                className="font-cormorant text-gold font-light leading-none mb-3"
-                style={{ fontSize: "clamp(36px, 10vw, 52px)" }}
+                className="font-cormorant text-gold font-light leading-none mb-2"
+                style={{ fontSize: "clamp(32px, 9vw, 48px)" }}  // HEIGHT: change clamp min/max
               >
                 {stat.value}
               </p>
@@ -578,7 +590,7 @@ function StatsBar() {
 
         {/* Gold divider */}
         <div
-          className="mx-auto mb-8"
+          className="mx-auto mb-6"  {/* HEIGHT: change mb-6 */}
           style={{
             width: "64px",
             height: "1px",
@@ -587,12 +599,12 @@ function StatsBar() {
         />
 
         {/* CTAs */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <a
             href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full sm:w-auto text-center bg-brown text-cream font-dm-sans text-sm tracking-[0.18em] uppercase px-12 py-4 hover:bg-brown-light transition-colors"
+            className="w-full sm:w-auto text-center bg-brown text-cream font-dm-sans text-sm tracking-[0.18em] uppercase px-12 py-3.5 hover:bg-brown-light transition-colors"
           >
             Book Your Stay
           </a>
@@ -602,7 +614,7 @@ function StatsBar() {
               e.preventDefault();
               document.querySelector("#invest")?.scrollIntoView({ behavior: "smooth" });
             }}
-            className="w-full sm:w-auto text-center border border-cream/20 text-cream/60 font-dm-sans text-sm tracking-[0.18em] uppercase px-12 py-4 hover:border-gold hover:text-gold transition-all duration-300"
+            className="w-full sm:w-auto text-center border border-cream/20 text-cream/60 font-dm-sans text-sm tracking-[0.18em] uppercase px-12 py-3.5 hover:border-gold hover:text-gold transition-all duration-300"
           >
             View Investment
           </a>
