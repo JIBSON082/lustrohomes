@@ -51,7 +51,6 @@ function Hero() {
   const textRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  // Scroll — nav color + text parallax
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
@@ -65,7 +64,6 @@ function Hero() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Phrase cycling
   useEffect(() => {
     const iv = setInterval(() => {
       setTransitioning(true);
@@ -77,56 +75,34 @@ function Hero() {
     return () => clearInterval(iv);
   }, []);
 
-  // Cinematic entrance
+  // CHANGED: Removed letterbox animation entirely.
+  // Text animations now start after a short 0.3s delay
   useEffect(() => {
     const init = async () => {
       try {
         const { gsap } = await import("gsap");
-        const tl = gsap.timeline();
+        const tl = gsap.timeline({ delay: 0.3 });
 
         tl
-          // Black bars retract like cinema curtains
-          .to(".lb-top", {
-            scaleY: 0,
-            duration: 1.8,
-            ease: "expo.inOut",
-            delay: 0.5,
-          })
-          .to(".lb-bottom", {
-            scaleY: 0,
-            duration: 1.8,
-            ease: "expo.inOut",
-          }, "<")
-
-          // "Welcome to" fades up
           .fromTo(".hero-eyebrow",
             { opacity: 0, y: 16 },
-            { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" },
-            "-=1.0"
+            { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" }
           )
-
-          // "Lustro Lagos" — clip-path reveal upward
           .fromTo(".hero-title",
             { opacity: 0, clipPath: "inset(100% 0 -30% 0)", y: 20 },
             { opacity: 1, clipPath: "inset(0% 0 -30% 0)", y: 0, duration: 1.2, ease: "expo.out" },
-            "-=0.7"
+            "-=0.5"
           )
-
-          // Gold divider expands from center
           .fromTo(".hero-divider",
             { scaleX: 0, opacity: 0 },
             { scaleX: 1, opacity: 1, duration: 0.9, ease: "power3.out", transformOrigin: "center" },
             "-=0.5"
           )
-
-          // "Crafted for"
           .fromTo(".hero-crafted",
             { opacity: 0, y: 12 },
             { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" },
             "-=0.4"
           )
-
-          // Cycling phrase
           .fromTo(".hero-phrase",
             { opacity: 0, y: 18 },
             { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
@@ -134,12 +110,6 @@ function Hero() {
           );
 
       } catch {
-        // Fallback
-        [".lb-top", ".lb-bottom"].forEach((sel) => {
-          document.querySelectorAll(sel).forEach((el) => {
-            (el as HTMLElement).style.transform = "scaleY(0)";
-          });
-        });
         [".hero-eyebrow", ".hero-title", ".hero-divider", ".hero-crafted", ".hero-phrase"].forEach((sel) => {
           document.querySelectorAll(sel).forEach((el) => {
             (el as HTMLElement).style.opacity = "1";
@@ -151,7 +121,6 @@ function Hero() {
     init();
   }, []);
 
-  // Menu animation
   useEffect(() => {
     if (!menuOpen) return;
     const init = async () => {
@@ -198,14 +167,7 @@ function Hero() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Tenor+Sans&display=swap');
 
-        .lb-top {
-          transform-origin: top center;
-          transform: scaleY(1);
-        }
-        .lb-bottom {
-          transform-origin: bottom center;
-          transform: scaleY(1);
-        }
+        /* CHANGED: Removed .lb-top and .lb-bottom styles entirely */
 
         .hero-eyebrow  { opacity: 0; }
         .hero-title    { opacity: 0; }
@@ -242,7 +204,7 @@ function Hero() {
         .menu-cta  { opacity: 0; }
       `}</style>
 
-      {/* ── Search Overlay ── */}
+      {/* Search Overlay — unchanged */}
       <div className={`search-overlay fixed inset-0 z-[95] bg-cream-dark flex flex-col px-6 pt-6 pb-10 ${searchOpen ? "open" : ""}`}>
         <div className="flex items-center justify-between mb-8">
           <span className="font-cormorant text-charcoal text-lg tracking-[0.15em] uppercase font-light">Search</span>
@@ -302,7 +264,7 @@ function Hero() {
         </div>
       </div>
 
-      {/* ── Mobile Menu ── */}
+      {/* Mobile Menu — unchanged */}
       <div className={`mobile-menu fixed inset-0 z-[90] bg-charcoal flex flex-col px-8 py-10 ${menuOpen ? "open" : ""}`}>
         <button onClick={() => setMenuOpen(false)} className="self-end mb-10 text-cream/40 hover:text-cream transition-colors">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-6 h-6">
@@ -335,7 +297,7 @@ function Hero() {
         </div>
       </div>
 
-      {/* ── Fixed Navbar — transparent → cream on scroll ── */}
+      {/* Navbar — unchanged */}
       <nav
         className={`fixed top-0 left-0 right-0 z-50 px-5 transition-all duration-500 ${
           scrolled
@@ -344,8 +306,6 @@ function Hero() {
         }`}
       >
         <div className="flex items-center justify-between relative">
-
-          {/* Left: hamburger + logo */}
           <button
             onClick={() => setMenuOpen(true)}
             className="flex flex-col gap-[5px]"
@@ -356,14 +316,12 @@ function Hero() {
             <span className={`w-3 h-px block transition-colors duration-500 ${scrolled ? "bg-charcoal" : "bg-white"}`} />
           </button>
 
-          {/* Center: wordmark */}
           <span className={`absolute left-1/2 -translate-x-1/2 font-cormorant font-bold tracking-[0.1em] uppercase text-[1.05rem] whitespace-nowrap transition-colors duration-500 ${
             scrolled ? "text-charcoal" : "text-white"
           }`}>
             Lustro Lagos
           </span>
 
-          {/* Right: Book */}
           <a
             href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
             target="_blank"
@@ -379,7 +337,7 @@ function Hero() {
         </div>
       </nav>
 
-      {/* ── Hero Section — 100dvh, no sticky involved ── */}
+      {/* Hero Section */}
       <section
         style={{
           position: "relative",
@@ -388,15 +346,14 @@ function Hero() {
           background: "#080808",
         }}
       >
-        {/* Background Image Replacing Videos */}
+        {/* CHANGED: Image is fully static — no scale, no animation */}
         <img
           src="https://res.cloudinary.com/dx3k7hbnc/image/upload/v1780580829/6vxk9fbdvdrmr0cyjbfv367b28_result_0_igqrjm.png"
-          alt="Lustro Homes Hero"
+          alt="Lustro Homes"
           className="absolute inset-0 w-full h-full object-cover"
-          style={{ transform: "scale(1.04)" }}
         />
 
-        {/* Cinematic gradient */}
+        {/* Gradient overlay */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -404,30 +361,21 @@ function Hero() {
           }}
         />
 
-        {/* ── Letterbox bars — cinema curtains ── */}
-        <div
-          className="lb-top absolute left-0 right-0 top-0 bg-black"
-          style={{ height: "16vh", zIndex: 25 }}
-        />
-        <div
-          className="lb-bottom absolute left-0 right-0 bottom-0 bg-black"
-          style={{ height: "16vh", zIndex: 25 }}
-        />
+        {/* CHANGED: Letterbox bars removed entirely */}
 
-        {/* ── Centered text content ── */}
+        {/* Centered text content */}
         <div
           ref={textRef}
-          className="absolute inset-0 flex flex-col items-center justify-center text-center px-6"
-          style={{ zIndex: 20 }}
+          className="absolute inset-0 flex flex-col items-center justify-center text-center"
+          style={{ zIndex: 20, padding: "0 clamp(24px, 6vw, 80px)" }}
         >
-          {/* Welcome to */}
           <p
             className="hero-eyebrow"
             style={{
               fontFamily: "'Cormorant Garamond', serif",
-              fontSize: "clamp(0.75rem, 2vw, 0.95rem)",
+              fontSize: "clamp(0.7rem, 2vw, 0.95rem)",
               letterSpacing: "0.55em",
-              fontStyle: "italic", 
+              fontStyle: "italic",
               color: "rgba(255,255,255,0.9)",
               fontWeight: "500",
               textTransform: "uppercase",
@@ -437,11 +385,10 @@ function Hero() {
             Welcome to
           </p>
 
-          {/* Lustro Homes */}
           <h1
             className="hero-title font-cormorant text-white font-light leading-none"
             style={{
-              fontSize: "clamp(54px, 15vw, 96px)",
+              fontSize: "clamp(48px, 13vw, 96px)",
               letterSpacing: "-0.01em",
               marginBottom: "24px",
               clipPath: "inset(0 0 -30% 0)",
@@ -451,7 +398,6 @@ function Hero() {
             Lustro Homes
           </h1>
 
-          {/* Gold divider */}
           <div
             className="hero-divider"
             style={{
@@ -462,33 +408,29 @@ function Hero() {
             }}
           />
 
-          {/* Crafted for */}
           <p
             className="hero-crafted"
             style={{
               fontFamily: "'Cormorant Garamond', serif",
-              fontSize: "clamp(0.75rem, 2vw, 0.9rem)",
+              fontSize: "clamp(0.7rem, 2vw, 0.9rem)",
               letterSpacing: "0.45em",
               fontStyle: "italic",
               color: "rgba(255,255,255,0.88)",
               fontWeight: "500",
               textTransform: "uppercase",
               marginBottom: "8px",
-              textAlign: "center",
-              width: "100%",
-              display: "block",
             }}
           >
             Crafted for
           </p>
 
-          {/* Cycling script phrase */}
-          <div className="hero-phrase" style={{ minHeight: "74px" }}>
+          {/* CHANGED: minHeight increased slightly to prevent layout shift on small screens */}
+          <div className="hero-phrase" style={{ minHeight: "80px", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <span
               className={`phrase-word ${transitioning ? "hidden" : "visible"}`}
               style={{
                 fontFamily: "'Great Vibes', cursive",
-                fontSize: "clamp(46px, 13vw, 72px)",
+                fontSize: "clamp(42px, 11vw, 72px)",
                 color: "#C8922A",
                 lineHeight: 1.2,
                 whiteSpace: "nowrap",
@@ -502,7 +444,6 @@ function Hero() {
     </>
   );
 }
-
 
 function StatsBar() {
   const sectionRef = useRef<HTMLElement>(null);
