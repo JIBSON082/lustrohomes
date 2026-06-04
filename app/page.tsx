@@ -316,7 +316,7 @@ function Hero() {
             <span className={`w-4 h-px block transition-colors duration-500 ${scrolled ? "bg-charcoal" : "bg-white"}`} />
           </button>
 
-          <span className={`absolute left-[42%] -translate-x-1/2 font-cormorant font-bold tracking-[0.1em] uppercase text-[1.25rem] whitespace-nowrap transition-colors duration-500 ${
+          <span className={`absolute left-[46%] -translate-x-1/2 font-cormorant font-bold tracking-[0.1em] uppercase text-[1.25rem] whitespace-nowrap transition-colors duration-500 ${
             scrolled ? "text-charcoal" : "text-white"
           }`}>
             Lustro Lagos
@@ -416,7 +416,7 @@ function Hero() {
               letterSpacing: "0.45em",
               fontStyle: "italic",
               color: "rgba(255,255,255,0.88)",
-              fontWeight: "500",
+              fontWeight: "560",
               textTransform: "uppercase",
               marginBottom: "8px",
             }}
