@@ -308,15 +308,15 @@ function Hero() {
         <div className="flex items-center justify-between relative">
           <button
             onClick={() => setMenuOpen(true)}
-            className="flex flex-col gap-[5px]"
+            className="flex flex-col gap-[6px]"
             aria-label="Menu"
           >
-            <span className={`w-5 h-px block transition-colors duration-500 ${scrolled ? "bg-charcoal" : "bg-white"}`} />
-            <span className={`w-5 h-px block transition-colors duration-500 ${scrolled ? "bg-charcoal" : "bg-white"}`} />
-            <span className={`w-3 h-px block transition-colors duration-500 ${scrolled ? "bg-charcoal" : "bg-white"}`} />
+            <span className={`w-6 h-px block transition-colors duration-500 ${scrolled ? "bg-charcoal" : "bg-white"}`} />
+            <span className={`w-6 h-px block transition-colors duration-500 ${scrolled ? "bg-charcoal" : "bg-white"}`} />
+            <span className={`w-4 h-px block transition-colors duration-500 ${scrolled ? "bg-charcoal" : "bg-white"}`} />
           </button>
 
-          <span className={`absolute left-1/2 -translate-x-1/2 font-cormorant font-bold tracking-[0.1em] uppercase text-[1.05rem] whitespace-nowrap transition-colors duration-500 ${
+          <span className={`absolute left-1/2 -translate-x-1/2 font-cormorant font-bold tracking-[0.1em] uppercase text-[1.45rem] whitespace-nowrap transition-colors duration-500 ${
             scrolled ? "text-charcoal" : "text-white"
           }`}>
             Lustro Lagos
