@@ -316,7 +316,7 @@ function Hero() {
             <span className={`w-4 h-px block transition-colors duration-500 ${scrolled ? "bg-charcoal" : "bg-white"}`} />
           </button>
 
-          <span className={`absolute left-1/2 -translate-x-1/2 font-cormorant font-bold tracking-[0.1em] uppercase text-[1.45rem] whitespace-nowrap transition-colors duration-500 ${
+          <span className={`absolute left-1/2 -translate-x-1/2 font-cormorant font-bold tracking-[0.1em] uppercase text-[1.25rem] whitespace-nowrap transition-colors duration-500 ${
             scrolled ? "text-charcoal" : "text-white"
           }`}>
             Lustro Lagos
@@ -326,7 +326,7 @@ function Hero() {
             href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
             target="_blank"
             rel="noopener noreferrer"
-            className={`font-dm-sans text-[0.6rem] tracking-[0.22em] uppercase px-4 py-2.5 transition-all duration-500 ${
+            className={`font-dm-sans text-[0.8rem] tracking-[0.28em] uppercase px-4 py-2.5 transition-all duration-500 ${
               scrolled
                 ? "bg-charcoal text-cream hover:bg-brown"
                 : "border border-white/50 text-white hover:bg-white/10"
