@@ -590,7 +590,7 @@ style={{ fontSize: "0.85rem", letterSpacing: "0.55em", fontWeight: 500 }}
 
         {/* Gold divider */}
         <div
-          className="mx-auto mb-6"  {/* HEIGHT: change mb-6 */}
+          className="mx-auto mb-4"  {/* HEIGHT: change mb-6 */}
           style={{
             width: "64px",
             height: "1px",
