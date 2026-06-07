@@ -536,15 +536,15 @@ function StatsBar() {
   return (
     <section
       ref={sectionRef}
-      className="bg-charcoal-light py-8 md:py-10 reveal-element"  {/* HEIGHT: change py-8 md:py-10 */}
+      className="bg-charcoal-light py-5 md:py-7 reveal-element"  {/* HEIGHT: change py-5 md:py-7 */}
     >
       <div className="max-w-5xl mx-auto px-6">
 
         {/* Header */}
-        <div className="text-center mb-6">  {/* HEIGHT: change mb-6 */}
+        <div className="text-center mb-4">  {/* HEIGHT: change mb-4 */}
           <p
-            className="font-dm-sans text-gold/60 uppercase mb-2"
-            style={{ fontSize: "0.6rem", letterSpacing: "0.5em" }}
+            className="font-cormorant text-gold/80 uppercase mb-2"
+style={{ fontSize: "0.85rem", letterSpacing: "0.55em", fontWeight: 500 }}
           >
             The Numbers
           </p>
@@ -562,11 +562,11 @@ function StatsBar() {
         </div>
 
         {/* Stats grid — fixed iOS Safari rendering with border instead of gap-px trick */}
-        <div className="grid grid-cols-2 mb-6">  {/* HEIGHT: change mb-6 */}
+        <div className="grid grid-cols-2 mb-4">  {/* HEIGHT: change mb-4 */}
           {stats.map((stat, i) => (
             <div
               key={stat.label}
-              className="flex flex-col items-center justify-center py-4 px-4 text-center"  {/* HEIGHT: change py-4 */}
+              className="flex flex-col items-center justify-center py-3 px-4 text-center"  {/* HEIGHT: change py-4 */}
               style={{
                 borderRight: i % 2 === 0 ? "1px solid rgba(255,255,255,0.06)" : "none",
                 borderBottom: i < 2 ? "1px solid rgba(255,255,255,0.06)" : "none",
