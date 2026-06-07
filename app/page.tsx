@@ -536,12 +536,12 @@ function StatsBar() {
   return (
     <section
       ref={sectionRef}
-      className="bg-charcoal-light py-5 md:py-7 reveal-element"  {/* HEIGHT: change py-5 md:py-7 */}
+      className="bg-charcoal-light py-5 md:py-7 reveal-element"  
     >
       <div className="max-w-5xl mx-auto px-6">
 
         {/* Header */}
-        <div className="text-center mb-4">  {/* HEIGHT: change mb-4 */}
+        <div className="text-center mb-4">  
           <p
             className="font-cormorant text-gold/80 uppercase mb-2"
 style={{ fontSize: "0.85rem", letterSpacing: "0.55em", fontWeight: 500 }}
@@ -562,11 +562,11 @@ style={{ fontSize: "0.85rem", letterSpacing: "0.55em", fontWeight: 500 }}
         </div>
 
         {/* Stats grid — fixed iOS Safari rendering with border instead of gap-px trick */}
-        <div className="grid grid-cols-2 mb-4">  {/* HEIGHT: change mb-4 */}
+        <div className="grid grid-cols-2 mb-4"> 
           {stats.map((stat, i) => (
             <div
               key={stat.label}
-              className="flex flex-col items-center justify-center py-3 px-4 text-center"  {/* HEIGHT: change py-4 */}
+              className="flex flex-col items-center justify-center py-3 px-4 text-center" 
               style={{
                 borderRight: i % 2 === 0 ? "1px solid rgba(255,255,255,0.06)" : "none",
                 borderBottom: i < 2 ? "1px solid rgba(255,255,255,0.06)" : "none",
@@ -590,7 +590,7 @@ style={{ fontSize: "0.85rem", letterSpacing: "0.55em", fontWeight: 500 }}
 
         {/* Gold divider */}
         <div
-          className="mx-auto mb-4"  {/* HEIGHT: change mb-6 */}
+          className="mx-auto mb-4" 
           style={{
             width: "64px",
             height: "1px",
