@@ -1070,7 +1070,7 @@ function YankeeByLustro() {
         {/* Header */}
         <div className="text-center mb-8 reveal-element">
           
-        <h2 className="font-cinzel text-6xl md:text-7xl text-cream font-light tracking-wide">
+        <h2 className="font-cinzel text-6xl md:text-7xl text-cream font-light">
   Yankee by Lustro
 </h2>
           <div className="section-line mx-auto mt-6" />
