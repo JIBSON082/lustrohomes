@@ -1065,7 +1065,7 @@ function YankeeByLustro() {
         <div className="text-center mb-8 reveal-element">
           
        <h2
-  className="font-cinzel text-cream font-light tracking-[0.12em]"
+  className="font-Cormorant text-cream font-light tracking-[0.06em]"
   style={{ fontSize: "clamp(2.8rem, 10vw, 4.5rem)" }}
 >
   Yankee by Lustro
