@@ -654,7 +654,7 @@ function About() {
             {[
               { value: "3", label: "Properties" },
               { value: "8,000+", label: "Total Stays" },
-              { value: "3 yrs", label: "Of Excellence" },
+              { value: "24hr", label: "Hospitality" },
             ].map((s) => (
               <div key={s.label}>
                 <p className="font-cormorant text-3xl md:text-4xl text-brown font-light">
