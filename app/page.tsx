@@ -1034,6 +1034,15 @@ function YankeeByLustro() {
     return () => observer.disconnect();
   }, [activeIdx]);
 
+  useEffect(() => {
+  const video = videoRef.current;
+  if (!video) return;
+  video.src = getVideoUrl(active.publicId);
+  video.load();
+  video.play().catch(() => {});
+  setPlaying(true);
+}, [activeIdx]);
+
   const handleVideoEnded = () => {
     const next = (activeIdx + 1) % videos.length;
     setActiveIdx(next);
@@ -1075,7 +1084,7 @@ function YankeeByLustro() {
           <div className="relative rounded-2xl overflow-hidden bg-charcoal mb-4 select-none">
             <video
               ref={videoRef}
-              key={active.publicId}
+              
               src={getVideoUrl(active.publicId)}
               muted={muted}
               loop={false}
@@ -1087,7 +1096,7 @@ function YankeeByLustro() {
                 Array.from(e.currentTarget.textTracks).forEach(
                   (t) => (t.mode = "hidden")
                 );
-                if (playing) e.currentTarget.play().catch(() => {});
+                
               }}
               className="w-full object-cover cursor-pointer"
               style={{
