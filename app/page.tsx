@@ -1043,12 +1043,6 @@ function YankeeByLustro() {
   setPlaying(true);
 }, [activeIdx]);
 
-  const handleVideoEnded = () => {
-    const next = (activeIdx + 1) % videos.length;
-    setActiveIdx(next);
-    setPlaying(true);
-  };
-
   const togglePlay = () => {
     if (!videoRef.current) return;
     playing ? videoRef.current.pause() : videoRef.current.play();
@@ -1070,7 +1064,7 @@ function YankeeByLustro() {
         {/* Header */}
         <div className="text-center mb-8 reveal-element">
           
-        <h2 className="font-cinzel text-6xl md:text-7xl text-cream font-light">
+        <h2 className="font-cinzel text-5.5xl md:text-6.5xl text-cream font-light">
   Yankee by Lustro
 </h2>
           <div className="section-line mx-auto mt-6" />
@@ -1084,14 +1078,12 @@ function YankeeByLustro() {
           <div className="relative rounded-2xl overflow-hidden bg-charcoal mb-4 select-none">
             <video
               ref={videoRef}
-              
               src={getVideoUrl(active.publicId)}
               muted={muted}
-              loop={false}
+              loop={true}
               playsInline
               disablePictureInPicture
               onClick={togglePlay}
-              onEnded={handleVideoEnded}
               onLoadedMetadata={(e) => {
                 Array.from(e.currentTarget.textTracks).forEach(
                   (t) => (t.mode = "hidden")
