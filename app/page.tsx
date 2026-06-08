@@ -837,7 +837,7 @@ function Rooms() {
             style={{ marginBottom: 0 }}>
             <video
               ref={videoRef}
-              key={active.publicId}
+             
               src={getVideoUrl(active.publicId)}
               muted={muted}
               loop={false}
