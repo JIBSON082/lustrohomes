@@ -1584,7 +1584,6 @@ type GalleryItem =
   | { type: "video"; publicId: string; label: string }
   | { type: "image"; src: string; alt: string; label: string };
 
-// Moved outside component — stable reference
 const GALLERY_ITEMS: GalleryItem[] = [
   { type: "video", publicId: "Lustro_Gallery_video_1_oxi2ea", label: "Lustro Life" },
   { type: "video", publicId: "Lustro_Gallery_video_2_ui7i9q", label: "The Experience" },
@@ -1600,6 +1599,63 @@ const GALLERY_ITEMS: GalleryItem[] = [
   { type: "image", src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642364/gallery-5_vapgeo.jpg", alt: "Lustro Homes amenities", label: "Amenities" },
 ];
 
+// ── Individual video item — handles its own play/pause via IntersectionObserver
+function VideoItem({ publicId, label, muted }: { publicId: string; label: string; muted: boolean }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const src = `https://res.cloudinary.com/dx3k7hbnc/video/upload/${publicId}.mp4`;
+
+  useEffect(() => {
+    const video = videoRef.current;
+    const container = containerRef.current;
+    if (!video || !container) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      // Only play when at least 60% of the video is visible
+      { threshold: 0.6 }
+    );
+
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
+
+  // Sync muted state
+  useEffect(() => {
+    if (videoRef.current) videoRef.current.muted = muted;
+  }, [muted]);
+
+  return (
+    <div ref={containerRef} className="relative overflow-hidden rounded-xl">
+      <video
+        ref={videoRef}
+        src={src}
+        muted={muted}
+        playsInline
+        loop
+        disablePictureInPicture
+        onContextMenu={(e) => e.preventDefault()}
+        className="w-full object-cover rounded-xl"
+        style={{ display: "block" }}
+        controlsList="nodownload nofullscreen noremoteplayback"
+      />
+      <div
+        className="absolute bottom-0 inset-x-0 px-4 py-3"
+        style={{ background: "linear-gradient(to top, rgba(0,0,0,0.72), transparent)" }}
+      >
+        <p className="font-cormorant text-cream text-xl font-light">{label}</p>
+      </div>
+    </div>
+  );
+}
+
 function Gallery() {
   const [overlayOpen, setOverlayOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"images" | "videos">("images");
@@ -1609,10 +1665,7 @@ function Gallery() {
   const images = GALLERY_ITEMS.filter((i) => i.type === "image") as Extract<GalleryItem, { type: "image" }>[];
   const videos = GALLERY_ITEMS.filter((i) => i.type === "video") as Extract<GalleryItem, { type: "video" }>[];
 
-  const getVideoUrl = (publicId: string) =>
-    `https://res.cloudinary.com/dx3k7hbnc/video/upload/${publicId}.mp4`;
-
-  // Lock body scroll when overlay is open
+  // Lock body scroll when overlay open
   useEffect(() => {
     document.body.style.overflow = overlayOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
@@ -1621,13 +1674,6 @@ function Gallery() {
   return (
     <>
       <style>{`
-        .gallery-overlay {
-          transform: translateY(100%);
-          transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .gallery-overlay.open {
-          transform: translateY(0);
-        }
         .g-tab {
           font-family: 'Cormorant Garamond', serif;
           font-size: 1.35rem;
@@ -1635,7 +1681,7 @@ function Gallery() {
           letter-spacing: 0.06em;
           padding-bottom: 8px;
           border-bottom: 1px solid transparent;
-          transition: color 0.3s ease, border-color 0.3s ease;
+          transition: color 0.15s ease, border-color 0.15s ease;
         }
         .g-tab.active {
           color: #C8922A;
@@ -1644,9 +1690,30 @@ function Gallery() {
         .g-tab.inactive {
           color: rgba(255,255,255,0.30);
         }
+        /* CHANGED: No slide animation — instant visibility toggle */
+        .gallery-overlay {
+          display: none;
+          position: fixed;
+          inset: 0;
+          z-index: 80;
+          background: #111;
+          overflow-y: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+        .gallery-overlay.open {
+          display: flex;
+          flex-direction: column;
+        }
+        /* CHANGED: Tab content instant switch — no fade, no transition */
+        .tab-panel {
+          display: none;
+        }
+        .tab-panel.active {
+          display: block;
+        }
         .teaser-img {
           filter: grayscale(100%);
-          transition: filter 0.6s ease, transform 0.6s ease;
+          transition: filter 0.5s ease, transform 0.5s ease;
         }
         .teaser-img:hover {
           filter: grayscale(0%);
@@ -1654,17 +1721,14 @@ function Gallery() {
         }
       `}</style>
 
-      {/* ── Gallery Overlay — slides up from bottom ── */}
-      <div
-        className={`gallery-overlay fixed inset-0 z-[80] bg-charcoal flex flex-col ${overlayOpen ? "open" : ""}`}
-        style={{ overflowY: "auto" }}
-      >
+      {/* ── Gallery Overlay — instant open/close ── */}
+      <div className={`gallery-overlay ${overlayOpen ? "open" : ""}`}>
+
         {/* Sticky header */}
         <div
-          className="sticky top-0 z-10 px-5 pt-5 pb-0"
-          style={{ background: "#1a1a1a", borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+          className="sticky top-0 z-10 px-5 pt-5 pb-0 flex-shrink-0"
+          style={{ background: "#111", borderBottom: "1px solid rgba(255,255,255,0.06)" }}
         >
-          {/* Top row — brand + close */}
           <div className="flex items-center justify-between mb-5">
             <p
               className="font-dm-sans text-gold/50 uppercase"
@@ -1672,18 +1736,36 @@ function Gallery() {
             >
               Lustro Lagos
             </p>
-            <button
-              onClick={() => setOverlayOpen(false)}
-              className="text-cream/35 hover:text-cream transition-colors"
-              aria-label="Close gallery"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+            <div className="flex items-center gap-4">
+              {/* Mute toggle — lives in header so it's always accessible */}
+              <button
+                onClick={() => setMuted((m) => !m)}
+                className="text-cream/35 hover:text-cream transition-colors"
+                aria-label={muted ? "Unmute videos" : "Mute videos"}
+              >
+                {muted ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6l4.72-4.72a.75.75 0 011.28.53V19.94a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.395C2.806 8.757 3.63 8.25 4.51 8.25H6.75z" />
+                  </svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.395C2.806 8.757 3.63 8.25 4.51 8.25H6.75z" />
+                  </svg>
+                )}
+              </button>
+              <button
+                onClick={() => setOverlayOpen(false)}
+                className="text-cream/35 hover:text-cream transition-colors"
+                aria-label="Close gallery"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
           </div>
 
-          {/* Tab row */}
+          {/* Tabs */}
           <div className="flex gap-8">
             <button
               className={`g-tab ${activeTab === "images" ? "active" : "inactive"}`}
@@ -1700,11 +1782,11 @@ function Gallery() {
           </div>
         </div>
 
-        {/* Scrollable content */}
+        {/* Content */}
         <div className="flex-1 px-4 pt-5 pb-20">
 
-          {/* ── Images Grid ── */}
-          {activeTab === "images" && (
+          {/* CHANGED: display:none / display:block swap — instant, no transition */}
+          <div className={`tab-panel ${activeTab === "images" ? "active" : ""}`}>
             <div className="grid grid-cols-2 gap-2">
               {images.map((img) => (
                 <div
@@ -1718,7 +1800,6 @@ function Gallery() {
                     className="w-full h-full object-cover"
                     loading="lazy"
                   />
-                  {/* Label overlay */}
                   <div
                     className="absolute bottom-0 inset-x-0 px-3 py-2"
                     style={{ background: "linear-gradient(to top, rgba(0,0,0,0.65), transparent)" }}
@@ -1733,67 +1814,29 @@ function Gallery() {
                 </div>
               ))}
             </div>
-          )}
+          </div>
 
-          {/* ── Videos Stack ── */}
-          {activeTab === "videos" && (
+          <div className={`tab-panel ${activeTab === "videos" ? "active" : ""}`}>
             <div className="flex flex-col gap-4">
+              {/* CHANGED: Each VideoItem manages its own play/pause via IntersectionObserver */}
               {videos.map((vid) => (
-                <div
+                <VideoItem
                   key={vid.publicId}
-                  className="relative overflow-hidden rounded-xl"
-                >
-                  <video
-                    src={getVideoUrl(vid.publicId)}
-                    muted={muted}
-                    playsInline
-                    loop
-                    autoPlay
-                    disablePictureInPicture
-                    onContextMenu={(e) => e.preventDefault()}
-                    className="w-full object-cover rounded-xl"
-                    style={{ display: "block" }}
-                    controlsList="nodownload nofullscreen noremoteplayback"
-                  />
-                  {/* Label + mute button */}
-                  <div
-                    className="absolute bottom-0 inset-x-0 px-4 py-3 flex items-end justify-between"
-                    style={{ background: "linear-gradient(to top, rgba(0,0,0,0.72), transparent)" }}
-                  >
-                    <p className="font-cormorant text-cream text-xl font-light">
-                      {vid.label}
-                    </p>
-                    <button
-                      onClick={() => setMuted((m) => !m)}
-                      className="text-cream/55 hover:text-cream transition-colors"
-                      aria-label={muted ? "Unmute" : "Mute"}
-                    >
-                      {muted ? (
-                        // Muted icon
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6l4.72-4.72a.75.75 0 011.28.53V19.94a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.395C2.806 8.757 3.63 8.25 4.51 8.25H6.75z" />
-                        </svg>
-                      ) : (
-                        // Unmuted icon
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.395C2.806 8.757 3.63 8.25 4.51 8.25H6.75z" />
-                        </svg>
-                      )}
-                    </button>
-                  </div>
-                </div>
+                  publicId={vid.publicId}
+                  label={vid.label}
+                  muted={muted}
+                />
               ))}
             </div>
-          )}
+          </div>
 
         </div>
       </div>
 
-      {/* ── Gallery Section (main page) ── */}
+      {/* ── Main Gallery Section ── */}
       <section ref={sectionRef} id="gallery" className="bg-cream py-24 md:py-32">
         <div className="max-w-5xl mx-auto px-6">
 
-          {/* Header */}
           <div className="text-center reveal-element">
             <p
               className="font-dm-sans text-brown uppercase mb-4"
@@ -1802,7 +1845,10 @@ function Gallery() {
               Gallery
             </p>
 
-            <h2 className="font-cormorant text-5xl md:text-6xl text-charcoal font-light mb-5">
+            {/* CHANGED: Bigger heading — was text-5xl md:text-6xl */}
+            <h2 className="font-cormorant text-charcoal font-light"
+              style={{ fontSize: "clamp(3.2rem, 14vw, 6rem)", lineHeight: 1.05, marginBottom: "20px" }}
+            >
               Life at Lustro
             </h2>
 
@@ -1815,22 +1861,24 @@ function Gallery() {
               }}
             />
 
-            {/* Copy */}
+            {/* CHANGED: Bolder, more visible copy */}
             <p
-              className="font-dm-sans text-charcoal/50 mx-auto mb-10"
+              className="font-dm-sans text-charcoal mx-auto mb-10"
               style={{
-                fontSize: "clamp(0.78rem, 2vw, 0.92rem)",
-                lineHeight: "1.85",
-                maxWidth: "440px",
+                fontSize: "clamp(0.85rem, 2.2vw, 1rem)",
+                lineHeight: "1.9",
+                maxWidth: "420px",
                 letterSpacing: "0.01em",
+                fontWeight: "500",
+                color: "rgba(30,26,20,0.72)",
               }}
             >
-              Every corner of Lustro is built to be experienced. Cinematic interiors,
-              private retreats, curated spaces — this is what premium shortlet living
-              looks like in Lagos.
+              Every corner of Lustro is built to be experienced. Cinematic
+              interiors, private retreats, curated spaces — this is what
+              premium shortlet living looks like in Lagos.
             </p>
 
-            {/* Teaser strip — 3 grayscale preview images */}
+            {/* Teaser strip */}
             <div
               className="grid grid-cols-3 gap-2 mx-auto mb-10"
               style={{ maxWidth: "360px" }}
@@ -1850,10 +1898,10 @@ function Gallery() {
               ))}
             </div>
 
-            {/* CTA — opens overlay */}
+            {/* CTA */}
             <button
               onClick={() => setOverlayOpen(true)}
-              className="inline-flex items-center gap-3 bg-charcoal text-cream font-dm-sans uppercase tracking-[0.28em] hover:bg-brown transition-colors duration-300"
+              className="inline-flex items-center gap-3 bg-charcoal text-cream font-dm-sans uppercase tracking-[0.28em] hover:bg-brown transition-colors duration-200"
               style={{ fontSize: "0.62rem", padding: "14px 40px" }}
             >
               Explore Gallery
@@ -1861,7 +1909,6 @@ function Gallery() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
               </svg>
             </button>
-
           </div>
 
           {/* Instagram */}
@@ -1882,7 +1929,6 @@ function Gallery() {
     </>
   );
 }
-
 // ─────────────────────────────────────────────────
 // INVESTMENT JOURNEY
 // ─────────────────────────────────────────────────
