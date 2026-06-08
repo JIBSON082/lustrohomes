@@ -861,7 +861,7 @@ function Rooms() {
                 
               }}
               className="w-full object-cover cursor-pointer"
-              style={{ aspectRatio: "9/16", width: "100%", pointerEvents: "auto" } as React.CSSProperties}
+              style={{ aspectRatio: "9/16", width: "100%", maxHeight: "480px", pointerEvents: "auto" } as React.CSSProperties}
               controlsList="nodownload nofullscreen noremoteplayback"
               onContextMenu={(e) => e.preventDefault()}
             />
