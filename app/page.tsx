@@ -1064,7 +1064,10 @@ function YankeeByLustro() {
         {/* Header */}
         <div className="text-center mb-8 reveal-element">
           
-        <h2 className="font-cinzel text-5.5xl md:text-6.5xl text-cream font-light">
+       <h2
+  className="font-cormorant text-cream font-light tracking-[0.12em]"
+  style={{ fontSize: "clamp(2.8rem, 10vw, 4.5rem)" }}
+>
   Yankee by Lustro
 </h2>
           <div className="section-line mx-auto mt-6" />
