@@ -1584,193 +1584,305 @@ type GalleryItem =
   | { type: "video"; publicId: string; label: string }
   | { type: "image"; src: string; alt: string; label: string };
 
+// Moved outside component — stable reference
+const GALLERY_ITEMS: GalleryItem[] = [
+  { type: "video", publicId: "Lustro_Gallery_video_1_oxi2ea", label: "Lustro Life" },
+  { type: "video", publicId: "Lustro_Gallery_video_2_ui7i9q", label: "The Experience" },
+  { type: "video", publicId: "Lustro_Gallery_video_3_chx6hw", label: "Inside Lustro" },
+  { type: "video", publicId: "Lustro_Gallery_video_4_nrxt34", label: "The Spaces" },
+  { type: "image", src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777562618/hero-1_jlcvld.png", alt: "Lustro Homes exterior", label: "Exterior" },
+  { type: "image", src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642365/gallery-7_tmifgb.jpg", alt: "Lustro Lagos neon sign", label: "Neon Sign" },
+  { type: "image", src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777569685/hero-3_oqrukn.jpg", alt: "Lustro Homes suite", label: "The Suite" },
+  { type: "image", src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642363/gallery-2_poa1ee.jpg", alt: "Lustro Lagos dining", label: "Dining" },
+  { type: "image", src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642372/gallery-4_qk8z3h.jpg", alt: "Lustro staircase", label: "Architecture" },
+  { type: "image", src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642363/gallery-6_sq3uy3.jpg", alt: "Lustro Homes lounge", label: "Lounge" },
+  { type: "image", src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777570438/hero-5_gzikdc.png", alt: "Lustro night exterior", label: "Night View" },
+  { type: "image", src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642364/gallery-5_vapgeo.jpg", alt: "Lustro Homes amenities", label: "Amenities" },
+];
+
 function Gallery() {
-  const [activeIdx, setActiveIdx] = useState(0);
+  const [overlayOpen, setOverlayOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<"images" | "videos">("images");
   const [muted, setMuted] = useState(true);
-  const [playing, setPlaying] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
 
-  const items: GalleryItem[] = [
-    { type: "video", publicId: "Lustro_Gallery_video_1_oxi2ea", label: "Lustro Life" },
-    { type: "video", publicId: "Lustro_Gallery_video_2_ui7i9q", label: "The Experience" },
-    { type: "video", publicId: "Lustro_Gallery_video_3_chx6hw", label: "Inside Lustro" },
-    { type: "video", publicId: "Lustro_Gallery_video_4_nrxt34", label: "The Spaces" },
-    { type: "image", src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777562618/hero-1_jlcvld.png", alt: "Lustro Homes exterior", label: "Exterior" },
-    { type: "image", src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642365/gallery-7_tmifgb.jpg", alt: "Lustro Lagos neon sign", label: "Neon Sign" },
-    { type: "image", src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777569685/hero-3_oqrukn.jpg", alt: "Lustro Homes suite", label: "The Suite" },
-    { type: "image", src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642363/gallery-2_poa1ee.jpg", alt: "Lustro Lagos dining", label: "Dining" },
-    { type: "image", src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642372/gallery-4_qk8z3h.jpg", alt: "Lustro staircase", label: "Architecture" },
-    { type: "image", src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642363/gallery-6_sq3uy3.jpg", alt: "Lustro Homes lounge", label: "Lounge" },
-    { type: "image", src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777570438/hero-5_gzikdc.png", alt: "Lustro night exterior", label: "Night View" },
-    { type: "image", src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642364/gallery-5_vapgeo.jpg", alt: "Lustro Homes amenities", label: "Amenities" },
-  ];
-
-  const activeItem = items[activeIdx];
+  const images = GALLERY_ITEMS.filter((i) => i.type === "image") as Extract<GalleryItem, { type: "image" }>[];
+  const videos = GALLERY_ITEMS.filter((i) => i.type === "video") as Extract<GalleryItem, { type: "video" }>[];
 
   const getVideoUrl = (publicId: string) =>
     `https://res.cloudinary.com/dx3k7hbnc/video/upload/${publicId}.mp4`;
 
-  // Intersection observer — play/pause on scroll
+  // Lock body scroll when overlay is open
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          if (activeItem.type === "video") {
-            videoRef.current?.play().catch(() => {});
-            setPlaying(true);
-          }
-        } else {
-          videoRef.current?.pause();
-          setPlaying(false);
-        }
-      },
-      { threshold: 0.4 }
-    );
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, [activeIdx, activeItem.type]);
-
-  // Instant video switching — no remount, no black screen
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    if (activeItem.type === "video") {
-      video.src = getVideoUrl(activeItem.publicId);
-      video.load();
-      video.play().catch(() => {});
-      setPlaying(true);
-    } else {
-      video.pause();
-      video.src = "";
-      setPlaying(false);
-    }
-  }, [activeIdx]);
-
-  // Auto-advance when video ends
-  const handleVideoEnded = () => {
-    const next = (activeIdx + 1) % items.length;
-    setActiveIdx(next);
-    setPlaying(true);
-  };
-
-  const toggleMute = () => {
-    if (!videoRef.current) return;
-    videoRef.current.muted = !muted;
-    setMuted(!muted);
-  };
-
-  const goPrev = () => {
-    setActiveIdx((i) => (i - 1 + items.length) % items.length);
-  };
-
-  const goNext = () => {
-    setActiveIdx((i) => (i + 1) % items.length);
-  };
+    document.body.style.overflow = overlayOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [overlayOpen]);
 
   return (
-    <section ref={sectionRef} id="gallery" className="bg-cream py-24 md:py-36">
-      <div className="max-w-5xl mx-auto px-6">
+    <>
+      <style>{`
+        .gallery-overlay {
+          transform: translateY(100%);
+          transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .gallery-overlay.open {
+          transform: translateY(0);
+        }
+        .g-tab {
+          font-family: 'Cormorant Garamond', serif;
+          font-size: 1.35rem;
+          font-weight: 300;
+          letter-spacing: 0.06em;
+          padding-bottom: 8px;
+          border-bottom: 1px solid transparent;
+          transition: color 0.3s ease, border-color 0.3s ease;
+        }
+        .g-tab.active {
+          color: #C8922A;
+          border-bottom-color: #C8922A;
+        }
+        .g-tab.inactive {
+          color: rgba(255,255,255,0.30);
+        }
+        .teaser-img {
+          filter: grayscale(100%);
+          transition: filter 0.6s ease, transform 0.6s ease;
+        }
+        .teaser-img:hover {
+          filter: grayscale(0%);
+          transform: scale(1.04);
+        }
+      `}</style>
 
-        {/* Header */}
-        <div className="text-center mb-14 reveal-element">
-          <p className="font-dm-sans text-[0.95rem] text-brown uppercase tracking-[0.28em] mb-4">
-            Gallery
-          </p>
-          <h2 className="font-cormorant text-5xl md:text-6xl text-charcoal font-light">
-            Life at Lustro
-          </h2>
-          <div className="section-line mx-auto mt-6" />
+      {/* ── Gallery Overlay — slides up from bottom ── */}
+      <div
+        className={`gallery-overlay fixed inset-0 z-[80] bg-charcoal flex flex-col ${overlayOpen ? "open" : ""}`}
+        style={{ overflowY: "auto" }}
+      >
+        {/* Sticky header */}
+        <div
+          className="sticky top-0 z-10 px-5 pt-5 pb-0"
+          style={{ background: "#1a1a1a", borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+        >
+          {/* Top row — brand + close */}
+          <div className="flex items-center justify-between mb-5">
+            <p
+              className="font-dm-sans text-gold/50 uppercase"
+              style={{ fontSize: "0.52rem", letterSpacing: "0.5em" }}
+            >
+              Lustro Lagos
+            </p>
+            <button
+              onClick={() => setOverlayOpen(false)}
+              className="text-cream/35 hover:text-cream transition-colors"
+              aria-label="Close gallery"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Tab row */}
+          <div className="flex gap-8">
+            <button
+              className={`g-tab ${activeTab === "images" ? "active" : "inactive"}`}
+              onClick={() => setActiveTab("images")}
+            >
+              Images
+            </button>
+            <button
+              className={`g-tab ${activeTab === "videos" ? "active" : "inactive"}`}
+              onClick={() => setActiveTab("videos")}
+            >
+              Videos
+            </button>
+          </div>
         </div>
 
-        <div className="reveal-element">
+        {/* Scrollable content */}
+        <div className="flex-1 px-4 pt-5 pb-20">
 
-          {/* Main Display */}
-          <div
-            className="relative rounded-2xl overflow-hidden bg-charcoal select-none"
-            style={{ minHeight: "320px" }}
-          >
-            {/* VIDEO — always rendered, hidden when image is active */}
-            <video
-              ref={videoRef}
-              muted={muted}
-              loop={false}
-              playsInline
-              disablePictureInPicture
-              onEnded={handleVideoEnded}
-              onLoadedMetadata={(e) => {
-                Array.from(e.currentTarget.textTracks).forEach(
-                  (t) => (t.mode = "hidden")
-                );
-              }}
-              onContextMenu={(e) => e.preventDefault()}
-              className="w-full object-cover"
+          {/* ── Images Grid ── */}
+          {activeTab === "images" && (
+            <div className="grid grid-cols-2 gap-2">
+              {images.map((img) => (
+                <div
+                  key={img.src}
+                  className="relative overflow-hidden rounded-xl"
+                  style={{ aspectRatio: "3/4" }}
+                >
+                  <img
+                    src={img.src}
+                    alt={img.alt}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                  {/* Label overlay */}
+                  <div
+                    className="absolute bottom-0 inset-x-0 px-3 py-2"
+                    style={{ background: "linear-gradient(to top, rgba(0,0,0,0.65), transparent)" }}
+                  >
+                    <p
+                      className="font-dm-sans text-cream/70 uppercase"
+                      style={{ fontSize: "0.48rem", letterSpacing: "0.3em" }}
+                    >
+                      {img.label}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* ── Videos Stack ── */}
+          {activeTab === "videos" && (
+            <div className="flex flex-col gap-4">
+              {videos.map((vid) => (
+                <div
+                  key={vid.publicId}
+                  className="relative overflow-hidden rounded-xl"
+                >
+                  <video
+                    src={getVideoUrl(vid.publicId)}
+                    muted={muted}
+                    playsInline
+                    loop
+                    autoPlay
+                    disablePictureInPicture
+                    onContextMenu={(e) => e.preventDefault()}
+                    className="w-full object-cover rounded-xl"
+                    style={{ display: "block" }}
+                    controlsList="nodownload nofullscreen noremoteplayback"
+                  />
+                  {/* Label + mute button */}
+                  <div
+                    className="absolute bottom-0 inset-x-0 px-4 py-3 flex items-end justify-between"
+                    style={{ background: "linear-gradient(to top, rgba(0,0,0,0.72), transparent)" }}
+                  >
+                    <p className="font-cormorant text-cream text-xl font-light">
+                      {vid.label}
+                    </p>
+                    <button
+                      onClick={() => setMuted((m) => !m)}
+                      className="text-cream/55 hover:text-cream transition-colors"
+                      aria-label={muted ? "Unmute" : "Mute"}
+                    >
+                      {muted ? (
+                        // Muted icon
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6l4.72-4.72a.75.75 0 011.28.53V19.94a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.395C2.806 8.757 3.63 8.25 4.51 8.25H6.75z" />
+                        </svg>
+                      ) : (
+                        // Unmuted icon
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.395C2.806 8.757 3.63 8.25 4.51 8.25H6.75z" />
+                        </svg>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+        </div>
+      </div>
+
+      {/* ── Gallery Section (main page) ── */}
+      <section ref={sectionRef} id="gallery" className="bg-cream py-24 md:py-32">
+        <div className="max-w-5xl mx-auto px-6">
+
+          {/* Header */}
+          <div className="text-center reveal-element">
+            <p
+              className="font-dm-sans text-brown uppercase mb-4"
+              style={{ fontSize: "0.6rem", letterSpacing: "0.5em" }}
+            >
+              Gallery
+            </p>
+
+            <h2 className="font-cormorant text-5xl md:text-6xl text-charcoal font-light mb-5">
+              Life at Lustro
+            </h2>
+
+            <div
+              className="mx-auto mb-7"
               style={{
-                display: activeItem.type === "video" ? "block" : "none",
-                width: "100%",
-                height: "auto",
-                pointerEvents: "none",
-              } as React.CSSProperties}
-              controlsList="nodownload nofullscreen noremoteplayback"
+                width: "48px",
+                height: "1px",
+                background: "linear-gradient(90deg, transparent, #C8922A, transparent)",
+              }}
             />
 
-            {/* IMAGE */}
-            {activeItem.type === "image" && (
-              <img
-                src={activeItem.src}
-                alt={activeItem.alt}
-                className="w-full object-cover"
-                style={{ maxHeight: "520px", display: "block" }}
-              />
-            )}
+            {/* Copy */}
+            <p
+              className="font-dm-sans text-charcoal/50 mx-auto mb-10"
+              style={{
+                fontSize: "clamp(0.78rem, 2vw, 0.92rem)",
+                lineHeight: "1.85",
+                maxWidth: "440px",
+                letterSpacing: "0.01em",
+              }}
+            >
+              Every corner of Lustro is built to be experienced. Cinematic interiors,
+              private retreats, curated spaces — this is what premium shortlet living
+              looks like in Lagos.
+            </p>
+
+            {/* Teaser strip — 3 grayscale preview images */}
+            <div
+              className="grid grid-cols-3 gap-2 mx-auto mb-10"
+              style={{ maxWidth: "360px" }}
+            >
+              {images.slice(0, 3).map((img) => (
+                <div
+                  key={img.src}
+                  className="overflow-hidden rounded-lg"
+                  style={{ aspectRatio: "1/1" }}
+                >
+                  <img
+                    src={img.src}
+                    alt={img.alt}
+                    className="teaser-img w-full h-full object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* CTA — opens overlay */}
+            <button
+              onClick={() => setOverlayOpen(true)}
+              className="inline-flex items-center gap-3 bg-charcoal text-cream font-dm-sans uppercase tracking-[0.28em] hover:bg-brown transition-colors duration-300"
+              style={{ fontSize: "0.62rem", padding: "14px 40px" }}
+            >
+              Explore Gallery
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-3 h-3">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+              </svg>
+            </button>
+
           </div>
 
-          {/* Bottom nav — label + prev/next + counter */}
-          <div className="flex items-center justify-between mt-4 px-1">
-            <button
-              onClick={goPrev}
-              className="flex items-center gap-2 font-dm-sans text-[0.65rem] text-charcoal/50 uppercase tracking-wider hover:text-charcoal transition-colors"
+          {/* Instagram */}
+          <div className="text-center mt-12 reveal-element">
+            <a
+              href="https://instagram.com/lustro_homes"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 font-dm-sans text-sm text-brown hover:text-brown-light transition-colors"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-              Prev
-            </button>
-
-            <span className="font-dm-sans text-[0.55rem] text-charcoal/30 uppercase tracking-[0.3em]">
-              {activeIdx + 1} / {items.length}
-            </span>
-
-            <button
-              onClick={goNext}
-              className="flex items-center gap-2 font-dm-sans text-[0.65rem] text-charcoal/50 uppercase tracking-wider hover:text-charcoal transition-colors"
-            >
-              Next
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
+              <span>Follow @lustro_homes for more moments</span>
+              <span className="text-base">→</span>
+            </a>
           </div>
 
         </div>
-      </div>
-
-      {/* Instagram link */}
-      <div className="text-center mt-12 reveal-element">
-        <a
-          href="https://instagram.com/lustro_homes"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 font-dm-sans text-sm text-brown hover:text-brown-light transition-colors"
-        >
-          <span>Follow @lustro_homes for more moments</span>
-          <span className="text-base">→</span>
-        </a>
-      </div>
-
-    </section>
+      </section>
+    </>
   );
 }
+
 // ─────────────────────────────────────────────────
 // INVESTMENT JOURNEY
 // ─────────────────────────────────────────────────
