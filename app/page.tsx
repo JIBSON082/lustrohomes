@@ -1147,13 +1147,21 @@ function YankeeByLustro() {
           
 
           {/* CTA */}
-          <div className="glass rounded-2xl p-5 md:p-6 text-center" style={{ isolation: "isolate" }}>
+          <div className="glass rounded-2xl p-5 md:p-6 text-center mt-4" style={{ isolation: "isolate" }}>
             <p className="font-dm-sans text-[0.65rem] text-gold uppercase tracking-[0.28em] mb-3">
               Now Available
             </p>
-            <h3 className="font-cormorant text-3xl md:text-4xl text-cream font-light mb-4">
-              Experience Yankee by Lustro
-            </h3>
+           <h3
+  className="text-cream font-light mb-4"
+  style={{
+    fontFamily: "'Great Vibes', cursive",
+    fontSize: "clamp(2.4rem, 9vw, 3.8rem)",
+    lineHeight: 1.15,
+    letterSpacing: "0.02em",
+  }}
+>
+  Experience Yankee by Lustro
+</h3>
             <p className="font-dm-sans text-cream/45 text-sm leading-[1.85] max-w-sm mx-auto mb-5">
               The same uncompromising standard. A fresh address. Book your stay or inquire about investment opportunities.
             </p>
