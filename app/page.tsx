@@ -1008,9 +1008,8 @@ function YankeeByLustro() {
   const sectionRef = useRef<HTMLElement>(null);
 
   const videos = [
-    { publicId: "Yankee_by_Lustro_1_fatub8", label: "The Arrival" },
-    { publicId: "Yankee_by_Lustro_2_fegw75", label: "The Interior" },
-  ];
+  { publicId: "Yankee_by_Lustro_1_fatub8", label: "The Arrival" },
+];
 
   const getVideoUrl = (publicId: string) =>
     `https://res.cloudinary.com/dx3k7hbnc/video/upload/${publicId}.mp4`;
@@ -1062,9 +1061,9 @@ function YankeeByLustro() {
         {/* Header */}
         <div className="text-center mb-16 reveal-element">
           
-          <h2 className="font-cinzel text-5xl md:text-6xl text-cream font-light">
-            Yankee by Lustro
-          </h2>
+        <h2 className="font-cinzel text-6xl md:text-8xl text-cream font-light tracking-wide">
+  Yankee by Lustro
+</h2>
           <div className="section-line mx-auto mt-6" />
           <p className="font-dm-sans text-cream/40 text-sm tracking-wide mt-6 max-w-md mx-auto">
             The Lustro standard, reimagined. A new address for those who refuse to settle.
@@ -1092,7 +1091,7 @@ function YankeeByLustro() {
               }}
               className="w-full object-cover cursor-pointer"
               style={{
-                maxHeight: "520px",
+                maxHeight: "560px",
                 pointerEvents: "auto",
               } as React.CSSProperties}
               controlsList="nodownload nofullscreen noremoteplayback"
@@ -1154,14 +1153,24 @@ function YankeeByLustro() {
             <p className="font-dm-sans text-cream/45 text-sm leading-[1.85] max-w-sm mx-auto mb-5">
               The same uncompromising standard. A fresh address. Book your stay or inquire about investment opportunities.
             </p>
-            <a
-              href={`${WHATSAPP_URL}?text=I'm interested in Yankee by Lustro`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block bg-brown text-cream font-dm-sans px-12 py-4 rounded-full text-sm hover:bg-brown-light transition-colors shadow-lg"
-            >
-              Book or Enquire
-            </a>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+  <a
+    href={`${WHATSAPP_URL}?text=I'm interested in Yankee by Lustro`}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="w-full sm:w-auto text-center bg-brown text-cream font-dm-sans px-12 py-4 rounded-full text-sm hover:bg-brown-light transition-colors shadow-lg tracking-[0.15em]"
+  >
+    Book or Enquire
+  </a>
+  <a
+    href="https://www.instagram.com/yankee.by.lustro?igsh=MXQwNW9lbmM1aHExNQ=="
+    target="_blank"
+    rel="noopener noreferrer"
+    className="w-full sm:w-auto text-center border border-gold/40 text-gold font-dm-sans px-12 py-4 rounded-full text-sm hover:border-gold hover:text-gold/80 transition-all duration-300 tracking-[0.15em]"
+  >
+    @Yankee by Lustro
+  </a>
+</div>
           </div>
         </div>
       </div>
