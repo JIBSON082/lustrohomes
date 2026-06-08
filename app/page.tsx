@@ -1102,12 +1102,7 @@ function YankeeByLustro() {
               onContextMenu={(e) => e.preventDefault()}
             />
 
-            {/* Label overlay */}
-           <div className="absolute top-5 left-5 pointer-events-none">
-  <p className="font-cinzel text-xs text-gold uppercase tracking-[0.28em] font-semibold drop-shadow-lg">
-    Yankee by Lustro
-  </p>
-</div>
+            
 
             {/* Controls */}
             <div className="absolute bottom-0 left-0 right-0 px-5 py-4 flex items-center justify-between bg-gradient-to-t from-black/50 to-transparent">
@@ -1147,7 +1142,7 @@ function YankeeByLustro() {
           
 
           {/* CTA */}
-          <div className="glass rounded-2xl p-5 md:p-6 text-center mt-6" style={{ isolation: "isolate" }}>
+          <div className="glass rounded-2xl p-5 md:p-6 text-center mt-10" style={{ isolation: "isolate" }}>
             <p className="font-dm-sans text-[0.65rem] text-gold uppercase tracking-[0.28em] mb-3">
               Now Available
             </p>
