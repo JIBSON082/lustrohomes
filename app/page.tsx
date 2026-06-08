@@ -1065,7 +1065,7 @@ function YankeeByLustro() {
         <div className="text-center mb-8 reveal-element">
           
        <h2
-  className="font-cormorant text-cream font-light tracking-[0.12em]"
+  className="font-cinzel text-cream font-light tracking-[0.12em]"
   style={{ fontSize: "clamp(2.8rem, 10vw, 4.5rem)" }}
 >
   Yankee by Lustro
@@ -1147,7 +1147,7 @@ function YankeeByLustro() {
           
 
           {/* CTA */}
-          <div className="glass rounded-2xl p-5 md:p-6 text-center mt-4" style={{ isolation: "isolate" }}>
+          <div className="glass rounded-2xl p-5 md:p-6 text-center mt-6" style={{ isolation: "isolate" }}>
             <p className="font-dm-sans text-[0.65rem] text-gold uppercase tracking-[0.28em] mb-3">
               Now Available
             </p>
@@ -1155,7 +1155,7 @@ function YankeeByLustro() {
   className="text-cream font-light mb-4"
   style={{
     fontFamily: "'Great Vibes', cursive",
-    fontSize: "clamp(2.4rem, 9vw, 3.8rem)",
+    fontSize: "clamp(2.5rem, 9.2vw, 4rem)",
     lineHeight: 1.15,
     letterSpacing: "0.02em",
   }}
