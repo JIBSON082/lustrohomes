@@ -1666,7 +1666,7 @@ function Gallery() {
 
         {/* Header */}
         <div className="text-center mb-14 reveal-element">
-          <p className="font-dm-sans text-[0.65rem] text-brown uppercase tracking-[0.28em] mb-4">
+          <p className="font-dm-sans text-[0.95rem] text-brown uppercase tracking-[0.28em] mb-4">
             Gallery
           </p>
           <h2 className="font-cormorant text-5xl md:text-6xl text-charcoal font-light">
