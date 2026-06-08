@@ -1611,6 +1611,7 @@ function Gallery() {
   const getVideoUrl = (publicId: string) =>
     `https://res.cloudinary.com/dx3k7hbnc/video/upload/${publicId}.mp4`;
 
+  // Intersection observer — play/pause on scroll
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -1630,16 +1631,27 @@ function Gallery() {
     return () => observer.disconnect();
   }, [activeIdx, activeItem.type]);
 
+  // Instant video switching — no remount, no black screen
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (activeItem.type === "video") {
+      video.src = getVideoUrl(activeItem.publicId);
+      video.load();
+      video.play().catch(() => {});
+      setPlaying(true);
+    } else {
+      video.pause();
+      video.src = "";
+      setPlaying(false);
+    }
+  }, [activeIdx]);
+
+  // Auto-advance when video ends
   const handleVideoEnded = () => {
     const next = (activeIdx + 1) % items.length;
     setActiveIdx(next);
     setPlaying(true);
-  };
-
-  const togglePlay = () => {
-    if (!videoRef.current) return;
-    playing ? videoRef.current.pause() : videoRef.current.play();
-    setPlaying(!playing);
   };
 
   const toggleMute = () => {
@@ -1649,15 +1661,11 @@ function Gallery() {
   };
 
   const goPrev = () => {
-    videoRef.current?.pause();
     setActiveIdx((i) => (i - 1 + items.length) % items.length);
-    setPlaying(true);
   };
 
   const goNext = () => {
-    videoRef.current?.pause();
     setActiveIdx((i) => (i + 1) % items.length);
-    setPlaying(true);
   };
 
   return (
@@ -1680,131 +1688,44 @@ function Gallery() {
           {/* Main Display */}
           <div
             className="relative rounded-2xl overflow-hidden bg-charcoal select-none"
-            style={{ maxHeight: "520px" }}
+            style={{ minHeight: "320px" }}
           >
-
-            {/* VIDEO */}
-            {activeItem.type === "video" && (
-              <>
-                <video
-                  ref={videoRef}
-                  key={activeItem.publicId}
-                  src={getVideoUrl(activeItem.publicId)}
-                  muted={muted}
-                  loop={false}
-                  playsInline
-                  disablePictureInPicture
-                  onClick={togglePlay}
-                  onEnded={handleVideoEnded}
-                  onLoadedMetadata={(e) => {
-                    Array.from(e.currentTarget.textTracks).forEach(
-                      (t) => (t.mode = "hidden")
-                    );
-                    if (playing) e.currentTarget.play().catch(() => {});
-                  }}
-                  className="w-full object-cover cursor-pointer"
-                  style={{ width: "100%", height: "auto", pointerEvents: "auto" } as React.CSSProperties}
-                  controlsList="nodownload nofullscreen noremoteplayback"
-                  onContextMenu={(e) => e.preventDefault()}
-                />
-
-                
-
-                {/* Counter — top right */}
-                <div className="absolute top-5 right-5 pointer-events-none">
-                  <span className="font-dm-sans text-[0.52rem] text-cream/45 tracking-[0.3em] uppercase">
-                    {activeIdx + 1} / {items.length}
-                  </span>
-                </div>
-
-                {/* Controls */}
-                <div className="absolute bottom-0 left-0 right-0 px-5 py-4 flex items-center justify-between bg-gradient-to-t from-black/55 to-transparent">
-                  <button
-                    onClick={togglePlay}
-                    className="w-9 h-9 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center hover:bg-white/25 transition-colors"
-                    aria-label={playing ? "Pause" : "Play"}
-                  >
-                    {playing ? (
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-white">
-                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
-                      </svg>
-                    ) : (
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-white ml-0.5">
-                        <path d="M8 5.14v14l11-7-11-7z" />
-                      </svg>
-                    )}
-                  </button>
-
-                  <div className="flex items-center gap-5">
-                    <button onClick={goPrev} className="text-cream/60 hover:text-cream transition-colors" aria-label="Previous">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                      </svg>
-                    </button>
-                    <button onClick={goNext} className="text-cream/60 hover:text-cream transition-colors" aria-label="Next">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                      </svg>
-                    </button>
-                  </div>
-
-                  <button
-                    onClick={toggleMute}
-                    className="w-9 h-9 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center hover:bg-white/25 transition-colors"
-                    aria-label={muted ? "Unmute" : "Mute"}
-                  >
-                    {muted ? (
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-white">
-                        <path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0 0 21 12c0-4.28-3-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06A8.99 8.99 0 0 0 17.73 18l1.73 1.73L21 18.46 5.54 3 4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
-                      </svg>
-                    ) : (
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-white">
-                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z" />
-                      </svg>
-                    )}
-                  </button>
-                </div>
-              </>
-            )}
+            {/* VIDEO — always rendered, hidden when image is active */}
+            <video
+              ref={videoRef}
+              muted={muted}
+              loop={false}
+              playsInline
+              disablePictureInPicture
+              onEnded={handleVideoEnded}
+              onLoadedMetadata={(e) => {
+                Array.from(e.currentTarget.textTracks).forEach(
+                  (t) => (t.mode = "hidden")
+                );
+              }}
+              onContextMenu={(e) => e.preventDefault()}
+              className="w-full object-cover"
+              style={{
+                display: activeItem.type === "video" ? "block" : "none",
+                width: "100%",
+                height: "auto",
+                pointerEvents: "none",
+              } as React.CSSProperties}
+              controlsList="nodownload nofullscreen noremoteplayback"
+            />
 
             {/* IMAGE */}
             {activeItem.type === "image" && (
-              <>
-                <img
-                  key={activeItem.src}
-                  src={activeItem.src}
-                  alt={activeItem.alt}
-                  className="w-full object-cover"
-                  style={{ maxHeight: "420px" }}
-                />
-
-                
-
-                {/* Counter — top right */}
-                <div className="absolute top-5 right-5 pointer-events-none">
-                  <span className="font-dm-sans text-[0.52rem] text-cream/45 tracking-[0.3em] uppercase">
-                    {activeIdx + 1} / {items.length}
-                  </span>
-                </div>
-
-                {/* Prev / Next for images */}
-                <div className="absolute bottom-0 left-0 right-0 px-5 py-4 flex items-center justify-center gap-5 bg-gradient-to-t from-black/40 to-transparent">
-                  <button onClick={goPrev} className="text-cream/60 hover:text-cream transition-colors" aria-label="Previous">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                    </svg>
-                  </button>
-                  <button onClick={goNext} className="text-cream/60 hover:text-cream transition-colors" aria-label="Next">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
-                </div>
-              </>
+              <img
+                src={activeItem.src}
+                alt={activeItem.alt}
+                className="w-full object-cover"
+                style={{ maxHeight: "520px", display: "block" }}
+              />
             )}
           </div>
 
-          {/* Prev / Next only */}
+          {/* Bottom nav — label + prev/next + counter */}
           <div className="flex items-center justify-between mt-4 px-1">
             <button
               onClick={goPrev}
@@ -1834,23 +1755,22 @@ function Gallery() {
         </div>
       </div>
 
-        {/* Instagram link */}
-        <div className="text-center mt-12 reveal-element">
-          <a
-            href="https://instagram.com/lustro_homes"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 font-dm-sans text-sm text-brown hover:text-brown-light transition-colors"
-          >
-            <span>Follow @lustro_homes for more moments</span>
-            <span className="text-base">→</span>
-          </a>
-        </div>
-      
+      {/* Instagram link */}
+      <div className="text-center mt-12 reveal-element">
+        <a
+          href="https://instagram.com/lustro_homes"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 font-dm-sans text-sm text-brown hover:text-brown-light transition-colors"
+        >
+          <span>Follow @lustro_homes for more moments</span>
+          <span className="text-base">→</span>
+        </a>
+      </div>
+
     </section>
   );
 }
-
 // ─────────────────────────────────────────────────
 // INVESTMENT JOURNEY
 // ─────────────────────────────────────────────────
