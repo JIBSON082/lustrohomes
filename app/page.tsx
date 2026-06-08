@@ -787,6 +787,15 @@ function Rooms() {
     return () => observer.disconnect();
   }, [activeIdx]);
 
+  useEffect(() => {
+  const video = videoRef.current;
+  if (!video) return;
+  video.src = getVideoUrl(active.publicId);
+  video.load();
+  video.play().catch(() => {});
+  setPlaying(true);
+}, [activeIdx]);
+
   const handleVideoEnded = () => {
     const next = (activeIdx + 1) % rooms.length;
     setActiveIdx(next);
@@ -849,10 +858,10 @@ function Rooms() {
                 Array.from(e.currentTarget.textTracks).forEach(
                   (t) => (t.mode = "hidden")
                 );
-                if (playing) e.currentTarget.play().catch(() => {});
+                
               }}
               className="w-full object-cover cursor-pointer"
-              style={{ maxHeight: "420px", pointerEvents: "auto" } as React.CSSProperties}
+              style={{ aspectRatio: "9/16", width: "100%", pointerEvents: "auto" } as React.CSSProperties}
               controlsList="nodownload nofullscreen noremoteplayback"
               onContextMenu={(e) => e.preventDefault()}
             />
