@@ -2186,7 +2186,7 @@ function Contact() {
       icon: "📍",
       title: "Our Location",
       detail: "37 Ibukun Olu St, Akoka, Yaba",
-      href: "https://maps.google.com/?q=37+Ibukun+Olu+Street+Akoka+Yaba+Lagos+Nigeria",
+      href: "https://maps.app.goo.gl/xF2wtFGyA51vkgba9",
     },
     {
       icon: "📸",
