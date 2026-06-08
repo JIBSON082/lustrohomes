@@ -1059,9 +1059,9 @@ function YankeeByLustro() {
       <div className="max-w-5xl mx-auto px-6">
 
         {/* Header */}
-        <div className="text-center mb-16 reveal-element">
+        <div className="text-center mb-8 reveal-element">
           
-        <h2 className="font-cinzel text-5.5xl md:text-6.8xl text-cream font-light tracking-wide">
+        <h2 className="font-cinzel text-6xl md:text-7xl text-cream font-light tracking-wide">
   Yankee by Lustro
 </h2>
           <div className="section-line mx-auto mt-6" />
@@ -1091,7 +1091,7 @@ function YankeeByLustro() {
               }}
               className="w-full object-cover cursor-pointer"
               style={{
-                maxHeight: "550px",
+                maxHeight: "540px",
                 pointerEvents: "auto",
               } as React.CSSProperties}
               controlsList="nodownload nofullscreen noremoteplayback"
