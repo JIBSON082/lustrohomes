@@ -830,7 +830,7 @@ function Rooms() {
 
         {/* Header */}
         <div className="text-center mb-10 reveal-element">
-          <p className="font-dm-sans text-[1.3rem] text-brown uppercase tracking-[0.28em] mb-4">
+          <p className="font-Cormorant text-[1.3rem] text-brown uppercase tracking-[0.14em] mb-4">
             Rooms & Suites
           </p>
           <h2 className="font-cormorant text-5xl md:text-6xl text-charcoal font-light">
@@ -1468,7 +1468,7 @@ function Dining() {
 
         {/* Section Title — TOP, bold, centered */}
         <div className="text-center mb-12 reveal-element">
-          <p className="font-dm-sans text-[1.3rem] text-gold uppercase tracking-[0.28em] mb-4 font-bold">
+          <p className="font-Cormorant text-[1.3rem] text-gold uppercase tracking-[0.14em] mb-4 font-bold">
             Signature Dining
           </p>
           <h2 className="font-cormorant text-5xl md:text-6xl text-cream font-light leading-[1.1]">
