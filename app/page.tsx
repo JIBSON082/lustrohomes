@@ -1967,7 +1967,7 @@ function Investment() {
       title: "LUSTRO 1.0 — THE BLUEPRINT",
       subtitle: "Where Yaba First Met Luxury",
       story:
-        "We started with one goal — build the most sought-after shortlet experience in Yaba. What emerged was more than an apartment. It was a lifestyle statement. Signature in-house dining, world-class aesthetics, and a hospitality standard that Lagos had never seen at this level.",
+        "We started with one goal : build the most sought-after shortlet experience in Yaba. What emerged was more than an apartment. It was a lifestyle statement. Signature in-house dining, world-class aesthetics, and a hospitality standard that Lagos had never seen at this level.",
       stats: [
         { value: "15,000+", label: "Guests Hosted" },
         { value: "₦2M+", label: "Monthly Revenue" },
@@ -1981,7 +1981,7 @@ function Investment() {
       title: "LUSTRO 2.0 — THE YANKEE EDITION",
       subtitle: "Luxury Redefined on the Mainland",
       story:
-        "We took everything that made 1.0 exceptional and brought it to the Lagos Mainland. Launched December 16th — sold out before the year ended. No delays. No excuses. Our investors were earning before most people even heard about it. When demand is real, results follow.",
+        "We took everything that made 1.0 exceptional and brought it to the Lagos Mainland. Launched December 16th and sold out before the year ended. No delays. No excuses. Our investors were earning before most people even heard about it. When demand is real, results follow.",
       stats: [
         { value: "Sold Out", label: "Launch Status" },
         { value: "₦1.4M+", label: "Monthly Returns" },
@@ -1995,14 +1995,14 @@ function Investment() {
       title: "LUSTRO 3.0 — THE SMART ECOSYSTEM",
       subtitle: "The Ultimate Lifestyle Sanctuary",
       story:
-        "Our most ambitious project yet — and it delivered. Fully automated smart apartment units. Yaba's first in-house spa. A fully equipped professional gym. Every detail engineered for maximum occupancy, maximum returns, and a living experience that simply does not exist anywhere else on the Mainland.",
+        "Our most ambitious project yet and it delivered. Fully automated smart apartment units. Yaba's first in-house spa. A fully equipped professional gym. Every detail engineered for maximum occupancy, maximum returns, and a living experience that simply does not exist anywhere else on the Mainland.",
       stats: [
         { value: "Full Auto", label: "Smart Features" },
         { value: "Yaba's First", label: "In-House Spa" },
         { value: "₦1.4M/mo", label: "Investor ROI" },
       ],
       status: "COMPLETED & EARNING",
-      quote: '"We don\'t build houses. We engineer the future."',
+      quote: '"We don't build houses. We engineer the future."',
       pricing: [
         { label: "Part Ownership", value: "₦32.5M", tag: "Sold Out" },
         { label: "Full Ownership", value: "₦65M", tag: "Sold Out" },
@@ -2029,7 +2029,7 @@ function Investment() {
           {/* Opening hook */}
           <div className="text-left bg-charcoal/50 rounded-2xl p-8 border border-white/5">
             <p className="font-cormorant text-2xl md:text-3xl text-cream font-light leading-[1.6] italic">
-              "Most properties sit underperforming — wrong structure, wrong
+              "Most properties sit underperforming : wrong structure, wrong
               aesthetics, wrong management. At Lustro, we proved that done
               right, a single apartment can generate over{" "}
               <span className="text-gold not-italic font-normal">
