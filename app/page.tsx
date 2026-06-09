@@ -2279,11 +2279,29 @@ function Testimonials() {
       text: "There is something about LUSTRO LAGOS((hotel and Restaurant) that's strikingly attractive. Is it their rooms,decors,food they all are fire not to mention the environment or services rendered and manner if service. I rate them 5 stars consecutively they deserve it.",
     },
     {
-      name: ".",
-      location: "Abuja",
+      name: "Nelson S.",
       stars: 5,
-      text: "I was visiting Lagos for a conference and chose Lustro on a recommendation. Best decision I made. The room felt like an international hotel.",
+      text: "Stayed there for a weekend staycation and it was lovely, very beautiful customer service, the receptionist is soo nice,the online rep too and their securities, very serene and calm environment, lovely facilities, I upgraded the next day and it was a very smooth transition
+I HIGHLY RECOMMEND !.",
     },
+   {
+      name: "Adebukola A.",
+      stars: 5,
+      text: "It exceeded my expectations and more. I had so much fun with my friends, the food was great, and the aesthetics were warm, It's easy to find, the services felt like home. !.",
+    },
+   {
+      name: "Saheed O.",
+      stars: 5,
+      text: "My first time in Lustro Lagos hotel, rooms were affordable, service was top notch and the food was too good to be true.",
+    },
+   {
+      name: "Joy M.",
+      stars: 5,
+      text: "It was a nice dining.
+I had a date with my sister and it was worth it 🥰
+The staffs were amazing and allowed pictures, even volunteering to take my pictures.",
+    },
+
   ];
 
   return (
