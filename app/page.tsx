@@ -2090,7 +2090,7 @@ function Investment() {
   <div className="flex items-center justify-between mt-4 px-1">
     <button
       onClick={() => setActiveVideo((i) => (i - 1 + INVEST_VIDEOS.length) % INVEST_VIDEOS.length)}
-      className="flex items-center gap-2 font-dm-sans text-[0.62rem] text-cream/40 uppercase tracking-wider hover:text-gold transition-colors"
+      className="flex items-center gap-2 font-dm-sans text-[0.82rem] text-cream/40 uppercase tracking-wider hover:text-gold transition-colors"
     >
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4">
         <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -2118,7 +2118,7 @@ function Investment() {
 
     <button
       onClick={() => setActiveVideo((i) => (i + 1) % INVEST_VIDEOS.length)}
-      className="flex items-center gap-2 font-dm-sans text-[0.62rem] text-cream/40 uppercase tracking-wider hover:text-gold transition-colors"
+      className="flex items-center gap-2 font-dm-sans text-[0.82rem] text-cream/40 uppercase tracking-wider hover:text-gold transition-colors"
     >
       Next
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4">
