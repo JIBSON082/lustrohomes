@@ -2276,37 +2276,34 @@ function Testimonials() {
     {
       name: "Kosi.",
       stars: 5,
-      text: "There is something about LUSTRO LAGOS((hotel and Restaurant) that's strikingly attractive. Is it their rooms,decors,food they all are fire not to mention the environment or services rendered and manner if service. I rate them 5 stars consecutively they deserve it.",
+      text: "There is something about LUSTRO LAGOS (hotel and Restaurant) that's strikingly attractive. Is it their rooms, decors, food — they all are fire, not to mention the environment or services rendered and manner of service. I rate them 5 stars consecutively, they deserve it.",
     },
     {
       name: "Nelson S.",
       stars: 5,
-      text: "Stayed there for a weekend staycation and it was lovely, very beautiful customer service, the receptionist is soo nice,the online rep too and their securities, very serene and calm environment, lovely facilities, I upgraded the next day and it was a very smooth transition
-I HIGHLY RECOMMEND !.",
+      text: "Stayed there for a weekend staycation and it was lovely. Very beautiful customer service, the receptionist is so nice, the online rep too and their securities. Very serene and calm environment, lovely facilities. I upgraded the next day and it was a very smooth transition. I HIGHLY RECOMMEND!",
     },
-   {
+    {
       name: "Adebukola A.",
       stars: 5,
-      text: "It exceeded my expectations and more. I had so much fun with my friends, the food was great, and the aesthetics were warm, It's easy to find, the services felt like home. !.",
+      text: "It exceeded my expectations and more. I had so much fun with my friends, the food was great, and the aesthetics were warm. It's easy to find, the services felt like home.",
     },
-   {
+    {
       name: "Saheed O.",
       stars: 5,
       text: "My first time in Lustro Lagos hotel, rooms were affordable, service was top notch and the food was too good to be true.",
     },
-   {
+    {
       name: "Joy M.",
       stars: 5,
-      text: "It was a nice dining.
-I had a date with my sister and it was worth it 🥰
-The staffs were amazing and allowed pictures, even volunteering to take my pictures.",
+      text: "It was a nice dining. I had a date with my sister and it was worth it 🥰 The staffs were amazing and allowed pictures, even volunteering to take my pictures.",
     },
-
   ];
 
   return (
     <section className="bg-cream-dark py-24 md:py-36">
       <div className="max-w-7xl mx-auto px-6">
+
         {/* Header */}
         <div className="text-center mb-16 reveal-element">
           <p className="font-dm-sans text-[0.65rem] text-brown uppercase tracking-[0.28em] mb-4">
@@ -2345,13 +2342,11 @@ The staffs were amazing and allowed pictures, even volunteering to take my pictu
                 <p className="font-dm-sans text-sm font-medium text-charcoal">
                   {r.name}
                 </p>
-                <p className="font-dm-sans text-xs text-charcoal/45 mt-0.5">
-                  {r.location}
-                </p>
               </div>
             </div>
           ))}
         </div>
+
       </div>
     </section>
   );
