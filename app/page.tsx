@@ -1531,14 +1531,14 @@ function Dining() {
         <div className="grid md:grid-cols-2 gap-10 items-start reveal-from-left">
           <div>
             <p className="font-dm-sans text-cream/60 leading-[1.85] text-sm md:text-base mb-5">
-              Lustro Lagos is more than a restaurant — it's an immersive sensory
+              Lustro Lagos is more than a restaurant, it's an immersive sensory
               experience. We source the finest local ingredients and reimagine
               them through a global culinary lens, delivering a menu that
               surprises, delights, and lingers long after the last bite.
             </p>
             <p className="font-dm-sans text-cream/60 leading-[1.85] text-sm md:text-base">
               Whether you're celebrating a milestone, hosting a business dinner,
-              or simply treating yourself — our team is dedicated to making every
+              or simply treating yourself ; our team is dedicated to making every
               meal an occasion. Open to both in-house guests and the public.
             </p>
           </div>
@@ -1894,7 +1894,7 @@ function Gallery() {
               }}
             >
               Every corner of Lustro is built to be experienced. Cinematic
-              interiors, private retreats, curated spaces — this is what
+              interiors, private retreats, curated spaces ; this is what
               premium shortlet living looks like in Lagos.
             </p>
 
