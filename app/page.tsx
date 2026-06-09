@@ -634,7 +634,7 @@ function About() {
       <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-[1fr_1.4fr] gap-14 md:gap-20 items-stretch">
         {/* Left — Text */}
         <div className="reveal-element">
-          <p className="font-dm-sans text-[0.65rem] text-brown uppercase tracking-[0.28em] mb-4">
+          <p className="font-dm-sans text-[1.3rem] text-brown uppercase tracking-[0.28em] mb-4">
             Our Story
           </p>
           <h2 className="font-cormorant text-5xl md:text-6xl text-charcoal font-light leading-[1.1] mb-6">
