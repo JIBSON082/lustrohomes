@@ -2043,26 +2043,27 @@ function Investment() {
 
        
         {/* ── Bento Video Block ── */}
+{/* ── Bento Video Block ── */}
 <div className="reveal-element mb-16">
   <div
     onClick={() => setVideoOpen(true)}
     className="relative rounded-2xl overflow-hidden cursor-pointer group"
     style={{ paddingTop: "128%" }}
   >
-    {/* Actual video as background — muted, shows real content */}
     <video
-      src="https://res.cloudinary.com/dx3k7hbnc/video/upload/Lustro_investment_jaijaq.mp4"
+      ref={previewRef}
+      key={activeVideo}
+      src={INVEST_VIDEOS[activeVideo]}
       muted
       loop
       autoPlay
       playsInline
+      onEnded={() => setActiveVideo((i) => (i + 1) % INVEST_VIDEOS.length)}
       className="absolute inset-0 w-full h-full object-cover"
     />
 
-    {/* Dark overlay */}
     <div className="absolute inset-0 bg-black/45 group-hover:bg-black/30 transition-all duration-700" />
 
-    {/* Play Button — centered, clean */}
     <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
       <div className="relative w-16 h-16 rounded-full border-2 border-cream/70 flex items-center justify-center group-hover:border-gold group-hover:scale-110 transition-all duration-700">
         <div className="absolute inset-0 rounded-full border border-cream/20 scale-125 group-hover:scale-150 transition-transform duration-700 opacity-60" />
@@ -2079,6 +2080,47 @@ function Investment() {
         Watch the Lustro Story
       </p>
     </div>
+  </div>
+
+  {/* Prev / Next — below the video box */}
+  <div className="flex items-center justify-between mt-4 px-1">
+    <button
+      onClick={() => setActiveVideo((i) => (i - 1 + INVEST_VIDEOS.length) % INVEST_VIDEOS.length)}
+      className="flex items-center gap-2 font-dm-sans text-[0.62rem] text-cream/40 uppercase tracking-wider hover:text-gold transition-colors"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+      </svg>
+      Prev
+    </button>
+
+    {/* Dot indicators */}
+    <div className="flex gap-2">
+      {INVEST_VIDEOS.map((_, i) => (
+        <button
+          key={i}
+          onClick={() => setActiveVideo(i)}
+          className="transition-all duration-300"
+          style={{
+            width: activeVideo === i ? "20px" : "6px",
+            height: "6px",
+            borderRadius: "3px",
+            background: activeVideo === i ? "#C8922A" : "rgba(255,255,255,0.2)",
+          }}
+          aria-label={`Video ${i + 1}`}
+        />
+      ))}
+    </div>
+
+    <button
+      onClick={() => setActiveVideo((i) => (i + 1) % INVEST_VIDEOS.length)}
+      className="flex items-center gap-2 font-dm-sans text-[0.62rem] text-cream/40 uppercase tracking-wider hover:text-gold transition-colors"
+    >
+      Next
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
   </div>
 </div>
 
@@ -2180,37 +2222,38 @@ function Investment() {
 
      
     {/* Video Modal — Full Screen */}
-      {videoOpen && (
-        <div
-          className="fixed inset-0 z-[100] bg-black flex items-center justify-center"
-          style={{ animation: "modalFadeIn 0.35s ease forwards" }}
-        >
-          <button
-            onClick={() => setVideoOpen(false)}
-            className="absolute top-5 right-5 z-10 w-11 h-11 rounded-full bg-white/10 flex items-center justify-center hover:bg-brown transition-colors"
-            aria-label="Close video"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-5 h-5 text-cream">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-          <video
-            src="https://res.cloudinary.com/dx3k7hbnc/video/upload/Lustro_investment_jaijaq.mp4"
-            controls
-            autoPlay
-            playsInline
-            preload="auto"
-            className="w-full h-full object-cover"
-            style={{ animation: "modalScaleIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards" }}
-            onLoadedMetadata={(e) => {
-              const video = e.currentTarget;
-              Array.from(video.textTracks).forEach((track) => {
-                track.mode = "hidden";
-              });
-            }}
-          />
-        </div>
-      )}
+      {/* Video Modal — Full Screen */}
+{videoOpen && (
+  <div
+    className="fixed inset-0 z-[100] bg-black flex items-center justify-center"
+    style={{ animation: "modalFadeIn 0.35s ease forwards" }}
+  >
+    <button
+      onClick={() => setVideoOpen(false)}
+      className="absolute top-5 right-5 z-10 w-11 h-11 rounded-full bg-white/10 flex items-center justify-center hover:bg-brown transition-colors"
+      aria-label="Close video"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-5 h-5 text-cream">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+    <video
+      ref={modalRef}
+      key={activeVideo}
+      src={INVEST_VIDEOS[activeVideo]}
+      controls
+      autoPlay
+      playsInline
+      preload="auto"
+      onEnded={() => setActiveVideo((i) => (i + 1) % INVEST_VIDEOS.length)}
+      className="w-full h-full object-cover"
+      style={{ animation: "modalScaleIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards" }}
+      onLoadedMetadata={(e) => {
+        Array.from(e.currentTarget.textTracks).forEach((t) => { t.mode = "hidden"; });
+      }}
+    />
+  </div>
+)}
 
     </section>
   );
