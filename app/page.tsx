@@ -634,7 +634,7 @@ function About() {
       <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-[1fr_1.4fr] gap-14 md:gap-20 items-stretch">
         {/* Left — Text */}
         <div className="reveal-element">
-          <p className="font-Cormorant text-[1.3rem] text-brown uppercase tracking-[0.14em] mb-6">
+          <p className="font-Cormorant text-[1.3rem] text-brown uppercase tracking-[0.14em] mb-8">
             Our Story
           </p>
           <h2 className="font-cormorant text-5xl md:text-6xl text-charcoal font-light leading-[1.1] mb-6">
@@ -830,7 +830,7 @@ function Rooms() {
 
         {/* Header */}
         <div className="text-center mb-10 reveal-element">
-          <p className="font-Cormorant text-[1.3rem] text-brown uppercase tracking-[0.14em] mb-4">
+          <p className="font-Cormorant text-[1.3rem] text-brown uppercase tracking-[0.14em] mb-8">
             Rooms & Suites
           </p>
           <h2 className="font-cormorant text-5xl md:text-6xl text-charcoal font-light">
@@ -1468,7 +1468,7 @@ function Dining() {
 
         {/* Section Title — TOP, bold, centered */}
         <div className="text-center mb-12 reveal-element">
-          <p className="font-Cormorant text-[1.3rem] text-gold uppercase tracking-[0.14em] mb-6 font-bold">
+          <p className="font-Cormorant text-[1.3rem] text-gold uppercase tracking-[0.14em] mb-8 font-bold">
             Signature Dining
           </p>
           <h2 className="font-cormorant text-5xl md:text-6xl text-cream font-light leading-[1.1]">
@@ -1859,8 +1859,8 @@ function Gallery() {
 
           <div className="text-center reveal-element">
             <p
-              className="font-dm-sans text-brown uppercase mb-4"
-              style={{ fontSize: "1.5rem", letterSpacing: "0.2em" }}
+              className="font-dm-sans text-brown uppercase mb-6"
+              style={{ fontSize: "1.5rem", letterSpacing: "0.15em" }}
             >
               Gallery
             </p>
@@ -2016,7 +2016,7 @@ function Investment() {
 
         {/* Header */}
         <div className="text-center mb-16 reveal-element">
-          <p className="font-dm-sans text-[1.3rem] text-gold uppercase tracking-[0.28em] mb-4">
+          <p className="font-Cormorant text-[1.3rem] text-gold uppercase tracking-[0.14em] mb-8">
             Investment Journey
           </p>
           <h2 className="font-cormorant text-4xl md:text-5xl text-cream font-light leading-[1.15] mb-6">
@@ -2306,7 +2306,7 @@ function Testimonials() {
 
         {/* Header */}
         <div className="text-center mb-16 reveal-element">
-          <p className="font-dm-sans text-[0.65rem] text-brown uppercase tracking-[0.28em] mb-4">
+          <p className="font-Cormorant text-[1.3rem] text-brown uppercase tracking-[0.14em] mb-8">
             Guest Reviews
           </p>
           <h2 className="font-cormorant text-5xl md:text-6xl text-charcoal font-light">
@@ -2394,7 +2394,7 @@ function Contact() {
       {/* Content */}
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
         <div className="reveal-element mb-16">
-          <p className="font-dm-sans text-[0.65rem] text-gold uppercase tracking-[0.28em] mb-5">
+          <p className="font-Cormorant text-[1.3rem] text-gold uppercase tracking-[0.14em] mb-8">
             Get In Touch
           </p>
           <h2 className="font-cormorant text-5xl md:text-7xl text-cream font-light leading-[1.1]">
