@@ -1732,7 +1732,7 @@ function Gallery() {
           <div className="flex items-center justify-between mb-5">
             <p
               className="font-dm-sans text-gold/50 uppercase"
-              style={{ fontSize: "0.52rem", letterSpacing: "0.5em" }}
+              style={{ fontSize: "0.92rem", letterSpacing: "0.5em" }}
             >
               Lustro Lagos
             </p>
@@ -1740,7 +1740,7 @@ function Gallery() {
               {/* Mute toggle — lives in header so it's always accessible */}
               <button
                 onClick={() => setMuted((m) => !m)}
-                className="text-cream/35 hover:text-cream transition-colors"
+                className="text-cream/45 hover:text-cream transition-colors"
                 aria-label={muted ? "Unmute videos" : "Mute videos"}
               >
                 {muted ? (
@@ -1840,7 +1840,7 @@ function Gallery() {
           <div className="text-center reveal-element">
             <p
               className="font-dm-sans text-brown uppercase mb-4"
-              style={{ fontSize: "0.6rem", letterSpacing: "0.5em" }}
+              style={{ fontSize: "1.2rem", letterSpacing: "0.6em" }}
             >
               Gallery
             </p>
