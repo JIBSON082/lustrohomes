@@ -1732,7 +1732,7 @@ function Gallery() {
           <div className="flex items-center justify-between mb-5">
             <p
               className="font-dm-sans text-gold/50 uppercase"
-              style={{ fontSize: "0.92rem", letterSpacing: "0.28em" }}
+              style={{ fontSize: "0.95rem", letterSpacing: "0.25em" }}
             >
               Lustro Lagos
             </p>
@@ -1740,11 +1740,11 @@ function Gallery() {
               {/* Mute toggle — lives in header so it's always accessible */}
               <button
                 onClick={() => setMuted((m) => !m)}
-                className="text-cream/70 hover:text-cream transition-colors"
+                className="text-cream/35 hover:text-cream transition-colors"
                 aria-label={muted ? "Unmute videos" : "Mute videos"}
               >
                 {muted ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-6 h-6">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6l4.72-4.72a.75.75 0 011.28.53V19.94a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.395C2.806 8.757 3.63 8.25 4.51 8.25H6.75z" />
                   </svg>
                 ) : (
@@ -1840,7 +1840,7 @@ function Gallery() {
           <div className="text-center reveal-element">
             <p
               className="font-dm-sans text-brown uppercase mb-4"
-              style={{ fontSize: "1.2rem", letterSpacing: "0.3em" }}
+              style={{ fontSize: "1.5rem", letterSpacing: "0.2em" }}
             >
               Gallery
             </p>
@@ -1869,7 +1869,7 @@ function Gallery() {
                 lineHeight: "1.9",
                 maxWidth: "420px",
                 letterSpacing: "0.01em",
-                fontWeight: "500",
+                fontWeight: "520",
                 color: "rgba(30,26,20,0.72)",
               }}
             >
@@ -1905,7 +1905,7 @@ function Gallery() {
               style={{ fontSize: "0.62rem", padding: "14px 40px" }}
             >
               Explore Gallery
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-3 h-3">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
               </svg>
             </button>
