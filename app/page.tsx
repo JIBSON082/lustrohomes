@@ -2334,7 +2334,7 @@ function Testimonials() {
 
               {/* Quote */}
               <p className="font-cormorant text-xl text-charcoal italic leading-[1.7] mb-7">
-                &ldquo;{r.text}&rdquo;
+                {r.text}
               </p>
 
               {/* Attribution */}
