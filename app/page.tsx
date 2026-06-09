@@ -2002,7 +2002,7 @@ function Investment() {
         { value: "₦1.4M/mo", label: "Investor ROI" },
       ],
       status: "COMPLETED & EARNING",
-      quote: '"We don't build houses. We engineer the future."',
+      quote: '"We don\'t build houses. We engineer the future."',
       pricing: [
         { label: "Part Ownership", value: "₦32.5M", tag: "Sold Out" },
         { label: "Full Ownership", value: "₦65M", tag: "Sold Out" },
