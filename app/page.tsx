@@ -2382,7 +2382,7 @@ function Contact() {
       {/* Background */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=1920&q=85"
+          src="https://res.cloudinary.com/dx3k7hbnc/image/upload/v1777570438/hero-5_gzikdc.png"
           alt="Lustro Homes contact section"
           fill
           sizes="100vw"
