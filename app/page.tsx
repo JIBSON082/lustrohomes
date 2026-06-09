@@ -1952,11 +1952,15 @@ function Gallery() {
 // ─────────────────────────────────────────────────
 // INVESTMENT JOURNEY
 // ─────────────────────────────────────────────────
+const INVEST_VIDEOS = [
+  "https://res.cloudinary.com/dx3k7hbnc/video/upload/Lustro_investment_jaijaq.mp4",
+  "https://res.cloudinary.com/dx3k7hbnc/video/upload/Lustro_Investment_2_xavqpk.mp4",
+];
 function Investment() {
   const [videoOpen, setVideoOpen] = useState(false);
-
-  const INVEST_VIDEO_EMBED =
-    "https://player.cloudinary.com/embed/?cloud_name=dx3k7hbnc&public_id=Lustro_investment_jaijaq&autoplay=true&controls=true&quality=auto:best";
+  const [activeVideo, setActiveVideo] = useState(0);
+  const previewRef = useRef<HTMLVideoElement>(null);
+  const modalRef = useRef<HTMLVideoElement>(null);
 
   const milestones = [
     {
