@@ -1590,6 +1590,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
   { type: "video", publicId: "Lustro_Gallery_video_3_chx6hw", label: "Inside Lustro" },
   { type: "video", publicId: "Lustro_VG1_jan16k", label: "Lustro Moments" },
   { type: "video", publicId: "Lustro_VG_og0r3l", label: "The Vibe" },
+  { type: "video", publicId: "Lustro_VGL_gdwe0g", label: "Lustro Lagos" },
   { type: "video", publicId: "Lustro_Gallery_video_4_nrxt34", label: "The Spaces" },
   { type: "image", src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777562618/hero-1_jlcvld.png", alt: "Lustro Homes exterior", label: "Exterior" },
   { type: "image", src: "https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777642365/gallery-7_tmifgb.jpg", alt: "Lustro Lagos neon sign", label: "Neon Sign" },
