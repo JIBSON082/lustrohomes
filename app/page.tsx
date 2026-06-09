@@ -2269,19 +2269,17 @@ function Investment() {
 function Testimonials() {
   const reviews = [
     {
-      name: "Adaeze O.",
-      location: "Lekki, Lagos",
+      name: "Ibikunle S.",
       stars: 5,
-      text: "From the moment we arrived, everything was perfect. The room aesthetics, the service, the food at Lustro Lagos — I have never experienced anything like it in Nigeria.",
+      text: "Lustro Lagos is a total vibe! 😍 The food is off the charts, with Afro-centric cuisine crafted by a British Nigerian chef that's both flavorful and beautifully presented. The aesthetics are on point, with a stylish lounge and alfresco dining area that's perfect for a romantic dinner or celebration. The live acoustic music adds to the cozy atmosphere, making you feel like you're in a trendy spot in Lagos. As for the comfort, the hotel rooms are comfy and perfect for an extended stay. Overall, Lustro Lagos is a gem in Yaba, offering an unforgettable dining and lodging experience.",
     },
     {
-      name: "Tunde M.",
-      location: "Ikeja, Lagos",
+      name: "Kosi.",
       stars: 5,
-      text: "Yankee by Lustro is a different world entirely. My girls and I booked for a staycation and did not want to leave. Every corner is Instagram-worthy.",
+      text: "There is something about LUSTRO LAGOS((hotel and Restaurant) that's strikingly attractive. Is it their rooms,decors,food they all are fire not to mention the environment or services rendered and manner if service. I rate them 5 stars consecutively they deserve it.",
     },
     {
-      name: "Chisom E.",
+      name: ".",
       location: "Abuja",
       stars: 5,
       text: "I was visiting Lagos for a conference and chose Lustro on a recommendation. Best decision I made. The room felt like an international hotel.",
