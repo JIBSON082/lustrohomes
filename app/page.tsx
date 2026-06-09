@@ -2356,9 +2356,12 @@ function Testimonials() {
 // ─────────────────────────────────────────────────
 // CONTACT SECTION
 // ─────────────────────────────────────────────────
-function Contact() {
+ function Contact() {
   const [locationOpen, setLocationOpen] = useState(false);
   const [instagramOpen, setInstagramOpen] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLDivElement>(null);
+  const lineRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const locations = [
     {
@@ -2386,37 +2389,103 @@ function Contact() {
     },
   ];
 
+  // GSAP entrance
+  useEffect(() => {
+    const init = async () => {
+      try {
+        const { gsap } = await import("gsap");
+        const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+        gsap.registerPlugin(ScrollTrigger);
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 75%",
+            once: true,
+          },
+        });
+
+        tl
+          // Ambient orbs fade in
+          .fromTo(".contact-orb-1",
+            { opacity: 0, scale: 0.6 },
+            { opacity: 1, scale: 1, duration: 2.4, ease: "power2.out" }
+          )
+          .fromTo(".contact-orb-2",
+            { opacity: 0, scale: 0.6 },
+            { opacity: 1, scale: 1, duration: 2.4, ease: "power2.out" },
+            "<0.2"
+          )
+          // Eyebrow
+          .fromTo(".contact-eyebrow",
+            { opacity: 0, y: 10 },
+            { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" },
+            "-=1.6"
+          )
+          // Heading lines stagger up
+          .fromTo(".contact-headline span",
+            { opacity: 0, y: 40, clipPath: "inset(100% 0 0 0)" },
+            { opacity: 1, y: 0, clipPath: "inset(0% 0 0 0)", duration: 1.1, ease: "expo.out", stagger: 0.12 },
+            "-=0.4"
+          )
+          // Gold divider
+          .fromTo(".contact-divider",
+            { scaleX: 0, opacity: 0 },
+            { scaleX: 1, opacity: 1, duration: 0.9, ease: "power3.out", transformOrigin: "left center" },
+            "-=0.5"
+          )
+          // Contact rows slide in
+          .fromTo(".contact-row",
+            { opacity: 0, x: -24 },
+            { opacity: 1, x: 0, duration: 0.7, ease: "power3.out", stagger: 0.1 },
+            "-=0.4"
+          )
+          // CTA
+          .fromTo(".contact-cta",
+            { opacity: 0, y: 20 },
+            { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
+            "-=0.3"
+          );
+      } catch {}
+    };
+    init();
+  }, []);
+
+  // Lock scroll when picker open
+  useEffect(() => {
+    document.body.style.overflow = locationOpen || instagramOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [locationOpen, instagramOpen]);
+
   return (
     <>
       <style>{`
+        /* ── Picker sheet ── */
         .contact-picker {
           display: none;
           position: fixed;
           inset: 0;
           z-index: 110;
-          background: rgba(8,8,8,0.75);
-          backdrop-filter: blur(6px);
-          -webkit-backdrop-filter: blur(6px);
+          background: rgba(6,5,4,0.80);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
           align-items: flex-end;
           justify-content: center;
         }
-        .contact-picker.open {
-          display: flex;
-        }
+        .contact-picker.open { display: flex; }
         .picker-sheet {
           width: 100%;
-          max-width: 480px;
-          background: #1a1714;
-          border-top: 1px solid rgba(200,146,42,0.15);
+          max-width: 500px;
+          background: #16130f;
+          border-top: 1px solid rgba(200,146,42,0.18);
           border-radius: 24px 24px 0 0;
-          padding: 32px 24px 48px;
+          padding: 28px 24px 52px;
         }
         .picker-handle {
-          width: 36px;
-          height: 3px;
-          background: rgba(255,255,255,0.12);
+          width: 36px; height: 3px;
+          background: rgba(255,255,255,0.10);
           border-radius: 2px;
-          margin: 0 auto 28px;
+          margin: 0 auto 26px;
         }
         .picker-option {
           display: flex;
@@ -2424,16 +2493,83 @@ function Contact() {
           justify-content: space-between;
           padding: 18px 20px;
           border-radius: 14px;
-          border: 1px solid rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.05);
           margin-bottom: 10px;
-          background: rgba(255,255,255,0.03);
+          background: rgba(255,255,255,0.02);
           transition: background 0.2s ease, border-color 0.2s ease;
           text-decoration: none;
-          cursor: pointer;
         }
         .picker-option:hover {
-          background: rgba(200,146,42,0.07);
-          border-color: rgba(200,146,42,0.25);
+          background: rgba(200,146,42,0.06);
+          border-color: rgba(200,146,42,0.22);
+        }
+
+        /* ── Contact rows ── */
+        .contact-row {
+          opacity: 0;
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 22px 0;
+          border-bottom: 1px solid rgba(255,255,255,0.06);
+          cursor: pointer;
+          text-align: left;
+          width: 100%;
+          text-decoration: none;
+          transition: border-color 0.3s ease;
+        }
+        .contact-row::after {
+          content: '';
+          position: absolute;
+          bottom: -1px; left: 0;
+          width: 0; height: 1px;
+          background: #C8922A;
+          transition: width 0.5s cubic-bezier(0.16,1,0.3,1);
+        }
+        .contact-row:hover::after { width: 100%; }
+        .contact-row:hover .row-arrow { transform: translateX(4px); color: #C8922A; }
+        .row-arrow { transition: transform 0.3s ease, color 0.3s ease; color: rgba(255,255,255,0.18); }
+
+        /* ── Ambient orbs ── */
+        .contact-orb-1 {
+          position: absolute;
+          width: 420px; height: 420px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(200,146,42,0.07) 0%, transparent 70%);
+          top: -80px; right: -100px;
+          pointer-events: none;
+          opacity: 0;
+        }
+        .contact-orb-2 {
+          position: absolute;
+          width: 320px; height: 320px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(200,146,42,0.05) 0%, transparent 70%);
+          bottom: 40px; left: -60px;
+          pointer-events: none;
+          opacity: 0;
+        }
+
+        /* ── Headline clip ── */
+        .contact-headline span {
+          display: block;
+          opacity: 0;
+          clip-path: inset(100% 0 0 0);
+        }
+
+        .contact-eyebrow { opacity: 0; }
+        .contact-divider { opacity: 0; }
+        .contact-cta { opacity: 0; }
+
+        /* ── Number label ── */
+        .row-number {
+          font-family: 'Cormorant Garamond', serif;
+          font-size: 0.65rem;
+          color: rgba(200,146,42,0.35);
+          letter-spacing: 0.1em;
+          min-width: 20px;
+          margin-right: 20px;
         }
       `}</style>
 
@@ -2444,49 +2580,25 @@ function Contact() {
       >
         <div className="picker-sheet" onClick={(e) => e.stopPropagation()}>
           <div className="picker-handle" />
-          <p
-            className="font-dm-sans text-cream/35 uppercase mb-6"
-            style={{ fontSize: "0.52rem", letterSpacing: "0.45em" }}
-          >
+          <p className="font-dm-sans text-cream/30 uppercase mb-6"
+            style={{ fontSize: "0.5rem", letterSpacing: "0.5em" }}>
             Choose a Location
           </p>
           {locations.map((loc) => (
-            <a
-              key={loc.name}
-              href={loc.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="picker-option"
-              onClick={() => setLocationOpen(false)}
-            >
+            <a key={loc.name} href={loc.href} target="_blank" rel="noopener noreferrer"
+              className="picker-option" onClick={() => setLocationOpen(false)}>
               <div>
-                <p className="font-cormorant text-cream text-xl font-light mb-0.5">
-                  {loc.name}
-                </p>
-                <p
-                  className="font-dm-sans text-cream/40"
-                  style={{ fontSize: "0.65rem", letterSpacing: "0.04em" }}
-                >
-                  {loc.address}
-                </p>
+                <p className="font-cormorant text-cream text-xl font-light mb-0.5">{loc.name}</p>
+                <p className="font-dm-sans text-cream/35" style={{ fontSize: "0.62rem" }}>{loc.address}</p>
               </div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={1.5}
-                className="w-4 h-4 text-gold/50"
-              >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4 text-gold/40">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
             </a>
           ))}
-          <button
-            onClick={() => setLocationOpen(false)}
-            className="w-full mt-4 font-dm-sans text-cream/25 uppercase"
-            style={{ fontSize: "0.55rem", letterSpacing: "0.3em" }}
-          >
+          <button onClick={() => setLocationOpen(false)}
+            className="w-full mt-5 font-dm-sans text-cream/20 uppercase"
+            style={{ fontSize: "0.52rem", letterSpacing: "0.35em" }}>
             Cancel
           </button>
         </div>
@@ -2499,131 +2611,107 @@ function Contact() {
       >
         <div className="picker-sheet" onClick={(e) => e.stopPropagation()}>
           <div className="picker-handle" />
-          <p
-            className="font-dm-sans text-cream/35 uppercase mb-6"
-            style={{ fontSize: "0.52rem", letterSpacing: "0.45em" }}
-          >
-            Follow Us On Instagram
+          <p className="font-dm-sans text-cream/30 uppercase mb-6"
+            style={{ fontSize: "0.5rem", letterSpacing: "0.5em" }}>
+            Follow Us on Instagram
           </p>
           {instagrams.map((ig) => (
-            <a
-              key={ig.name}
-              href={ig.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="picker-option"
-              onClick={() => setInstagramOpen(false)}
-            >
+            <a key={ig.name} href={ig.href} target="_blank" rel="noopener noreferrer"
+              className="picker-option" onClick={() => setInstagramOpen(false)}>
               <div>
-                <p className="font-cormorant text-cream text-xl font-light mb-0.5">
-                  {ig.name}
-                </p>
-                <p
-                  className="font-dm-sans text-gold/55"
-                  style={{ fontSize: "0.65rem", letterSpacing: "0.04em" }}
-                >
-                  {ig.handle}
-                </p>
+                <p className="font-cormorant text-cream text-xl font-light mb-0.5">{ig.name}</p>
+                <p className="font-dm-sans text-gold/50" style={{ fontSize: "0.62rem" }}>{ig.handle}</p>
               </div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={1.5}
-                className="w-4 h-4 text-gold/50"
-              >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4 text-gold/40">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
             </a>
           ))}
-          <button
-            onClick={() => setInstagramOpen(false)}
-            className="w-full mt-4 font-dm-sans text-cream/25 uppercase"
-            style={{ fontSize: "0.55rem", letterSpacing: "0.3em" }}
-          >
+          <button onClick={() => setInstagramOpen(false)}
+            className="w-full mt-5 font-dm-sans text-cream/20 uppercase"
+            style={{ fontSize: "0.52rem", letterSpacing: "0.35em" }}>
             Cancel
           </button>
         </div>
       </div>
 
       {/* ── Contact Section ── */}
-      <section id="contact" className="relative py-28 md:py-40 overflow-hidden">
+      <section
+        ref={sectionRef}
+        id="contact"
+        className="relative overflow-hidden py-28 md:py-40"
+        style={{ background: "#0d0b09" }}
+      >
+        {/* Ambient light orbs */}
+        <div className="contact-orb-1" />
+        <div className="contact-orb-2" />
 
-        {/* Background */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="https://res.cloudinary.com/dx3k7hbnc/image/upload/v1777570438/hero-5_gzikdc.png"
-            alt="Lustro Homes contact"
-            fill
-            sizes="100vw"
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-charcoal/82" />
-        </div>
+        {/* Subtle grid texture */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: "linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px)",
+            backgroundSize: "72px 72px",
+          }}
+        />
 
-        <div className="relative z-10 max-w-5xl mx-auto px-6">
+        <div className="relative z-10 max-w-4xl mx-auto px-6">
 
-          {/* Header */}
-          <div className="text-center mb-16 reveal-element">
+          {/* ── Top — eyebrow + heading ── */}
+          <div className="mb-16 md:mb-20">
             <p
-              className="font-dm-sans text-gold/60 uppercase mb-5"
-              style={{ fontSize: "0.58rem", letterSpacing: "0.5em" }}
+              className="contact-eyebrow font-dm-sans text-gold/50 uppercase mb-6"
+              style={{ fontSize: "0.55rem", letterSpacing: "0.55em" }}
             >
               Get In Touch
             </p>
-            <h2
-              className="font-cormorant text-cream font-light leading-[1.08]"
-              style={{ fontSize: "clamp(2.8rem, 10vw, 5rem)" }}
-            >
-              Ready to Experience{" "}
-              <em className="italic text-gold">Lustro?</em>
-            </h2>
+
+            <div className="contact-headline overflow-hidden">
+              <h2
+                className="font-cormorant text-cream font-light"
+                style={{ fontSize: "clamp(2.6rem, 10vw, 5.5rem)", lineHeight: 1.05 }}
+              >
+                <span>Ready to Experience</span>
+                <span style={{ color: "#C8922A", fontStyle: "italic" }}>Lustro?</span>
+              </h2>
+            </div>
+
+            {/* Animated gold rule */}
             <div
-              className="mx-auto mt-6"
+              className="contact-divider mt-7"
               style={{
-                width: "48px",
                 height: "1px",
-                background: "linear-gradient(90deg, transparent, #C8922A, transparent)",
+                maxWidth: "80px",
+                background: "linear-gradient(90deg, #C8922A, rgba(200,146,42,0.2))",
               }}
             />
           </div>
 
-          {/* Three contact rows — editorial list style */}
-          <div
-            className="reveal-element mb-16 mx-auto"
-            style={{ maxWidth: "520px" }}
-          >
+          {/* ── Contact rows ── */}
+          <div className="mb-16">
 
             {/* WhatsApp */}
             <a
               href={`${WHATSAPP_URL}?text=Hello, I'd like to make an enquiry`}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center justify-between py-6 border-b border-cream/8 hover:border-gold/25 transition-colors duration-300"
+              className="contact-row"
             >
-              <div className="flex items-center gap-5">
-                <div
-                  className="w-10 h-10 rounded-full border border-cream/10 flex items-center justify-center group-hover:border-gold/30 transition-colors"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-gold/60">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-                    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.531 5.858L0 24l6.334-1.508A11.934 11.934 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.015-1.374l-.36-.214-3.732.888.936-3.617-.235-.372A9.818 9.818 0 012.182 12C2.182 6.58 6.58 2.182 12 2.182S21.818 6.58 21.818 12 17.42 21.818 12 21.818z"/>
-                  </svg>
-                </div>
+              <div className="flex items-center flex-1">
+                <span className="row-number">01</span>
                 <div>
-                  <p className="font-cormorant text-cream text-xl font-light">
+                  <p className="font-cormorant text-cream font-light"
+                    style={{ fontSize: "clamp(1.5rem, 5vw, 2.2rem)", lineHeight: 1.1 }}>
                     WhatsApp Us
                   </p>
-                  <p
-                    className="font-dm-sans text-cream/35 mt-0.5"
-                    style={{ fontSize: "0.62rem", letterSpacing: "0.04em" }}
-                  >
-                    Chat with us directly
+                  <p className="font-dm-sans text-cream/30 mt-1"
+                    style={{ fontSize: "0.6rem", letterSpacing: "0.06em" }}>
+                    Chat directly — fastest response
                   </p>
                 </div>
               </div>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1} className="w-5 h-5 text-gold/30 group-hover:text-gold/60 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth={1} className="row-arrow w-5 h-5 flex-shrink-0 ml-4">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
               </svg>
             </a>
@@ -2631,28 +2719,23 @@ function Contact() {
             {/* Location */}
             <button
               onClick={() => setLocationOpen(true)}
-              className="group w-full flex items-center justify-between py-6 border-b border-cream/8 hover:border-gold/25 transition-colors duration-300 text-left"
+              className="contact-row"
             >
-              <div className="flex items-center gap-5">
-                <div className="w-10 h-10 rounded-full border border-cream/10 flex items-center justify-center group-hover:border-gold/30 transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4 text-gold/60">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-                  </svg>
-                </div>
+              <div className="flex items-center flex-1">
+                <span className="row-number">02</span>
                 <div>
-                  <p className="font-cormorant text-cream text-xl font-light">
+                  <p className="font-cormorant text-cream font-light"
+                    style={{ fontSize: "clamp(1.5rem, 5vw, 2.2rem)", lineHeight: 1.1 }}>
                     Our Locations
                   </p>
-                  <p
-                    className="font-dm-sans text-cream/35 mt-0.5"
-                    style={{ fontSize: "0.62rem", letterSpacing: "0.04em" }}
-                  >
+                  <p className="font-dm-sans text-cream/30 mt-1"
+                    style={{ fontSize: "0.6rem", letterSpacing: "0.06em" }}>
                     Lustro Homes · Yankee by Lustro
                   </p>
                 </div>
               </div>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1} className="w-5 h-5 text-gold/30 group-hover:text-gold/60 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth={1} className="row-arrow w-5 h-5 flex-shrink-0 ml-4">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
             </button>
@@ -2660,49 +2743,74 @@ function Contact() {
             {/* Instagram */}
             <button
               onClick={() => setInstagramOpen(true)}
-              className="group w-full flex items-center justify-between py-6 border-b border-cream/8 hover:border-gold/25 transition-colors duration-300 text-left"
+              className="contact-row"
             >
-              <div className="flex items-center gap-5">
-                <div className="w-10 h-10 rounded-full border border-cream/10 flex items-center justify-center group-hover:border-gold/30 transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4 text-gold/60">
-                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-                    <circle cx="12" cy="12" r="4" />
-                    <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" />
-                  </svg>
-                </div>
+              <div className="flex items-center flex-1">
+                <span className="row-number">03</span>
                 <div>
-                  <p className="font-cormorant text-cream text-xl font-light">
+                  <p className="font-cormorant text-cream font-light"
+                    style={{ fontSize: "clamp(1.5rem, 5vw, 2.2rem)", lineHeight: 1.1 }}>
                     Instagram
                   </p>
-                  <p
-                    className="font-dm-sans text-cream/35 mt-0.5"
-                    style={{ fontSize: "0.62rem", letterSpacing: "0.04em" }}
-                  >
+                  <p className="font-dm-sans text-cream/30 mt-1"
+                    style={{ fontSize: "0.6rem", letterSpacing: "0.06em" }}>
                     @lustro_homes · @yankee.by.lustro
                   </p>
                 </div>
               </div>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1} className="w-5 h-5 text-gold/30 group-hover:text-gold/60 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth={1} className="row-arrow w-5 h-5 flex-shrink-0 ml-4">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
             </button>
 
           </div>
 
-          {/* Book CTA */}
-          <div className="text-center reveal-element">
+          {/* ── Bottom — CTA + brand stamp ── */}
+          <div className="contact-cta flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
+
             <a
               href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 bg-brown text-cream font-dm-sans uppercase tracking-[0.25em] hover:bg-brown-light transition-colors duration-300 shadow-lg"
-              style={{ fontSize: "0.62rem", padding: "16px 48px", borderRadius: "100px" }}
+              className="group inline-flex items-center gap-4"
             >
-              Book Your Stay
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-3 h-3">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
-              </svg>
+              {/* Animated circle button */}
+              <div
+                className="relative w-14 h-14 rounded-full border border-gold/30 flex items-center justify-center
+                  group-hover:border-gold group-hover:bg-gold/10 transition-all duration-500"
+              >
+                <div
+                  className="absolute inset-0 rounded-full border border-gold/10 scale-125
+                    group-hover:scale-150 transition-transform duration-700 opacity-50"
+                />
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth={1.5}
+                  className="w-5 h-5 text-gold/60 group-hover:text-gold transition-colors ml-0.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+                </svg>
+              </div>
+              <div>
+                <p className="font-cormorant text-cream text-2xl font-light group-hover:text-gold transition-colors duration-300">
+                  Book Your Stay
+                </p>
+                <p className="font-dm-sans text-cream/25 mt-0.5"
+                  style={{ fontSize: "0.55rem", letterSpacing: "0.3em", textTransform: "uppercase" }}>
+                  Via WhatsApp
+                </p>
+              </div>
             </a>
+
+            {/* Brand stamp */}
+            <div className="text-right">
+              <p
+                className="font-cormorant text-cream/8 font-light select-none"
+                style={{ fontSize: "clamp(2.5rem, 8vw, 4.5rem)", lineHeight: 1, letterSpacing: "-0.02em" }}
+              >
+                Lustro
+              </p>
+            </div>
+
           </div>
 
         </div>
