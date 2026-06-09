@@ -2052,7 +2052,7 @@ function Investment() {
   <div
     onClick={() => setVideoOpen(true)}
     className="relative rounded-2xl overflow-hidden cursor-pointer group"
-    style={{ paddingTop: "142%" }}
+    style={{ paddingTop: "144%" }}
   >
     <video
       ref={previewRef}
