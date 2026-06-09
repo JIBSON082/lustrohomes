@@ -2357,91 +2357,357 @@ function Testimonials() {
 // CONTACT SECTION
 // ─────────────────────────────────────────────────
 function Contact() {
-  const contactCards = [
+  const [locationOpen, setLocationOpen] = useState(false);
+  const [instagramOpen, setInstagramOpen] = useState(false);
+
+  const locations = [
     {
-      icon: "📱",
-      title: "WhatsApp Us",
-      detail: "Chat with us directly",
-      href: `${WHATSAPP_URL}?text=Hello, I'd like to make an enquiry`,
-    },
-    {
-      icon: "📍",
-      title: "Our Location",
-      detail: "37 Ibukun Olu St, Akoka, Yaba",
+      name: "Lustro Homes",
+      address: "37 Ibukun Olu St, Akoka, Yaba",
       href: "https://maps.app.goo.gl/xF2wtFGyA51vkgba9",
     },
     {
-      icon: "📸",
-      title: "Instagram",
-      detail: "@lustro_homes",
-      href: "https://instagram.com/lustro_homes",
+      name: "Yankee by Lustro",
+      address: "Mainland Lagos",
+      href: "https://maps.app.goo.gl/MhmdsB3DCuUGmtiv9",
+    },
+  ];
+
+  const instagrams = [
+    {
+      name: "Lustro Homes",
+      handle: "@lustro_homes",
+      href: "https://www.instagram.com/lustro_homes?igsh=MXdvNGlsNmZ5Nnh5eg==",
+    },
+    {
+      name: "Yankee by Lustro",
+      handle: "@yankee.by.lustro",
+      href: "https://www.instagram.com/yankee.by.lustro?igsh=MXQwNW9lbmM1aHExNQ==",
     },
   ];
 
   return (
-    <section id="contact" className="relative py-28 md:py-40 overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 z-0">
-        <Image
-          src="https://res.cloudinary.com/dx3k7hbnc/image/upload/v1777570438/hero-5_gzikdc.png"
-          alt="Lustro Homes contact section"
-          fill
-          sizes="100vw"
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-charcoal/82" />
-      </div>
+    <>
+      <style>{`
+        .contact-picker {
+          display: none;
+          position: fixed;
+          inset: 0;
+          z-index: 110;
+          background: rgba(8,8,8,0.75);
+          backdrop-filter: blur(6px);
+          -webkit-backdrop-filter: blur(6px);
+          align-items: flex-end;
+          justify-content: center;
+        }
+        .contact-picker.open {
+          display: flex;
+        }
+        .picker-sheet {
+          width: 100%;
+          max-width: 480px;
+          background: #1a1714;
+          border-top: 1px solid rgba(200,146,42,0.15);
+          border-radius: 24px 24px 0 0;
+          padding: 32px 24px 48px;
+        }
+        .picker-handle {
+          width: 36px;
+          height: 3px;
+          background: rgba(255,255,255,0.12);
+          border-radius: 2px;
+          margin: 0 auto 28px;
+        }
+        .picker-option {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 18px 20px;
+          border-radius: 14px;
+          border: 1px solid rgba(255,255,255,0.06);
+          margin-bottom: 10px;
+          background: rgba(255,255,255,0.03);
+          transition: background 0.2s ease, border-color 0.2s ease;
+          text-decoration: none;
+          cursor: pointer;
+        }
+        .picker-option:hover {
+          background: rgba(200,146,42,0.07);
+          border-color: rgba(200,146,42,0.25);
+        }
+      `}</style>
 
-      {/* Content */}
-      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
-        <div className="reveal-element mb-16">
-          <p className="font-Cormorant text-[1.3rem] text-gold uppercase tracking-[0.14em] mb-8">
-            Get In Touch
+      {/* ── Location Picker ── */}
+      <div
+        className={`contact-picker ${locationOpen ? "open" : ""}`}
+        onClick={() => setLocationOpen(false)}
+      >
+        <div className="picker-sheet" onClick={(e) => e.stopPropagation()}>
+          <div className="picker-handle" />
+          <p
+            className="font-dm-sans text-cream/35 uppercase mb-6"
+            style={{ fontSize: "0.52rem", letterSpacing: "0.45em" }}
+          >
+            Choose a Location
           </p>
-          <h2 className="font-cormorant text-5xl md:text-7xl text-cream font-light leading-[1.1]">
-            Ready to Experience{" "}
-            <em className="italic text-gold">Lustro?</em>
-          </h2>
-        </div>
-
-        {/* Contact cards */}
-        <div className="grid md:grid-cols-3 gap-5 mb-14">
-          {contactCards.map((card, i) => (
+          {locations.map((loc) => (
             <a
-              key={card.title}
-              href={card.href}
+              key={loc.name}
+              href={loc.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="reveal-element glass rounded-2xl p-8 text-center hover:scale-[1.02] transition-transform block"
-              style={{
-                isolation: "isolate",
-                transitionDelay: `${i * 0.08}s`,
-              }}
+              className="picker-option"
+              onClick={() => setLocationOpen(false)}
             >
-              <span className="text-4xl mb-4 block">{card.icon}</span>
-              <h3 className="font-cormorant text-2xl text-cream mb-2">
-                {card.title}
-              </h3>
-              <p className="font-dm-sans text-sm text-cream/55">
-                {card.detail}
-              </p>
+              <div>
+                <p className="font-cormorant text-cream text-xl font-light mb-0.5">
+                  {loc.name}
+                </p>
+                <p
+                  className="font-dm-sans text-cream/40"
+                  style={{ fontSize: "0.65rem", letterSpacing: "0.04em" }}
+                >
+                  {loc.address}
+                </p>
+              </div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.5}
+                className="w-4 h-4 text-gold/50"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
             </a>
           ))}
-        </div>
-
-        {/* Main CTA */}
-        <div className="reveal-element">
-          <a
-            href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block bg-brown text-cream font-dm-sans px-14 py-4 rounded-full text-sm hover:bg-brown-light transition-colors shadow-lg"
+          <button
+            onClick={() => setLocationOpen(false)}
+            className="w-full mt-4 font-dm-sans text-cream/25 uppercase"
+            style={{ fontSize: "0.55rem", letterSpacing: "0.3em" }}
           >
-            Book Your Stay Now
-          </a>
+            Cancel
+          </button>
         </div>
       </div>
-    </section>
+
+      {/* ── Instagram Picker ── */}
+      <div
+        className={`contact-picker ${instagramOpen ? "open" : ""}`}
+        onClick={() => setInstagramOpen(false)}
+      >
+        <div className="picker-sheet" onClick={(e) => e.stopPropagation()}>
+          <div className="picker-handle" />
+          <p
+            className="font-dm-sans text-cream/35 uppercase mb-6"
+            style={{ fontSize: "0.52rem", letterSpacing: "0.45em" }}
+          >
+            Follow Us On Instagram
+          </p>
+          {instagrams.map((ig) => (
+            <a
+              key={ig.name}
+              href={ig.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="picker-option"
+              onClick={() => setInstagramOpen(false)}
+            >
+              <div>
+                <p className="font-cormorant text-cream text-xl font-light mb-0.5">
+                  {ig.name}
+                </p>
+                <p
+                  className="font-dm-sans text-gold/55"
+                  style={{ fontSize: "0.65rem", letterSpacing: "0.04em" }}
+                >
+                  {ig.handle}
+                </p>
+              </div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.5}
+                className="w-4 h-4 text-gold/50"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          ))}
+          <button
+            onClick={() => setInstagramOpen(false)}
+            className="w-full mt-4 font-dm-sans text-cream/25 uppercase"
+            style={{ fontSize: "0.55rem", letterSpacing: "0.3em" }}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+
+      {/* ── Contact Section ── */}
+      <section id="contact" className="relative py-28 md:py-40 overflow-hidden">
+
+        {/* Background */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="https://res.cloudinary.com/dx3k7hbnc/image/upload/v1777570438/hero-5_gzikdc.png"
+            alt="Lustro Homes contact"
+            fill
+            sizes="100vw"
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-charcoal/82" />
+        </div>
+
+        <div className="relative z-10 max-w-5xl mx-auto px-6">
+
+          {/* Header */}
+          <div className="text-center mb-16 reveal-element">
+            <p
+              className="font-dm-sans text-gold/60 uppercase mb-5"
+              style={{ fontSize: "0.58rem", letterSpacing: "0.5em" }}
+            >
+              Get In Touch
+            </p>
+            <h2
+              className="font-cormorant text-cream font-light leading-[1.08]"
+              style={{ fontSize: "clamp(2.8rem, 10vw, 5rem)" }}
+            >
+              Ready to Experience{" "}
+              <em className="italic text-gold">Lustro?</em>
+            </h2>
+            <div
+              className="mx-auto mt-6"
+              style={{
+                width: "48px",
+                height: "1px",
+                background: "linear-gradient(90deg, transparent, #C8922A, transparent)",
+              }}
+            />
+          </div>
+
+          {/* Three contact rows — editorial list style */}
+          <div
+            className="reveal-element mb-16 mx-auto"
+            style={{ maxWidth: "520px" }}
+          >
+
+            {/* WhatsApp */}
+            <a
+              href={`${WHATSAPP_URL}?text=Hello, I'd like to make an enquiry`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex items-center justify-between py-6 border-b border-cream/8 hover:border-gold/25 transition-colors duration-300"
+            >
+              <div className="flex items-center gap-5">
+                <div
+                  className="w-10 h-10 rounded-full border border-cream/10 flex items-center justify-center group-hover:border-gold/30 transition-colors"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-gold/60">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.531 5.858L0 24l6.334-1.508A11.934 11.934 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.015-1.374l-.36-.214-3.732.888.936-3.617-.235-.372A9.818 9.818 0 012.182 12C2.182 6.58 6.58 2.182 12 2.182S21.818 6.58 21.818 12 17.42 21.818 12 21.818z"/>
+                  </svg>
+                </div>
+                <div>
+                  <p className="font-cormorant text-cream text-xl font-light">
+                    WhatsApp Us
+                  </p>
+                  <p
+                    className="font-dm-sans text-cream/35 mt-0.5"
+                    style={{ fontSize: "0.62rem", letterSpacing: "0.04em" }}
+                  >
+                    Chat with us directly
+                  </p>
+                </div>
+              </div>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1} className="w-5 h-5 text-gold/30 group-hover:text-gold/60 transition-colors">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+              </svg>
+            </a>
+
+            {/* Location */}
+            <button
+              onClick={() => setLocationOpen(true)}
+              className="group w-full flex items-center justify-between py-6 border-b border-cream/8 hover:border-gold/25 transition-colors duration-300 text-left"
+            >
+              <div className="flex items-center gap-5">
+                <div className="w-10 h-10 rounded-full border border-cream/10 flex items-center justify-center group-hover:border-gold/30 transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4 text-gold/60">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="font-cormorant text-cream text-xl font-light">
+                    Our Locations
+                  </p>
+                  <p
+                    className="font-dm-sans text-cream/35 mt-0.5"
+                    style={{ fontSize: "0.62rem", letterSpacing: "0.04em" }}
+                  >
+                    Lustro Homes · Yankee by Lustro
+                  </p>
+                </div>
+              </div>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1} className="w-5 h-5 text-gold/30 group-hover:text-gold/60 transition-colors">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+
+            {/* Instagram */}
+            <button
+              onClick={() => setInstagramOpen(true)}
+              className="group w-full flex items-center justify-between py-6 border-b border-cream/8 hover:border-gold/25 transition-colors duration-300 text-left"
+            >
+              <div className="flex items-center gap-5">
+                <div className="w-10 h-10 rounded-full border border-cream/10 flex items-center justify-center group-hover:border-gold/30 transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4 text-gold/60">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                    <circle cx="12" cy="12" r="4" />
+                    <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="font-cormorant text-cream text-xl font-light">
+                    Instagram
+                  </p>
+                  <p
+                    className="font-dm-sans text-cream/35 mt-0.5"
+                    style={{ fontSize: "0.62rem", letterSpacing: "0.04em" }}
+                  >
+                    @lustro_homes · @yankee.by.lustro
+                  </p>
+                </div>
+              </div>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1} className="w-5 h-5 text-gold/30 group-hover:text-gold/60 transition-colors">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+
+          </div>
+
+          {/* Book CTA */}
+          <div className="text-center reveal-element">
+            <a
+              href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 bg-brown text-cream font-dm-sans uppercase tracking-[0.25em] hover:bg-brown-light transition-colors duration-300 shadow-lg"
+              style={{ fontSize: "0.62rem", padding: "16px 48px", borderRadius: "100px" }}
+            >
+              Book Your Stay
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-3 h-3">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+              </svg>
+            </a>
+          </div>
+
+        </div>
+      </section>
+    </>
   );
 }
 
