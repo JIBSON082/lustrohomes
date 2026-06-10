@@ -2357,9 +2357,10 @@ function Testimonials() {
 // CONTACT SECTION
 // ─────────────────────────────────────────────────
   
-function Contact() {
+ function Contact() {
   const [locationOpen, setLocationOpen] = useState(false);
   const [instagramOpen, setInstagramOpen] = useState(false);
+  const [whatsappOpen, setWhatsappOpen] = useState(false);
 
   const locations = [
     {
@@ -2387,10 +2388,23 @@ function Contact() {
     },
   ];
 
+  const whatsapps = [
+    {
+      name: "Lustro Homes",
+      handle: "+234 703 928 6817",
+      href: "https://wa.me/2347039286817?text=Hello, I'd like to make an enquiry",
+    },
+    {
+      name: "Yankee by Lustro",
+      handle: "+234 703 262 8361",
+      href: "https://wa.me/2347032628361?text=Hello, I'd like to make an enquiry",
+    },
+  ];
+
   useEffect(() => {
-    document.body.style.overflow = locationOpen || instagramOpen ? "hidden" : "";
+    document.body.style.overflow = locationOpen || instagramOpen || whatsappOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
-  }, [locationOpen, instagramOpen]);
+  }, [locationOpen, instagramOpen, whatsappOpen]);
 
   return (
     <>
@@ -2438,6 +2452,38 @@ function Contact() {
           border-color: rgba(200,146,42,0.22);
         }
       `}</style>
+
+      {/* ── WhatsApp Picker ── */}
+      <div
+        className={`contact-picker ${whatsappOpen ? "open" : ""}`}
+        onClick={() => setWhatsappOpen(false)}
+      >
+        <div className="picker-sheet" onClick={(e) => e.stopPropagation()}>
+          <div className="picker-handle" />
+          <p className="font-dm-sans text-cream/30 uppercase mb-6"
+            style={{ fontSize: "0.5rem", letterSpacing: "0.5em" }}>
+            Chat on WhatsApp
+          </p>
+          {whatsapps.map((w) => (
+            <a key={w.name} href={w.href} target="_blank" rel="noopener noreferrer"
+              className="picker-option" onClick={() => setWhatsappOpen(false)}>
+              <div>
+                <p className="font-cormorant text-cream text-xl font-light mb-0.5">{w.name}</p>
+                <p className="font-dm-sans text-cream/35" style={{ fontSize: "0.62rem" }}>{w.handle}</p>
+              </div>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth={1.5} className="w-4 h-4 text-gold/40">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          ))}
+          <button onClick={() => setWhatsappOpen(false)}
+            className="w-full mt-5 font-dm-sans text-cream/20 uppercase"
+            style={{ fontSize: "0.52rem", letterSpacing: "0.35em" }}>
+            Cancel
+          </button>
+        </div>
+      </div>
 
       {/* ── Location Picker ── */}
       <div
@@ -2507,7 +2553,7 @@ function Contact() {
       <section id="contact" className="bg-charcoal py-24 md:py-36">
         <div className="max-w-5xl mx-auto px-6">
 
-          {/* Header — same pattern as every other section */}
+          {/* Header */}
           <div className="text-center mb-16 reveal-element">
             <p className="font-cormorant text-[1.3rem] text-gold/70 uppercase tracking-[0.14em] mb-8">
               Get In Touch
@@ -2519,15 +2565,13 @@ function Contact() {
             <div className="section-line mx-auto mt-6" />
           </div>
 
-          {/* Contact cards — same card pattern as Testimonials */}
+          {/* Contact cards */}
           <div className="grid md:grid-cols-3 gap-5 mb-14 reveal-element">
 
             {/* WhatsApp */}
-            <a
-              href={`${WHATSAPP_URL}?text=Hello, I'd like to make an enquiry`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="card-lift bg-charcoal-light rounded-2xl p-8 text-center border border-white/5 hover:border-gold/20 transition-colors block"
+            <button
+              onClick={() => setWhatsappOpen(true)}
+              className="card-lift bg-charcoal-light rounded-2xl p-8 text-center border border-white/5 hover:border-gold/20 transition-colors w-full"
             >
               <div className="w-10 h-10 rounded-full border border-gold/20 flex items-center justify-center mx-auto mb-5">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-gold/60">
@@ -2536,8 +2580,8 @@ function Contact() {
                 </svg>
               </div>
               <h3 className="font-cormorant text-2xl text-cream font-light mb-2">WhatsApp Us</h3>
-              <p className="font-dm-sans text-sm text-cream/40">Chat with us directly</p>
-            </a>
+              <p className="font-dm-sans text-sm text-cream/40">Lustro Homes · Yankee by Lustro</p>
+            </button>
 
             {/* Location */}
             <button
@@ -2583,10 +2627,10 @@ function Contact() {
             }}
           />
 
-          {/* CTA — same style as StatsBar */}
+          {/* CTAs */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 reveal-element">
             <a
-              href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
+              href="https://wa.me/2347039286817?text=I'd like to book a stay at Lustro Homes"
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto text-center bg-brown text-cream font-dm-sans text-sm tracking-[0.18em] uppercase px-12 py-4 hover:bg-brown-light transition-colors"
@@ -2594,7 +2638,7 @@ function Contact() {
               Book Your Stay
             </a>
             <a
-              href={`${WHATSAPP_URL}?text=I'm interested in upcoming Lustro Homes investment opportunities`}
+              href="https://wa.me/2347039286817?text=I'm interested in upcoming Lustro Homes investment opportunities"
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto text-center border border-cream/20 text-cream/60 font-dm-sans text-sm tracking-[0.18em] uppercase px-12 py-4 hover:border-gold hover:text-gold transition-all duration-300"
@@ -2608,7 +2652,6 @@ function Contact() {
     </>
   );
 }
-
 
 // ─────────────────────────────────────────────────
 // FOOTER
