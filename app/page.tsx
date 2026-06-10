@@ -6,7 +6,7 @@ import Image from "next/image";
 // ─────────────────────────────────────────────────
 // CONSTANTS
 // ─────────────────────────────────────────────────
-const WHATSAPP_NUMBER = "2348000000000"; // ← Replace with actual WhatsApp number
+const WHATSAPP_NUMBER = "2347039286817"; // ← Replace with actual WhatsApp number
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
 
 const HERO_VIDEO_1 =
