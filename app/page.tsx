@@ -2028,7 +2028,7 @@ function Investment() {
           <p className="font-Cormorant text-[1.3rem] text-gold uppercase tracking-[0.14em] mb-8">
             Investment Journey
           </p>
-          <h2 className="font-Cormorant text-4xl md:text-5xl text-cream font-light leading-[1.15] mb-6">
+          <h2 className="font-cormorant text-4xl md:text-5xl text-cream font-light leading-[1.15] mb-6">
             The Lustro Journey —{" "}
             <em className="italic text-gold">From Vision to Value</em>
           </h2>
