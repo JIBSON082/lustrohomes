@@ -2656,9 +2656,13 @@ function Testimonials() {
 // ─────────────────────────────────────────────────
 // FOOTER
 // ─────────────────────────────────────────────────
-function Footer() {
+ function Footer() {
+  const [igOpen, setIgOpen] = useState(false);
+  const [waOpen, setWaOpen] = useState(false);
+  const [xOpen, setXOpen] = useState(false);
+  const [tiktokOpen, setTiktokOpen] = useState(false);
+
   const navLinks = [
-    
     { label: "About", href: "#about" },
     { label: "Rooms", href: "#rooms" },
     { label: "Dining", href: "#dining" },
@@ -2667,121 +2671,354 @@ function Footer() {
     { label: "Contact", href: "#contact" },
   ];
 
-  const handleFooterNav = (
-    e: React.MouseEvent<HTMLAnchorElement>,
-    href: string
-  ) => {
+  const socials = {
+    instagram: [
+      { name: "Lustro Homes", handle: "@lustro_homes", href: "https://www.instagram.com/lustro_homes?igsh=MXdvNGlsNmZ5Nnh5eg==" },
+      { name: "Yankee by Lustro", handle: "@yankee.by.lustro", href: "https://www.instagram.com/yankee.by.lustro?igsh=MXQwNW9lbmM1aHExNQ==" },
+    ],
+    whatsapp: [
+      { name: "Lustro Homes", handle: "+234 703 928 6817", href: "https://wa.me/2347039286817?text=Hello, I'd like to make an enquiry" },
+      { name: "Yankee by Lustro", handle: "+234 703 262 8361", href: "https://wa.me/2347032628361?text=Hello, I'd like to make an enquiry" },
+    ],
+    x: [
+      { name: "Lustro Homes", handle: "@lustro_lagos", href: "https://x.com/lustro_lagos" },
+      { name: "Yankee by Lustro", handle: "@yankeebylustro", href: "https://x.com/yankeebylustro" },
+    ],
+    tiktok: [
+      { name: "Lustro Homes", handle: "@lustro_homes", href: "https://vm.tiktok.com/ZS9jJjNhKVKJV-XLDRU/" },
+      { name: "Yankee by Lustro", handle: "@yankee.by.lustro", href: "https://vm.tiktok.com/ZS9jJjFR586wr-MgnU4/" },
+    ],
+  };
+
+  useEffect(() => {
+    document.body.style.overflow = igOpen || waOpen || xOpen || tiktokOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [igOpen, waOpen, xOpen, tiktokOpen]);
+
+  const handleFooterNav = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     document.querySelector(href)?.scrollIntoView({ behavior: "instant" });
   };
 
+  // Reusable picker component
+  const Picker = ({
+    open, onClose, title, items,
+  }: {
+    open: boolean;
+    onClose: () => void;
+    title: string;
+    items: { name: string; handle: string; href: string }[];
+  }) => (
+    <div
+      className={`footer-picker ${open ? "open" : ""}`}
+      onClick={onClose}
+    >
+      <div className="footer-sheet" onClick={(e) => e.stopPropagation()}>
+        <div className="footer-handle" />
+        <p className="font-dm-sans text-cream/30 uppercase mb-6"
+          style={{ fontSize: "0.5rem", letterSpacing: "0.5em" }}>
+          {title}
+        </p>
+        {items.map((item) => (
+          <a key={item.name} href={item.href} target="_blank" rel="noopener noreferrer"
+            className="footer-picker-option" onClick={onClose}>
+            <div>
+              <p className="font-cormorant text-cream text-xl font-light mb-0.5">{item.name}</p>
+              <p className="font-dm-sans text-gold/50" style={{ fontSize: "0.62rem" }}>{item.handle}</p>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" strokeWidth={1.5} className="w-4 h-4 text-gold/40 flex-shrink-0">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        ))}
+        <button onClick={onClose}
+          className="w-full mt-5 font-dm-sans text-cream/20 uppercase"
+          style={{ fontSize: "0.52rem", letterSpacing: "0.35em" }}>
+          Cancel
+        </button>
+      </div>
+    </div>
+  );
+
   return (
-    <footer className="bg-charcoal border-t border-white/5">
-      <div className="max-w-7xl mx-auto px-6 py-16 grid md:grid-cols-3 gap-12 md:gap-16">
-        {/* Col 1 — Brand */}
-        <div>
-          <div className="flex items-center gap-3 mb-5">
-            <div className="relative w-16 h-16">
-  <Image
-    src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777567002/lustrologo_wfervy.png"
-    alt="Lustro Homes Logo"
-    fill
-    sizes="192px"
-    quality={100}
-    className="object-contain"
-  />
-</div>
-            <span className="font-cormorant text-cream font-semibold text-xl tracking-wide">
-              Lustro Homes
-            </span>
-          </div>
-          <p className="font-dm-sans text-[0.65rem] text-gold uppercase tracking-wider mb-5">
-            Staycation in Lagos · Signature Dining · Investment
-          </p>
-          <p className="font-dm-sans text-cream/45 text-sm leading-[1.8]">
-            Lagos' most sought-after shortlet experience and signature dining
-            destination, nestled in the heart of Yaba.
-          </p>
-        </div>
+    <>
+      <style>{`
+        .footer-picker {
+          display: none;
+          position: fixed;
+          inset: 0;
+          z-index: 110;
+          background: rgba(8,8,8,0.60);
+          backdrop-filter: blur(6px);
+          -webkit-backdrop-filter: blur(6px);
+          align-items: flex-end;
+          justify-content: center;
+        }
+        .footer-picker.open { display: flex; }
+        .footer-sheet {
+          width: 100%;
+          max-width: 500px;
+          background: #1a1714;
+          border-top: 1px solid rgba(200,146,42,0.15);
+          border-radius: 24px 24px 0 0;
+          padding: 28px 24px 52px;
+        }
+        .footer-handle {
+          width: 36px; height: 3px;
+          background: rgba(255,255,255,0.10);
+          border-radius: 2px;
+          margin: 0 auto 26px;
+        }
+        .footer-picker-option {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 18px 20px;
+          border-radius: 14px;
+          border: 1px solid rgba(255,255,255,0.05);
+          margin-bottom: 10px;
+          background: rgba(255,255,255,0.02);
+          transition: background 0.2s ease, border-color 0.2s ease;
+          text-decoration: none;
+        }
+        .footer-picker-option:hover {
+          background: rgba(200,146,42,0.06);
+          border-color: rgba(200,146,42,0.22);
+        }
+        .social-btn {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+          cursor: pointer;
+          background: none;
+          border: none;
+          padding: 0;
+          text-decoration: none;
+        }
+        .social-icon-wrap {
+          width: 42px; height: 42px;
+          border-radius: 50%;
+          border: 1px solid rgba(255,255,255,0.08);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: border-color 0.3s ease, background 0.3s ease;
+        }
+        .social-btn:hover .social-icon-wrap {
+          border-color: rgba(200,146,42,0.35);
+          background: rgba(200,146,42,0.06);
+        }
+        .social-btn:hover .social-label {
+          color: rgba(255,255,255,0.7);
+        }
+        .social-label {
+          font-family: 'DM Sans', sans-serif;
+          font-size: 0.52rem;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.25);
+          transition: color 0.3s ease;
+        }
+      `}</style>
 
-        {/* Col 2 — Navigation */}
-        <div>
-          <h4 className="font-dm-sans text-[0.6rem] text-cream/25 uppercase tracking-[0.25em] mb-7">
-            Explore
-          </h4>
-          <div className="space-y-3.5">
-            {navLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                onClick={(e) => handleFooterNav(e, link.href)}
-                className="block font-dm-sans text-sm text-cream/50 hover:text-cream transition-colors"
-              >
-                {link.label}
-              </a>
-            ))}
-          </div>
-        </div>
+      {/* Pickers */}
+      <Picker open={igOpen} onClose={() => setIgOpen(false)} title="Follow on Instagram" items={socials.instagram} />
+      <Picker open={waOpen} onClose={() => setWaOpen(false)} title="Chat on WhatsApp" items={socials.whatsapp} />
+      <Picker open={xOpen} onClose={() => setXOpen(false)} title="Follow on X" items={socials.x} />
+      <Picker open={tiktokOpen} onClose={() => setTiktokOpen(false)} title="Follow on TikTok" items={socials.tiktok} />
 
-        {/* Col 3 — Social */}
-        <div>
-          <h4 className="font-dm-sans text-[0.6rem] text-cream/25 uppercase tracking-[0.25em] mb-7">
-            Connect
-          </h4>
-          <div className="space-y-4">
-            <a
-              href="https://instagram.com/lustro_homes"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 group"
-            >
-              <span className="font-dm-sans text-sm text-cream/50 group-hover:text-cream transition-colors">
-                Instagram — @lustro_homes
-              </span>
-            </a>
-            <a
-              href="https://instagram.com/lustro_lagos"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 group"
-            >
-              <span className="font-dm-sans text-sm text-cream/50 group-hover:text-cream transition-colors">
-                Instagram — @lustro_lagos
-              </span>
-            </a>
-            <a
-              href={WHATSAPP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 group"
-            >
-              <span className="font-dm-sans text-sm text-cream/50 group-hover:text-cream transition-colors">
-                WhatsApp — Booking
-              </span>
-            </a>
-            <div className="pt-4">
-              <p className="font-dm-sans text-xs text-cream/30 leading-relaxed">
-                37 Ibukun Olu Street,
-                <br />
-                Akoka, Yaba, Lagos, Nigeria
+      <footer className="bg-charcoal border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-6 py-16">
+
+          {/* Top — 3 cols */}
+          <div className="grid md:grid-cols-3 gap-12 md:gap-16 mb-16">
+
+            {/* Col 1 — Brand */}
+            <div>
+              <div className="flex items-center gap-3 mb-5">
+                <div className="relative w-14 h-14">
+                  <Image
+                    src="https://res.cloudinary.com/dx3k7hbnc/image/upload/q_auto,f_auto/v1777567002/lustrologo_wfervy.png"
+                    alt="Lustro Homes Logo"
+                    fill
+                    sizes="56px"
+                    quality={100}
+                    className="object-contain"
+                  />
+                </div>
+                <span className="font-cormorant text-cream font-semibold text-xl tracking-wide">
+                  Lustro Homes
+                </span>
+              </div>
+              <p className="font-dm-sans text-[0.62rem] text-gold/60 uppercase tracking-wider mb-5">
+                Staycation · Signature Dining · Investment
               </p>
+              <p className="font-dm-sans text-cream/40 text-sm leading-[1.8]">
+                Lagos' most sought-after shortlet experience and signature dining
+                destination, nestled in the heart of Yaba.
+              </p>
+
+              {/* Address */}
+              <div className="mt-6 pt-6 border-t border-white/5">
+                <p className="font-dm-sans text-[0.6rem] text-cream/25 uppercase tracking-[0.25em] mb-3">
+                  Address
+                </p>
+                <p className="font-dm-sans text-xs text-cream/35 leading-relaxed">
+                  37 Ibukun Olu Street, Akoka,<br />
+                  Yaba, Lagos, Nigeria
+                </p>
+              </div>
+            </div>
+
+            {/* Col 2 — Navigation */}
+            <div>
+              <h4 className="font-dm-sans text-[0.6rem] text-cream/25 uppercase tracking-[0.25em] mb-7">
+                Explore
+              </h4>
+              <div className="space-y-3.5">
+                {navLinks.map((link) => (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    onClick={(e) => handleFooterNav(e, link.href)}
+                    className="block font-dm-sans text-sm text-cream/45 hover:text-cream transition-colors"
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Col 3 — Contact quick links */}
+            <div>
+              <h4 className="font-dm-sans text-[0.6rem] text-cream/25 uppercase tracking-[0.25em] mb-7">
+                Contact
+              </h4>
+              <div className="space-y-4">
+                <button
+                  onClick={() => setWaOpen(true)}
+                  className="flex items-center gap-3 group text-left"
+                >
+                  <span className="font-dm-sans text-sm text-cream/45 group-hover:text-cream transition-colors">
+                    WhatsApp Us
+                  </span>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-3 h-3 text-gold/30 group-hover:text-gold transition-colors">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+                <a
+                  href="mailto:lustrolagos@gmail.com"
+                  className="flex items-center gap-3 group"
+                >
+                  <span className="font-dm-sans text-sm text-cream/45 group-hover:text-cream transition-colors">
+                    lustrolagos@gmail.com
+                  </span>
+                </a>
+                <button
+                  onClick={() => setIgOpen(true)}
+                  className="flex items-center gap-3 group text-left"
+                >
+                  <span className="font-dm-sans text-sm text-cream/45 group-hover:text-cream transition-colors">
+                    Instagram
+                  </span>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-3 h-3 text-gold/30 group-hover:text-gold transition-colors">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Social icons row */}
+          <div
+            className="pt-10 border-t border-white/5"
+          >
+            <p className="font-dm-sans text-[0.58rem] text-cream/20 uppercase tracking-[0.35em] text-center mb-8">
+              Follow the Experience
+            </p>
+
+            <div className="flex items-center justify-center gap-8">
+
+              {/* Instagram */}
+              <button className="social-btn" onClick={() => setIgOpen(true)}>
+                <div className="social-icon-wrap">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                    stroke="rgba(200,146,42,0.7)" strokeWidth={1.5} className="w-4 h-4">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                    <circle cx="12" cy="12" r="4" />
+                    <circle cx="17.5" cy="6.5" r="0.5" fill="rgba(200,146,42,0.7)" stroke="none" />
+                  </svg>
+                </div>
+                <span className="social-label">Instagram</span>
+              </button>
+
+              {/* WhatsApp */}
+              <button className="social-btn" onClick={() => setWaOpen(true)}>
+                <div className="social-icon-wrap">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(200,146,42,0.7)" className="w-4 h-4">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.531 5.858L0 24l6.334-1.508A11.934 11.934 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.015-1.374l-.36-.214-3.732.888.936-3.617-.235-.372A9.818 9.818 0 012.182 12C2.182 6.58 6.58 2.182 12 2.182S21.818 6.58 21.818 12 17.42 21.818 12 21.818z"/>
+                  </svg>
+                </div>
+                <span className="social-label">WhatsApp</span>
+              </button>
+
+              {/* X / Twitter */}
+              <button className="social-btn" onClick={() => setXOpen(true)}>
+                <div className="social-icon-wrap">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(200,146,42,0.7)" className="w-4 h-4">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                  </svg>
+                </div>
+                <span className="social-label">X</span>
+              </button>
+
+              {/* TikTok */}
+              <button className="social-btn" onClick={() => setTiktokOpen(true)}>
+                <div className="social-icon-wrap">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(200,146,42,0.7)" className="w-4 h-4">
+                    <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.74a4.85 4.85 0 01-1.01-.05z"/>
+                  </svg>
+                </div>
+                <span className="social-label">TikTok</span>
+              </button>
+
+              {/* Email */}
+              <a
+                href="mailto:lustrolagos@gmail.com"
+                className="social-btn"
+              >
+                <div className="social-icon-wrap">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                    stroke="rgba(200,146,42,0.7)" strokeWidth={1.5} className="w-4 h-4">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                  </svg>
+                </div>
+                <span className="social-label">Email</span>
+              </a>
+
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Bottom bar */}
-      <div className="border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col md:flex-row justify-between items-center gap-3">
-          <p className="font-dm-sans text-xs text-cream/25">
-            © {new Date().getFullYear()} Lustro Homes. All rights reserved.
-          </p>
-          <p className="font-dm-sans text-xs text-cream/25">
-            Crafted with precision · Yaba, Lagos, Nigeria
-          </p>
         </div>
-      </div>
-    </footer>
+
+        {/* Bottom bar */}
+        <div className="border-t border-white/5">
+          <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col md:flex-row justify-between items-center gap-3">
+            <p className="font-dm-sans text-xs text-cream/20">
+              © {new Date().getFullYear()} Lustro Homes. All rights reserved.
+            </p>
+            <p className="font-dm-sans text-xs text-cream/20">
+              Crafted with precision · Yaba, Lagos, Nigeria
+            </p>
+          </div>
+        </div>
+
+      </footer>
+    </>
   );
 }
 
