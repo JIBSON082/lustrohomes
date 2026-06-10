@@ -2370,7 +2370,7 @@ function Testimonials() {
     },
     {
       name: "Yankee by Lustro",
-      address: "Yaba, Lagos",
+      address: "4 Adebiyi Street, Onike, Lagos.",
       href: "https://maps.app.goo.gl/MhmdsB3DCuUGmtiv9",
     },
   ];
@@ -2867,7 +2867,7 @@ function Testimonials() {
                 </p>
                 <p className="font-dm-sans text-xs text-cream/35 leading-relaxed">
                   37 Ibukun Olu Street, Akoka,<br />
-                  Yaba, Lagos, Nigeria
+                  4 Adebiyi Street, Onike,Lagos.
                 </p>
               </div>
             </div>
