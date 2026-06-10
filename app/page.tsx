@@ -1553,7 +1553,7 @@ function Dining() {
               Explore Lustro's Menu
             </button>
             <a
-              href="https://instagram.com/lustro_lagos"
+              href="https://www.instagram.com/lustro_homes?igsh=MXdvNGlsNmZ5Nnh5eg=="
               target="_blank"
               rel="noopener noreferrer"
               className="border border-cream/20 text-cream font-dm-sans text-sm px-8 py-3.5 rounded-full hover:bg-cream/10 transition-colors text-center"
