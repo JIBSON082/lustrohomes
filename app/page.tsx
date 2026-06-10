@@ -681,17 +681,20 @@ function About() {
   />
 </div>
           {/* Floating glass badge */}
-          <div
-            className="glass absolute bottom-6 left-6 px-5 py-4 rounded-xl"
-            style={{ isolation: "isolate" }}
-          >
-            <p className="font-dm-sans text-[0.6rem] text-cream/60 uppercase tracking-widest">
-              Follow us
-            </p>
-            <p className="font-cormorant text-xl text-gold tracking-wide mt-0.5">
-              @lustro_homes
-            </p>
-          </div>
+          <a
+  href="https://www.instagram.com/lustro_homes?igsh=MXdvNGlsNmZ5Nnh5eg=="
+  target="_blank"
+  rel="noopener noreferrer"
+  className="glass absolute bottom-6 left-6 px-5 py-4 rounded-xl hover:opacity-80 transition-opacity"
+  style={{ isolation: "isolate" }}
+>
+  <p className="font-dm-sans text-[0.6rem] text-cream/60 uppercase tracking-widest">
+    Follow us
+  </p>
+  <p className="font-cormorant text-xl text-gold tracking-wide mt-0.5">
+    @lustro_homes
+  </p>
+</a>
         </div>
       </div>
     </section>
