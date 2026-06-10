@@ -293,7 +293,7 @@ function Hero() {
         </div>
         <div className="mt-auto pt-8 menu-cta">
           <p className="font-dm-sans text-[0.58rem] text-cream/25 uppercase tracking-[0.3em] mb-3">Ready to experience Lustro?</p>
-          <a href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`} target="_blank" rel="noopener noreferrer"
+          <a href={`${WHATSAPP_URL}?text= Hello, I'd like to book a stay at Lustro Homes`} target="_blank" rel="noopener noreferrer"
             className="font-dm-sans text-sm text-gold tracking-[0.2em] uppercase underline-link hover:text-gold/70 transition-colors">
             Book Your Stay
           </a>
@@ -604,7 +604,7 @@ style={{ fontSize: "0.85rem", letterSpacing: "0.55em", fontWeight: 500 }}
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <a
-            href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
+            href={`${WHATSAPP_URL}?text=Hello, I'd like to book a stay at Lustro Homes`}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full sm:w-auto text-center bg-brown text-cream font-dm-sans text-sm tracking-[0.18em] uppercase px-12 py-3.5 hover:bg-brown-light transition-colors"
@@ -985,7 +985,7 @@ function Rooms() {
 
             {/* CTA */}
             <a
-              href={`${WHATSAPP_URL}?text=I'd like to book The ${active.name} at Lustro Homes`}
+              href={`${WHATSAPP_URL}?text=Hello, I'd like to book The ${active.name} at Lustro Homes`}
               target="_blank"
               rel="noopener noreferrer"
               className="block text-center bg-charcoal text-cream font-dm-sans text-sm py-3.5 rounded-full hover:bg-brown transition-colors"
@@ -1168,7 +1168,7 @@ function YankeeByLustro() {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
   <a
-    href={`${YANKEE_WHATSAPP_URL}?text=Hello, I'll like to book a room in Yankee by Lustro`}
+    href={`${YANKEE_WHATSAPP_URL}?text=Hello, I would like to book a room in Yankee by Lustro`}
     target="_blank"
     rel="noopener noreferrer"
     className="w-full sm:w-auto text-center bg-brown text-cream font-dm-sans px-12 py-4 rounded-full text-sm hover:bg-brown-light transition-colors shadow-lg tracking-[0.15em]"
