@@ -2370,7 +2370,7 @@ function Testimonials() {
     },
     {
       name: "Yankee by Lustro",
-      address: "Mainland Lagos",
+      address: "Yaba, Lagos",
       href: "https://maps.app.goo.gl/MhmdsB3DCuUGmtiv9",
     },
   ];
