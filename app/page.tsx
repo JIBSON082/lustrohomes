@@ -6,8 +6,11 @@ import Image from "next/image";
 // ─────────────────────────────────────────────────
 // CONSTANTS
 // ─────────────────────────────────────────────────
-const WHATSAPP_NUMBER = "2347039286817"; // ← Replace with actual WhatsApp number
+const WHATSAPP_NUMBER = "2347039286817";
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
+
+const YANKEE_WHATSAPP_NUMBER = "2347032628361" ;
+const YANKEE_WHATSAPP_URL = `https://wa.me/${YANKEE_WHATSAPP_NUMBER}`;
 
 const HERO_VIDEO_1 =
   "https://res.cloudinary.com/dx3k7hbnc/video/upload/v1777632548/Hero-video_egr33p.mp4";
@@ -1165,7 +1168,7 @@ function YankeeByLustro() {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
   <a
-    href={`${WHATSAPP_URL}?text=I'm interested in Yankee by Lustro`}
+    href={`${YANKEE_WHATSAPP_URL}?text=Hello, I'll like to book a room in Yankee by Lustro`}
     target="_blank"
     rel="noopener noreferrer"
     className="w-full sm:w-auto text-center bg-brown text-cream font-dm-sans px-12 py-4 rounded-full text-sm hover:bg-brown-light transition-colors shadow-lg tracking-[0.15em]"
