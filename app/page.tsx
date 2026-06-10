@@ -326,7 +326,7 @@ function Hero() {
           </span>
 
           <a
-            href={`${WHATSAPP_URL}?text=I'd like to book a stay at Lustro Homes`}
+            href={`${WHATSAPP_URL}?text=Hello, I'd like to book a stay at Lustro Homes`}
             target="_blank"
             rel="noopener noreferrer"
             className={`font-dm-sans text-[0.8rem] tracking-[0.28em] uppercase px-4 py-2.5 transition-all duration-500 ${
