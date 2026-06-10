@@ -2509,7 +2509,7 @@ function Contact() {
 
           {/* Header — same pattern as every other section */}
           <div className="text-center mb-16 reveal-element">
-            <p className="font-dm-sans text-[0.65rem] text-gold/70 uppercase tracking-[0.28em] mb-4">
+            <p className="font-cormorant text-[1.3rem] text-gold/70 uppercase tracking-[0.14em] mb-8">
               Get In Touch
             </p>
             <h2 className="font-cormorant text-5xl md:text-6xl text-cream font-light">
