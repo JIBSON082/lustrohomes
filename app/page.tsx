@@ -1964,11 +1964,10 @@ const INVEST_VIDEOS = [
   "https://res.cloudinary.com/dx3k7hbnc/video/upload/Lustro_Investment_2_xavqpk.mp4",
 ];
 
-const [showInvestContact, setShowInvestContact] = useState(false);
-
 function Investment() {
   const [videoOpen, setVideoOpen] = useState(false);
   const [activeVideo, setActiveVideo] = useState(0);
+  const [showInvestContact, setShowInvestContact] = useState(false);
   const previewRef = useRef<HTMLVideoElement>(null);
   const modalRef = useRef<HTMLVideoElement>(null);
 
