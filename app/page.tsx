@@ -1959,6 +1959,11 @@ function Gallery() {
 // ─────────────────────────────────────────────────
 // INVESTMENT JOURNEY
 // ─────────────────────────────────────────────────
+const INVEST_VIDEOS = [
+  "https://res.cloudinary.com/dx3k7hbnc/video/upload/Lustro_investment_jaijaq.mp4",
+  "https://res.cloudinary.com/dx3k7hbnc/video/upload/Lustro_Investment_2_xavqpk.mp4",
+];
+
 function Investment() {
   const [videoOpen, setVideoOpen] = useState(false);
   const [activeVideo, setActiveVideo] = useState(0);
@@ -1971,7 +1976,7 @@ function Investment() {
       title: "LUSTRO 1.0 — THE BLUEPRINT",
       subtitle: "Where Yaba First Met Luxury",
       story:
-        "We started with one goal : build the most sought-after shortlet experience in Yaba. What emerged was more than an apartment. It was a lifestyle statement. Signature in-house dining, world-class aesthetics, and a hospitality standard that Lagos had never seen at this level.",
+        "We started with one goal: build the most sought-after shortlet experience in Yaba. What emerged was more than an apartment. It was a lifestyle statement. Signature in-house dining, world-class aesthetics, and a hospitality standard that Lagos had never seen at this level.",
       stats: [
         { value: "15,000+", label: "Guests Hosted" },
         { value: "₦2M+", label: "Monthly Revenue" },
@@ -1999,10 +2004,10 @@ function Investment() {
       title: "LUSTRO 3.0 — THE SMART ECOSYSTEM",
       subtitle: "The Ultimate Lifestyle Sanctuary",
       story:
-        "Our most ambitious project yet and it delivered. Fully automated smart apartment units. Yaba's first in-house spa. A fully equipped professional gym. Every detail engineered for maximum occupancy, maximum returns, and a living experience that simply does not exist anywhere else on the Mainland.",
+        "Our most ambitious project yet and it delivered. Fully automated smart apartment units. Yaba\'s first in-house spa. A fully equipped professional gym. Every detail engineered for maximum occupancy, maximum returns, and a living experience that simply does not exist anywhere else on the Mainland.",
       stats: [
         { value: "Full Auto", label: "Smart Features" },
-        { value: "Yaba's First", label: "In-House Spa" },
+        { value: "Yaba\'s First", label: "In-House Spa" },
         { value: "₦1.4M/mo", label: "Investor ROI" },
       ],
       status: "COMPLETED & EARNING",
@@ -2020,7 +2025,7 @@ function Investment() {
 
         {/* Header */}
         <div className="text-center mb-16 reveal-element">
-          <p className="font-Cormorant text-[1.3rem] text-gold uppercase tracking-[0.14em] mb-8">
+          <p className="font-cormorant text-[1.3rem] text-gold uppercase tracking-[0.14em] mb-8">
             Investment Journey
           </p>
           <h2 className="font-cormorant text-4xl md:text-5xl text-cream font-light leading-[1.15] mb-6">
@@ -2032,7 +2037,7 @@ function Investment() {
           </p>
           <div className="text-left bg-charcoal/50 rounded-2xl p-8 border border-white/5">
             <p className="font-cormorant text-2xl md:text-3xl text-cream font-light leading-[1.6] italic">
-              "Most properties sit underperforming : wrong structure, wrong
+              &ldquo;Most properties sit underperforming: wrong structure, wrong
               aesthetics, wrong management. At Lustro, we proved that done
               right, a single apartment can generate over{" "}
               <span className="text-gold not-italic font-normal">
@@ -2043,7 +2048,7 @@ function Investment() {
                 ₦1.4 million pure profit
               </span>{" "}
               to investors. Consistently. Every month. This is the track
-              record."
+              record.&rdquo;
             </p>
           </div>
         </div>
@@ -2243,7 +2248,7 @@ function Investment() {
                   </span>
                   <div className="flex-1 h-px bg-white/8" />
                 </div>
-                <a
+                
                   href="tel:+2348146535261"
                   className="w-full sm:w-auto text-center flex items-center justify-center gap-2 border border-cream/15 text-cream/65 font-dm-sans text-sm tracking-[0.15em] uppercase px-10 py-4 rounded-full hover:border-gold hover:text-gold transition-all duration-300"
                 >
@@ -2252,8 +2257,8 @@ function Investment() {
                   </svg>
                   Call Us
                 </a>
-                <a
-                  href="https://wa.me/2349053034565?text=Hello%2C%20I'm%20interested%20in%20upcoming%20Lustro%20Homes%20investment%20opportunities"
+                
+                  href="https://wa.me/2349053034565?text=Hello%2C%20I%27m%20interested%20in%20upcoming%20Lustro%20Homes%20investment%20opportunities"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full sm:w-auto text-center flex items-center justify-center gap-2 bg-brown text-cream font-dm-sans text-sm tracking-[0.15em] uppercase px-10 py-4 rounded-full hover:bg-brown-light transition-colors shadow-lg"
@@ -2306,9 +2311,8 @@ function Investment() {
 
     </section>
   );
-}  
-  
-
+}
+      
 // ─────────────────────────────────────────────────
 // TESTIMONIALS
 // ─────────────────────────────────────────────────
