@@ -2443,12 +2443,12 @@ function Testimonials() {
     {
       name: "Lustro Homes",
       handle: "+234 703 928 6817",
-      href: "https://wa.me/2347039286817?text=Hello, I'd like to make an enquiry",
+      href: "https://wa.me/2347039286817?text=Hello, I'd like to make an enquiry about Lustro homes",
     },
     {
       name: "Yankee by Lustro",
       handle: "+234 703 262 8361",
-      href: "https://wa.me/2347032628361?text=Hello, I'd like to make an enquiry",
+      href: "https://wa.me/2347032628361?text=Hello, I'd like to make an enquiry about Yankee by Lustro",
     },
   ];
 
