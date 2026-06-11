@@ -2001,8 +2001,8 @@ function Investment() {
       pricing: null,
     },
     {
-      title: "LUSTRO 3.0 — THE SMART ECOSYSTEM",
-      subtitle: "The Ultimate Lifestyle Sanctuary",
+      title: "LUSTRO 3.0 — LUXURY, REIMAGINED",
+      subtitle: "Where Luxury Meets Timeless Comfort",
       story:
         "Our most ambitious project yet and it delivered. Fully automated smart apartment units. Yaba's first in-house spa. A fully equipped professional gym. Every detail engineered for maximum occupancy, maximum returns, and a living experience that simply does not exist anywhere else on the Mainland.",
       stats: [
