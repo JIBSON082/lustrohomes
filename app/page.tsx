@@ -2216,7 +2216,7 @@ function Investment() {
               onClick={() => setShowInvestContact(!showInvestContact)}
               className="inline-flex items-center gap-3 bg-brown text-cream font-dm-sans px-14 py-4 rounded-full text-sm hover:bg-brown-light transition-all duration-300 shadow-lg"
             >
-              {showInvestContact ? "Hide Options" : "Get In Touch"}
+              {showInvestContact ? "Get In Touch" : "Get In Touch"}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -2679,7 +2679,7 @@ function Testimonials() {
           />
 
           {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 reveal-element">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 reveal-element">
             <a
               href="https://wa.me/2347039286817?text=I'd like to book a stay at Lustro Homes"
               target="_blank"
