@@ -2681,7 +2681,7 @@ function Testimonials() {
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 reveal-element">
             <a
-              href="https://wa.me/2347039286817?text=I'd like to book a stay at Lustro Homes"
+              href="https://wa.me/2347039286817?text=Hello, I'd like to book a stay at Lustro Homes"
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto text-center bg-brown text-cream font-dm-sans text-sm tracking-[0.18em] uppercase px-12 py-4 hover:bg-brown-light transition-colors"
@@ -2721,8 +2721,8 @@ function Testimonials() {
       { name: "Yankee by Lustro", handle: "@yankee.by.lustro", href: "https://www.instagram.com/yankee.by.lustro?igsh=MXQwNW9lbmM1aHExNQ==" },
     ],
     whatsapp: [
-      { name: "Lustro Homes", handle: "+234 703 928 6817", href: "https://wa.me/2347039286817?text=Hello, I'd like to make an enquiry" },
-      { name: "Yankee by Lustro", handle: "+234 703 262 8361", href: "https://wa.me/2347032628361?text=Hello, I'd like to make an enquiry" },
+      { name: "Lustro Homes", handle: "+234 703 928 6817", href: "https://wa.me/2347039286817?text=Hello, I'd like to make an enquiry about Lustro homes" },
+      { name: "Yankee by Lustro", handle: "+234 703 262 8361", href: "https://wa.me/2347032628361?text=Hello, I'd like to make an enquiry about Yankee by Lustro" },
     ],
     x: [
       { name: "Lustro Homes", handle: "@lustro_lagos", href: "https://x.com/lustro_lagos" },
