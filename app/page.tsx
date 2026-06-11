@@ -2688,14 +2688,7 @@ function Testimonials() {
             >
               Book Your Stay
             </a>
-            <a
-              href="https://wa.me/2347039286817?text=I'm interested in upcoming Lustro Homes investment opportunities"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto text-center border border-cream/20 text-cream/60 font-dm-sans text-sm tracking-[0.18em] uppercase px-12 py-4 hover:border-gold hover:text-gold transition-all duration-300"
-            >
-              Investment Enquiry
-            </a>
+          
           </div>
 
         </div>
@@ -2917,7 +2910,7 @@ function Testimonials() {
                   Address
                 </p>
                 <p className="font-dm-sans text-xs text-cream/35 leading-relaxed">
-                  37 Ibukun Olu Street, Akoka,<br />
+                  37 Ibukun Olu Street, Akoka,Lagos.<br />
                   4 Adebiyi Street, Onike,Lagos.
                 </p>
               </div>
