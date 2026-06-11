@@ -291,7 +291,7 @@ function Hero() {
             </a>
           ))}
         </div>
-        <div className="mt-auto pt-14 menu-cta">
+        <div className="mt-auto pt-8 menu-cta">
           <p className="font-dm-sans text-[0.58rem] text-cream/25 uppercase tracking-[0.3em] mb-3">Ready to experience Lustro?</p>
           <a href={`${WHATSAPP_URL}?text= Hello, I'd like to book a stay at Lustro Homes`} target="_blank" rel="noopener noreferrer"
             className="font-dm-sans text-sm text-gold tracking-[0.2em] uppercase underline-link hover:text-gold/70 transition-colors">
