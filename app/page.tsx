@@ -282,7 +282,7 @@ function Hero() {
       </div>
 
       {/* Mobile Menu — unchanged */}
-      <div className={`mobile-menu fixed inset-0 z-[100] bg-charcoal flex flex-col px-4 py-6 overflow-y-auto ${menuOpen ? "open" : ""}`}>
+      <div className={`mobile-menu fixed inset-0 z-[90] bg-charcoal flex flex-col px-4 py-6 overflow-y-auto ${menuOpen ? "open" : ""}`}>
         <button onClick={() => setMenuOpen(false)} className="self-end mb-10 text-cream/40 hover:text-cream transition-colors">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-6 h-6">
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
