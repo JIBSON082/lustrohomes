@@ -1,4 +1,4 @@
-"use client";
+."use client";
 
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import Image from "next/image";
@@ -2032,8 +2032,8 @@ function Investment() {
             Investment Journey
           </p>
           <h2 className="font-cormorant text-4xl md:text-5xl text-cream font-light leading-[1.15] mb-6">
-            The Lustro Journey —{" "}
-            <em className="italic text-gold">From Vision to Value</em>
+            The Lustro Story —{" "}
+            <em className="italic text-gold">From Vision to Exceptional Value</em>
           </h2>
           <p className="font-dm-sans text-cream/45 text-sm tracking-wide mb-10">
             3 Iconic Projects. Zero Compromises. Proven Results
@@ -2042,7 +2042,7 @@ function Investment() {
            <p className="font-cormorant text-2xl md:text-3xl text-cream font-light leading-[1.6] italic">
   Most properties never reach their full potential. The structure
   is wrong. The experience is uninspiring. The management falls short.
-  <br /><br />
+  <br />
   At Lustro, we&apos;ve demonstrated what happens when every detail is
   executed with precision. A single apartment generating over{" "}
   <span className="text-gold not-italic font-normal">
@@ -2053,7 +2053,7 @@ function Investment() {
     ₦1.4 million returned as profit
   </span>{" "}
   to investors.
-  <br /><br />
+  <br />
   Consistently. Predictably. Month after month.
   <br /><br />
   This is the standard we&apos;ve set.
