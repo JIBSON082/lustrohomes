@@ -2032,11 +2032,11 @@ function Investment() {
             Investment Journey
           </p>
           <h2 className="font-cormorant text-4xl md:text-5xl text-cream font-light leading-[1.15] mb-6">
-            The Lustro Story —{" "}
+            The Lustro Journey —{" "}
             <em className="italic text-gold">From Vision to Value</em>
           </h2>
           <p className="font-dm-sans text-cream/45 text-sm tracking-wide mb-10">
-            3 Iconic Projects. Zero Compromises. Proven Results
+            3 Iconic Projects. 100% Delivery. A New Era.
           </p>
           <div className="text-left bg-charcoal/50 rounded-2xl p-8 border border-white/5">
            <p className="font-cormorant text-2xl md:text-3xl text-cream font-light leading-[1.6] italic">
