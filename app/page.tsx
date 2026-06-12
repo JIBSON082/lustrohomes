@@ -2042,7 +2042,7 @@ function Investment() {
            <p className="font-cormorant text-2xl md:text-3xl text-cream font-light leading-[1.6] italic">
   Most properties never reach their full potential. The structure
   is wrong. The experience is uninspiring. The management falls short.
-  <br />
+  <br /><br />
   At Lustro, we&apos;ve demonstrated what happens when every detail is
   executed with precision. A single apartment generating over{" "}
   <span className="text-gold not-italic font-normal">
@@ -2055,7 +2055,7 @@ function Investment() {
   to investors.
   <br />
   Consistently. Predictably. Month after month.
-  <br />
+  <br /><br />
   This is the standard we&apos;ve set.
 </p>
           </div>
