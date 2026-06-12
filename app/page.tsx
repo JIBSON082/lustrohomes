@@ -1,4 +1,4 @@
-."use client";
+"use client";
 
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import Image from "next/image";
@@ -2032,11 +2032,11 @@ function Investment() {
             Investment Journey
           </p>
           <h2 className="font-cormorant text-4xl md:text-5xl text-cream font-light leading-[1.15] mb-6">
-            The Lustro Journey —{" "}
-            <em className="italic text-gold">From Vision to Value</em>
+            The Lustro Portfolio —{" "}
+            <em className="italic text-gold">From Vision to Exceptional Value</em>
           </h2>
           <p className="font-dm-sans text-cream/45 text-sm tracking-wide mb-10">
-            3 Iconic Projects. 100% Delivery. A New Era.
+            3 Iconic Projects. Zero compromises. Proven Results.
           </p>
           <div className="text-left bg-charcoal/50 rounded-2xl p-8 border border-white/5">
            <p className="font-cormorant text-2xl md:text-3xl text-cream font-light leading-[1.6] italic">
