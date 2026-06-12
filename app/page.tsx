@@ -1006,9 +1006,7 @@ function Rooms() {
             >
               Book This Room
             </a>
-            <p className="font-dm-sans text-[0.55rem] text-charcoal/30 text-center uppercase tracking-wider mt-2">
-              Instant confirmation via WhatsApp
-            </p>
+            
 
           </div>
         </div>
