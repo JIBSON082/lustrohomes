@@ -147,10 +147,24 @@ function Hero() {
     else setSearchQuery("");
   }, [searchOpen]);
 
-  useEffect(() => {
-    document.body.style.overflow = menuOpen || searchOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
-  }, [menuOpen, searchOpen]);
+ useEffect(() => {
+  if (menuOpen || searchOpen) {
+    const scrollY = window.scrollY;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.width = "100%";
+    return () => {
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.width = "";
+      window.scrollTo(0, scrollY);
+    };
+  }
+}, [menuOpen, searchOpen]);
 
   const handleSearchNavigate = (href: string) => {
     setSearchOpen(false);
@@ -268,10 +282,7 @@ function Hero() {
       </div>
 
       {/* Mobile Menu — unchanged */}
-      <div
-  className={`mobile-menu fixed inset-x-0 top-0 z-[90] bg-charcoal flex flex-col px-8 py-10 ${menuOpen ? "open" : ""}`}
-  style={{ height: "100dvh" }}
->
+      <div className={`mobile-menu fixed inset-0 z-[90] bg-charcoal flex flex-col px-8 py-10 overflow-y-auto ${menuOpen ? "open" : ""}`}>
         <button onClick={() => setMenuOpen(false)} className="self-end mb-10 text-cream/40 hover:text-cream transition-colors">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-6 h-6">
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
