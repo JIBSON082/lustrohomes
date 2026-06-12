@@ -2040,7 +2040,7 @@ function Investment() {
           </p>
           <div className="text-left bg-charcoal/50 rounded-2xl p-8 border border-white/5">
            <p className="font-cormorant text-2xl md:text-3xl text-cream font-light leading-[1.6] italic">
-  Most properties never reach their full potential. The structure
+  &quot;Most properties never reach their full potential. The structure
   is wrong. The experience is uninspiring. The management falls short.
   <br />
   At Lustro, we&apos;ve demonstrated what happens when every detail is
@@ -2056,7 +2056,7 @@ function Investment() {
   <br />
   Consistently. Predictably. Month after month.
   <br />
-  This is the standard we&apos;ve set.
+  This is the standard we&apos;ve set.&quot;
 </p>
           </div>
         </div>
