@@ -2040,18 +2040,23 @@ function Investment() {
           </p>
           <div className="text-left bg-charcoal/50 rounded-2xl p-8 border border-white/5">
            <p className="font-cormorant text-2xl md:text-3xl text-cream font-light leading-[1.6] italic">
-  &quot;Most properties sit underperforming : wrong structure, wrong
-              aesthetics, wrong management. At Lustro, we proved that done
-              right, a single apartment can generate over{" "}
-              <span className="text-gold not-italic font-normal">
-                ₦2 million every month
-              </span>{" "}
-              — and deliver{" "}
-              <span className="text-gold not-italic font-normal">
-                ₦1.4 million pure profit
-              </span>{" "}
-              to investors. Consistently. Every month. This is the track
-              record.&quot;
+  Most properties never reach their full potential. The structure
+  is wrong. The experience is uninspiring. The management falls short.
+  <br />
+  At Lustro, we&apos;ve demonstrated what happens when every detail is
+  executed with precision. A single apartment generating over{" "}
+  <span className="text-gold not-italic font-normal">
+    ₦2 million in monthly revenue
+  </span>
+  , with up to{" "}
+  <span className="text-gold not-italic font-normal">
+    ₦1.4 million returned as profit
+  </span>{" "}
+  to investors.
+  <br />
+  Consistently. Predictably. Month after month.
+  <br />
+  This is the standard we&apos;ve set.
 </p>
           </div>
         </div>
